@@ -20,9 +20,9 @@ let DUMMY_COURSES = [{
         // }]
 }];
 
-const sendCourseList = (req, res, next) => {
-    return DUMMY_COURSES;
-}
+// const sendCourseList = (req, res, next) => {
+//     return DUMMY_COURSES;
+// }
 
 const getCoursesList = (req, res, next) => {
     res.json({ courses: DUMMY_COURSES });
@@ -44,5 +44,5 @@ const getCourseById = (req, res, next) => {
 
 exports.getCourseById = getCourseById;
 exports.getCoursesList = getCoursesList;
-exports.sendCourseList = sendCourseList;
-exports.DUMMY_COURSES = DUMMY_COURSES;
+// exports.sendCourseList = sendCourseList;
+// exports.DUMMY_COURSES = DUMMY_COURSES;
