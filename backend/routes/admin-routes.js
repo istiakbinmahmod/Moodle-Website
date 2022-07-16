@@ -14,12 +14,22 @@ router.get('/courses', adminController.getCoursesList); // => localhost:5000/adm
 
 router.post('/create-course', adminController.adminCreateCourse); // => localhost:5000/admin/create-course to create a new course
 
-router.post('/create-session', adminController.adminCreateSession); // => localhost:5000/admin/create-session to create a new session
-
 router.delete('/delete/:courseID', adminController.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
 
-router.delete('/delete/:sessionID', adminController.adminDeleteSession); // => localhost:5000/admin/delete-session to delete a session
-
 router.patch('/edit/:courseID', adminController.adminEditCourse); // => localhost:5000/admin/edit-course to edit a course (only the title and credit hour)
+
+router.post('/create/user', adminController.adminCreateUser); // => localhost:5000/admin/create-user to create a new user')
+
+router.get('/get/users', adminController.getUsersList); // => localhost:5000/admin/create-user to create a new user')`
+
+router.patch('/edit/user/:userID', adminController.adminEditUser); // => localhost:5000/admin/edit-user to edit a user (only the name and email)
+
+router.delete('/delete/:userID', adminController.adminDeleteUser); // => localhost:5000/admin/delete-user to delete a user
+
+
+
+
+
+
 
 module.exports = router;
