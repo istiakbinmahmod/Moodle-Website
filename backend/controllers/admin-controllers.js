@@ -108,7 +108,6 @@ const adminCreateCourse = async(req, res, next) => {
         return next(error);
     }
 
-    // res.status(201).json({ message: "Course created successfully." });
     res.json({ message: "Course created successfully." });
 };
 
@@ -180,7 +179,6 @@ const adminEditCourse = async(req, res, next) => {
         return next(error);
     }
 
-    // res.status(200).json({ course: updatedCourse });
     res.json({ course: course });
 };
 
@@ -228,8 +226,6 @@ const adminRemovesFromCourse = async(req, res, next) => {
         }
     }
 
-
-
     try {
         course.participants.pull(participants);
         const session = await mongoose.startSession();
@@ -249,7 +245,6 @@ const adminRemovesFromCourse = async(req, res, next) => {
 
     res.json({ course: course });
 };
-
 
 const adminDeleteCourse = async(req, res, next) => {
     const courseID = req.params.courseID;
@@ -303,7 +298,6 @@ const getCoursesList = async(req, res, next) => {
         return next(error);
     }
     res.json({ courses: courses });
-    // res.json({ message: "Get all courses!" });
 };
 
 const adminCreateUser = async(req, res, next) => {
@@ -365,18 +359,15 @@ const getUsersList = async(req, res, next) => {
         return next(error);
     }
     res.json({ users: users });
-    // res.json({ message: "Get all users!" });
 };
 
 const adminEditUser = (req, res, next) => {};
 
 const adminDeleteUser = async(req, res, next) => {
-    // const courseID = req.params.courseID;
     const userID = req.params.userID;
-    // let course;
+
     let user;
     try {
-        // course = await Course.findById(courseID).populate("participants");
         user = await User.findById(userID).populate("courses");
     } catch (err) {
         const error = new HttpError(
@@ -390,14 +381,14 @@ const adminDeleteUser = async(req, res, next) => {
         return next(error);
     }
     try {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        await user.remove({ session: session });
-        for await (const course of user.courses) {
-            course.participants.pull(user);
-            await course.save({ session: session });
-        }
-        await session.commitTransaction();
+        const session = await mongoose.startSession(); // Start session
+        session.startTransaction(); // Start MongoDB transaction
+        await user.remove({ session: session }); // Remove user
+        for await (const course of user.courses) { // Remove user from all courses
+            course.participants.pull(user); // Remove user from course
+            await course.save({ session: session }); // Save course
+        } // End for
+        await session.commitTransaction(); // Commit MongoDB transaction
     } catch (err) {
         const error = new HttpError(
             "Something went wrong, could not delete course.",
