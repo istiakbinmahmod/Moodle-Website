@@ -6,7 +6,7 @@ const HttpError = require("../models/http-error");
 const Course = require("../models/courses");
 const User = require("../models/users");
 
-const DUMMY_COURSES = require("./course-controllers").DUMMY_COURSES; // this is to get the dummy courses from the course-controllers.js
+//const DUMMY_COURSES = require("./course-controllers").DUMMY_COURSES; // this is to get the dummy courses from the course-controllers.js
 
 //this one is to create a dummy admin, we will create a new admin in mongoDB later
 const DUMMY_ADMIN = [{
@@ -58,27 +58,24 @@ const adminCreateCourse = async(req, res, next) => {
 
     let user;
 
-    try {
-        // user = await User.findOne({ moodleID: participants });
-        // user.map((u) => u.moodleID === participants);
-        user = await User.findById(participants);
-    } catch (err) {
-        const error = new HttpError(
-            "Something went wrong, could not find user.",
-            500
-        );
-        return next(error);
+    if (participants.length > 0) {
+        try {
+            user = await User.findById(participants);
+        } catch (err) {
+            const error = new HttpError(
+                "Something went wrong, could not find user.",
+                500
+            );
+            return next(error);
+        }
+
+        if (!user) {
+            const error = new HttpError("Could not find user for provided id.", 404);
+            return next(error);
+        }
     }
 
-    if (!user) {
-        const error = new HttpError(
-            "Could not find user for provided id.",
-            404
-        );
-        return next(error);
-    }
-
-    const createdCourse = new Course({
+    const createdCourse = await Course.create({
         sessionID,
         courseID,
         courseTitle,
@@ -86,19 +83,22 @@ const adminCreateCourse = async(req, res, next) => {
         courseCreditHour,
         startDate,
         endDate,
-        user
+        participants,
     });
 
-
     try {
-        // await createdCourse.save();
         const session = await mongoose.startSession();
         session.startTransaction();
         await createdCourse.save({ session: session });
-        user.courses.push(createdCourse);
-        await user.save({ session: session });
-        await session.commitTransaction();
 
+        for await (const id of participants) {
+            const userRelatedToCourse = await User.findById(id);
+            userRelatedToCourse.courses.push(createdCourse);
+            await userRelatedToCourse.save({ session: session });
+            console.log(userRelatedToCourse.moodleID);
+        }
+
+        await session.commitTransaction();
     } catch (err) {
         const error = new HttpError(
             "Creating course failed, please try again.",
@@ -108,42 +108,191 @@ const adminCreateCourse = async(req, res, next) => {
         return next(error);
     }
 
-    res.status(201).json({ course: createdCourse });
+    // res.status(201).json({ message: "Course created successfully." });
+    res.json({ message: "Course created successfully." });
 };
 
-const adminEditCourse = (req, res, next) => {
+const adminEditCourse = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         throw new HttpError("Invalid inputs passed, please check your data.", 422);
     }
 
-    const {
-        sessionID,
-        courseID,
-        courseTitle,
-        courseCreditHour,
-        courseDescription,
-    } = req.body;
+    const { courseId, participants } = req.body;
     const cid = req.params.courseID;
 
-    const updatedCourse = {...DUMMY_COURSES.find((c) => c.courseID === cid) };
-    const courseIndex = DUMMY_COURSES.findIndex((c) => c.courseID === cid);
-    updatedCourse.courseTitle = courseTitle;
-    updatedCourse.courseCreditHour = courseCreditHour;
-    updatedCourse.courseDescription = courseDescription;
+    let course;
+    try {
+        course = await Course.findById(cid);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find course.",
+            500
+        );
+        return next(error);
+    }
 
-    DUMMY_COURSES[courseIndex] = updatedCourse;
+    if (!course) {
+        const error = new HttpError("Could not find course for provided id.", 404);
 
-    res.status(200).json({ course: updatedCourse });
+        return next(error);
+    }
+
+    let user;
+    if (participants.length > 0) {
+        try {
+            user = await User.findById(participants);
+        } catch (err) {
+            const error = new HttpError(
+                "Something went wrong, could not find user.",
+                500
+            );
+            return next(error);
+        }
+
+        if (!user) {
+            const error = new HttpError("Could not find user for provided id.", 404);
+            return next(error);
+        }
+    }
+
+    course.participants = participants;
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await course.save({ session: session });
+
+        for await (const id of participants) {
+            const userRelatedToCourse = await User.findById(id);
+            userRelatedToCourse.courses.push(course);
+            await userRelatedToCourse.save({ session: session });
+            console.log(userRelatedToCourse.moodleID);
+        }
+
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Updating course failed, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+
+    // res.status(200).json({ course: updatedCourse });
+    res.json({ course: course });
 };
 
-const adminDeleteCourse = (req, res, next) => {
-    const courseID = req.body;
-    if (!DUMMY_COURSES.find((c) => c.courseID === courseID)) {
-        throw new HttpError("Could not find a course for that id.", 404);
+const adminRemovesFromCourse = async(req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new HttpError("Invalid inputs passed, please check your data.", 422);
     }
-    DUMMY_COURSES = DUMMY_COURSES.filter((c) => c.courseID !== courseID);
-    res.status(200).json({ message: "Deleted course." });
+
+    const { courseId, participants } = req.body;
+    const cid = req.params.courseID;
+
+    let course;
+    try {
+        course = await Course.findById(cid);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find course.",
+            500
+        );
+        return next(error);
+    }
+
+    if (!course) {
+        const error = new HttpError("Could not find course for provided id.", 404);
+
+        return next(error);
+    }
+
+    let user;
+    if (participants.length > 0) {
+        try {
+            user = await User.findById(participants);
+        } catch (err) {
+            const error = new HttpError(
+                "Something went wrong, could not find user.",
+                500
+            );
+            return next(error);
+        }
+
+        if (!user) {
+            const error = new HttpError("Could not find user for provided id.", 404);
+            return next(error);
+        }
+    }
+
+    for (var i = 0, len = course.participants.length; i < len; i++) {
+        for (var j in participants) {
+            if (course.participants[i] === j) {
+                course.participants.splice(i, 1);
+                console.log(course.participants);
+
+            }
+        }
+    }
+    console.log(course.participants);
+    // try {
+    //     const session = await mongoose.startSession();
+    //     session.startTransaction();
+    //     await course.remove({ session: session });
+    //     for await (const userToRemove of course.participants) {
+    //         userToRemove.courses.remove(course);
+    //         await userToRemove.save({ session: session });
+    //     }
+    //     await session.commitTransaction();
+    // } catch (err) {
+    //     const error = new HttpError(
+    //         "Deleting from course failed, please try again.",
+    //         500
+    //     );
+    //     console.log(err);
+    //     return next(error);
+    // }
+
+    res.json({ course: course });
+};
+
+const adminDeleteCourse = async(req, res, next) => {
+    const courseID = req.params.courseID;
+    let course;
+    try {
+        course = await Course.findById(courseID).populate("participants");
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find course.",
+            500
+        );
+        return next(error);
+    }
+    if (!course) {
+        const error = new HttpError("Could not find course for provided id.", 404);
+        return next(error);
+    }
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await course.remove({ session: session });
+        for await (const user of course.participants) {
+            user.courses.pull(course);
+            await user.save({ session: session });
+        }
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not delete course.",
+            500
+        );
+        return next(error);
+    }
+
+    res.status(200).json({ message: "Course deleted successfully." });
 };
 
 const getCoursesList = async(req, res, next) => {
@@ -158,13 +307,10 @@ const getCoursesList = async(req, res, next) => {
         return next(error);
     }
     if (!courses) {
-        const error = new HttpError(
-            "Could not find courses.",
-            404
-        );
+        const error = new HttpError("Could not find courses.", 404);
         return next(error);
     }
-    res.json({ courses });
+    res.json({ courses: courses });
     // res.json({ message: "Get all courses!" });
 };
 
@@ -184,7 +330,7 @@ const adminCreateUser = async(req, res, next) => {
         address,
         accessTime,
         role,
-        courses
+        courses,
     } = req.body;
 
     const createdUser = new User({
@@ -197,7 +343,7 @@ const adminCreateUser = async(req, res, next) => {
         address,
         accessTime,
         role,
-        courses
+        courses,
     });
 
     try {
@@ -227,3 +373,4 @@ exports.adminCreateUser = adminCreateUser;
 exports.getUsersList = getUsersList;
 exports.adminEditUser = adminEditUser;
 exports.adminDeleteUser = adminDeleteUser;
+exports.adminRemovesFromCourse = adminRemovesFromCourse;

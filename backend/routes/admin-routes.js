@@ -26,6 +26,8 @@ router.patch('/edit/user/:userID', adminController.adminEditUser); // => localho
 
 router.delete('/delete/:userID', adminController.adminDeleteUser); // => localhost:5000/admin/delete-user to delete a user
 
+router.patch('/removeUser/course/:courseID', adminController.adminRemovesFromCourse); // => localhost:5000/admin/delete-all to delete user from course
+
 
 
 

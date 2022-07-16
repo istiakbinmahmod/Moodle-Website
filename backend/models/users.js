@@ -14,7 +14,7 @@ const userSchema = new Schema({
     address: { type: String, required: false },
     accessTime: { type: String, required: false },
     role: { type: String, required: true },
-    courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }]
+    courses: [{ type: mongoose.Types.ObjectId, ref: 'Course' }]
 });
 
 userSchema.plugin(uniqueValidator);

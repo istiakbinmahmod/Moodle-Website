@@ -11,7 +11,7 @@ const courseSchema = new Schema({
     courseCreditHour: { type: Number, required: true },
     startDate: { type: String, required: false },
     endDate: { type: String, required: false },
-    participants: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    participants: [{ type: mongoose.Types.ObjectId, ref: 'User' }]
 
 
 });
