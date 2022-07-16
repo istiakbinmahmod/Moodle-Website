@@ -156,7 +156,7 @@ const adminEditCourse = async(req, res, next) => {
         }
     }
 
-    course.participants = participants;
+    course.participants.push(participants);
 
     try {
         const session = await mongoose.startSession();
@@ -190,7 +190,7 @@ const adminRemovesFromCourse = async(req, res, next) => {
         throw new HttpError("Invalid inputs passed, please check your data.", 422);
     }
 
-    const { courseId, participants } = req.body;
+    const { participants } = req.body;
     const cid = req.params.courseID;
 
     let course;
@@ -228,36 +228,28 @@ const adminRemovesFromCourse = async(req, res, next) => {
         }
     }
 
-    for (var i = 0, len = course.participants.length; i < len; i++) {
-        for (var j in participants) {
-            if (course.participants[i] === j) {
-                course.participants.splice(i, 1);
-                console.log(course.participants);
 
-            }
-        }
+
+    try {
+        course.participants.pull(participants);
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await course.save({ session: session });
+        user.courses.pull(course);
+        await user.save({ session: session });
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Deleting from course failed, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
     }
-    console.log(course.participants);
-    // try {
-    //     const session = await mongoose.startSession();
-    //     session.startTransaction();
-    //     await course.remove({ session: session });
-    //     for await (const userToRemove of course.participants) {
-    //         userToRemove.courses.remove(course);
-    //         await userToRemove.save({ session: session });
-    //     }
-    //     await session.commitTransaction();
-    // } catch (err) {
-    //     const error = new HttpError(
-    //         "Deleting from course failed, please try again.",
-    //         500
-    //     );
-    //     console.log(err);
-    //     return next(error);
-    // }
 
     res.json({ course: course });
 };
+
 
 const adminDeleteCourse = async(req, res, next) => {
     const courseID = req.params.courseID;
@@ -357,11 +349,65 @@ const adminCreateUser = async(req, res, next) => {
     res.status(201).json({ user: createdUser });
 };
 
-const getUsersList = (req, res, next) => {};
+const getUsersList = async(req, res, next) => {
+    let users;
+    try {
+        users = await User.find();
+    } catch (err) {
+        const error = new HttpError(
+            "Failed to fetch users, please try again.",
+            500
+        );
+        return next(error);
+    }
+    if (!users) {
+        const error = new HttpError("Could not find users.", 404);
+        return next(error);
+    }
+    res.json({ users: users });
+    // res.json({ message: "Get all users!" });
+};
 
 const adminEditUser = (req, res, next) => {};
 
-const adminDeleteUser = (req, res, next) => {};
+const adminDeleteUser = async(req, res, next) => {
+    // const courseID = req.params.courseID;
+    const userID = req.params.userID;
+    // let course;
+    let user;
+    try {
+        // course = await Course.findById(courseID).populate("participants");
+        user = await User.findById(userID).populate("courses");
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find course.",
+            500
+        );
+        return next(error);
+    }
+    if (!user) {
+        const error = new HttpError("Could not find user for provided id.", 404);
+        return next(error);
+    }
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await user.remove({ session: session });
+        for await (const course of user.courses) {
+            course.participants.pull(user);
+            await course.save({ session: session });
+        }
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not delete course.",
+            500
+        );
+        return next(error);
+    }
+
+    res.status(200).json({ message: "User deleted successfully." });
+};
 
 exports.getAdmin = getAdmin;
 exports.adminLogin = adminLogin;

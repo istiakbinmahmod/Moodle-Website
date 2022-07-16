@@ -24,7 +24,7 @@ router.get('/get/users', adminController.getUsersList); // => localhost:5000/adm
 
 router.patch('/edit/user/:userID', adminController.adminEditUser); // => localhost:5000/admin/edit-user to edit a user (only the name and email)
 
-router.delete('/delete/:userID', adminController.adminDeleteUser); // => localhost:5000/admin/delete-user to delete a user
+router.delete('/delete/user/:userID', adminController.adminDeleteUser); // => localhost:5000/admin/delete-user to delete a user
 
 router.patch('/removeUser/course/:courseID', adminController.adminRemovesFromCourse); // => localhost:5000/admin/delete-all to delete user from course
 
