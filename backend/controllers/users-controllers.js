@@ -37,19 +37,8 @@ const getCoursesByUserId = async(req, res, next) => {
     if (!user) {
         console.log(err);
         return next(new HttpError('Could not find a user for this id.', 404));
-        //throw new HttpError("Could not find a user for this id.", 404);
     }
-    // let coursesOfUser = [];
-    // for (let i = 0; i < user.courses.length; i++) {
-    //     const course = await Course.findById(user.courses[i]);
-    //     if (!course) {
-    //         console.log(err);
-    //         return next(new HttpError('Could not find a course for this id.', 404));
-    //         // throw new HttpError("Could not find a course for this id.", 404);
-    //     }
-    //     coursesOfUser.push(course);
-    // }
-    // res.json({ coursesOfUser });
+
     let coursesOfUser;
     try {
         coursesOfUser = await User.findById(userId).populate('courses');

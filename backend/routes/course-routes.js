@@ -38,4 +38,8 @@ router.patch(
 
 router.delete('/:courseID', adminControllers.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
 
+router.get('/get/courses/:sessionID', coursesControllers.getCourseBySessionID); // => localhost:5000/admin/get-course to get a course
+
+
+
 module.exports = router;
