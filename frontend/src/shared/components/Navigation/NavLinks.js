@@ -41,7 +41,7 @@ const NavLinks = (props) => {
       )}
       {auth.isLoggedIn && (
         <li>
-          <NavLink to="/api/admin/create/user">EDIT COURSE</NavLink>
+          <NavLink to="/api/admin/edit-course">EDIT COURSE</NavLink>
         </li>
       )}
       {!auth.isLoggedIn && (

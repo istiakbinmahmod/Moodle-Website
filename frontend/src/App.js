@@ -48,6 +48,9 @@ const App = () => {
         <Route path="/api/admin/delete-course" exact>
           <NewCourse />
         </Route>
+        <Route path="/api/admin/edit-course" exact>
+          <NewCourse />
+        </Route>
         <Route path="/places/:placeId">
           <UpdatePlace />
         </Route>
