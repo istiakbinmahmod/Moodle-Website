@@ -21,9 +21,10 @@ const SessionList = (props) => {
       {props.items.map((session_item) => (
         <SessionItem
           key={session_item.session_id}
-          session_id={session_item.session_id}
-          start_date={session_item.start_date}
-          end_date={session_item.end_date}
+          sessionID={session_item.sessionID}
+          startDate={session_item.startDate}
+          endDate={session_item.endDate}
+          courses={session_item.courses}
         />
       ))}
     </ul>

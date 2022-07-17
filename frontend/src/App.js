@@ -18,6 +18,7 @@ import Courses from "./courses/pages/Courses";
 import NewUser from "./user/pages/NewUser";
 import DeleteCourse from "./courses/pages/DeleteCourse";
 import Sessions from "./sessions/pages/Sessions";
+import NewSession from "./sessions/pages/NewSession";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -49,6 +50,9 @@ const App = () => {
         </Route>
         <Route path="/api/admin/create-course" exact>
           <NewCourse />
+        </Route>
+        <Route path="/api/admin/create-session" exact>
+          <NewSession />
         </Route>
         <Route path="/api/admin/delete-course" exact>
           <DeleteCourse />

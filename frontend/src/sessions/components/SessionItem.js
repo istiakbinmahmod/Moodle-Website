@@ -15,17 +15,32 @@ const SessionItem = (props) => {
             <Avatar image={props.image} alt={props.name} />
           </div> */}
           <div className="session-item__info">
-            <h2>{props.session_id}</h2>
-            <h3>
+            <h2>
+              {"Session ID : "}
+              {props.sessionID}
+            </h2>
+            <h2>
+              {"Start Date : "}
+              {props.startDate}
+            </h2>
+            <h2>
+              {"End Date : "}
+              {props.endDate}
+            </h2>
+            <h2>
+              {"Courses : "}
+              {props.courses}
+            </h2>
+            {/* <h3>
               {"Start Date : "}
               {props.start_date}
-              {/* {props.credit_hour === 1 ? "Credit Hour" : "Credit Hours"} */}
+              {props.credit_hour === 1 ? "Credit Hour" : "Credit Hours"}
             </h3>
             <h3>
               {"End Date : "}
               {props.end_date}
-              {/* {props.credit_hour === 1 ? "Credit Hour" : "Credit Hours"} */}
-            </h3>
+              {props.credit_hour === 1 ? "Credit Hour" : "Credit Hours"}
+            </h3> */}
           </div>
         </Link>
         {/* <Link to={`/${props.id}/places`}>
