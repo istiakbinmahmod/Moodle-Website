@@ -31,6 +31,12 @@ const SessionItem = (props) => {
               {"Courses : "}
               {props.courses}
             </h2>
+            {/* {props.courses.map((course) => (
+              <h2>
+                {"Course : siuu"}
+                {course.courseID}
+              </h2>
+            ))} */}
             {/* <h3>
               {"Start Date : "}
               {props.start_date}

@@ -19,19 +19,38 @@ const Sessions = () => {
 
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedSessions, setLoadedSessions] = useState();
+  // const [loadedSessionsWithCourses, setLoadedSessionsWithCourses] = useState();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchSessions = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:5000/sessions"
+          "http://localhost:5000/api/admin/get/sessions"
         );
 
-        setLoadedUsers(responseData.users);
+        setLoadedSessions(responseData.sessions);
+        // setLoadedSessionsWithCourses(responseData.sessionsWithCourses);
       } catch (err) {}
     };
-    fetchUsers();
+    fetchSessions();
   }, [sendRequest]);
+
+  return (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && (
+        <div className="center">
+          <LoadingSpinner asOverlay />
+        </div>
+      )}
+      {!isLoading && loadedSessions && (
+        <SessionList
+          items={loadedSessions}
+          // items_crs={loadedSessionsWithCourses}
+        />
+      )}
+    </React.Fragment>
+  );
 };
 
 export default Sessions;

@@ -15,7 +15,7 @@ const NavLinks = (props) => {
         </NavLink>
       </li>
       <li>
-        <NavLink to="/sessions" exact>
+        <NavLink to="/get/sessions" exact>
           ALL SESSIONS
         </NavLink>
       </li>
