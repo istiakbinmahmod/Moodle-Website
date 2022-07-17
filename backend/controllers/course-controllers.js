@@ -7,7 +7,7 @@ const Session = require("../models/sessions");
 
 const getCoursesList = async (req, res, next) => {
   const courses = await Course.find();
-
+  //ghhthjj
   res.json({
     courses: courses.map((course) => course.toObject({ getters: true })),
   });
