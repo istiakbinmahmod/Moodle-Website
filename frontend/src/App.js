@@ -16,6 +16,8 @@ import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
 import Courses from "./courses/pages/Courses";
 import NewUser from "./user/pages/NewUser";
+import DeleteCourse from "./courses/pages/DeleteCourse";
+import Sessions from "./sessions/pages/Sessions";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,6 +38,9 @@ const App = () => {
         <Route path="/" exact>
           <Courses />
         </Route>
+        <Route path="/sessions" exact>
+          <Sessions />
+        </Route>
         <Route path="/api/admin/create/user" exact>
           <NewUser />
         </Route>
@@ -46,12 +51,18 @@ const App = () => {
           <NewCourse />
         </Route>
         <Route path="/api/admin/delete-course" exact>
-          <NewCourse />
+          <DeleteCourse />
         </Route>
         <Route path="/api/admin/edit-course" exact>
           <NewCourse />
         </Route>
         <Route path="/places/:placeId">
+          <UpdatePlace />
+        </Route>
+        <Route path="/courses/:courseId">
+          <UpdatePlace />
+        </Route>
+        <Route path="/sessions/:sessionId">
           <UpdatePlace />
         </Route>
         <Redirect to="/" />
@@ -62,6 +73,9 @@ const App = () => {
       <Switch>
         <Route path="/" exact>
           <Courses />
+        </Route>
+        <Route path="/sessions" exact>
+          <Sessions />
         </Route>
         <Route path="/:userId/places" exact>
           <UserPlaces />

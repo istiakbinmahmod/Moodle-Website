@@ -12,11 +12,23 @@ import "./UserForm.css";
 const NewUser = () => {
   const [formState, inputHandler] = useForm(
     {
-      title: {
+      moodle_id: {
         value: "",
         isValid: false,
       },
-      description: {
+      user_name: {
+        value: "",
+        isValid: false,
+      },
+      email_id: {
+        value: "",
+        isValid: false,
+      },
+      phone_num: {
+        value: "",
+        isValid: false,
+      },
+      date_of_birth: {
         value: "",
         isValid: false,
       },
@@ -24,6 +36,26 @@ const NewUser = () => {
         value: "",
         isValid: false,
       },
+      password: {
+        value: "",
+        isValid: false,
+      },
+      role: {
+        value: "",
+        isValid: false,
+      },
+      // title: {
+      //   value: "",
+      //   isValid: false,
+      // },
+      // description: {
+      //   value: "",
+      //   isValid: false,
+      // },
+      // address: {
+      //   value: "",
+      //   isValid: false,
+      // },
     },
     false
   );
@@ -36,82 +68,73 @@ const NewUser = () => {
   return (
     <form className="user-form" onSubmit={userSubmitHandler}>
       <Input
-        id="moodleid"
+        id="moodle_id"
         element="input"
         type="text"
-        label="MoodleID"
+        label="Moodle ID"
         validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
+        errorText="Please enter a valid id."
         onInput={inputHandler}
       />
       <Input
-        id="username"
-        element="input"
-        type="text"
-        label="UserName"
-        validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
-        onInput={inputHandler}
-      />
-      <Input
-        id="title"
+        id="user_name"
         element="input"
         type="text"
         label="User Name"
         validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
+        errorText="Please enter a valid name."
         onInput={inputHandler}
       />
       <Input
-        id="title"
+        id="email_id"
         element="input"
-        type="text"
-        label="User Name"
+        type="email"
+        label="Email ID"
         validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
+        errorText="Please enter a valid email."
         onInput={inputHandler}
       />
       <Input
-        id="title"
+        id="phone_num"
         element="input"
         type="text"
-        label="User Name"
+        label="Phone Number"
         validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
+        errorText="Please enter a valid phone number."
         onInput={inputHandler}
       />
       <Input
-        id="title"
+        id="date_of_birth"
         element="input"
         type="text"
-        label="User Name"
+        label="Date of Birth"
         validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
+        errorText="Please enter a valid date of birth."
         onInput={inputHandler}
       />
       <Input
-        id="title"
+        id="address"
         element="input"
         type="text"
-        label="User Name"
+        label="Address"
         validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
+        errorText="Please enter a valid address."
         onInput={inputHandler}
       />
       <Input
-        id="title"
+        id="password"
         element="input"
-        type="text"
-        label="User Name"
+        type="password"
+        label="Password"
         validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
+        errorText="Please enter a valid password."
         onInput={inputHandler}
       />
       <Input
-        id="title"
+        id="role"
         element="input"
         type="text"
-        label="User Name"
+        label="Role"
         validators={[VALIDATOR_REQUIRE()]}
         errorText="Please enter a valid title."
         onInput={inputHandler}

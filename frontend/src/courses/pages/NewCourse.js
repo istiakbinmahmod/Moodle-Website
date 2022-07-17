@@ -12,18 +12,30 @@ import "./CourseForm.css";
 const NewCourse = () => {
   const [formState, inputHandler] = useForm(
     {
-      title: {
+      course_id: {
         value: "",
         isValid: false,
       },
-      description: {
+      course_title: {
         value: "",
         isValid: false,
       },
-      address: {
+      credit_hour: {
         value: "",
         isValid: false,
       },
+      // title: {
+      //   value: "",
+      //   isValid: false,
+      // },
+      // description: {
+      //   value: "",
+      //   isValid: false,
+      // },
+      // address: {
+      //   value: "",
+      //   isValid: false,
+      // },
     },
     false
   );
@@ -36,15 +48,35 @@ const NewCourse = () => {
   return (
     <form className="course-form" onSubmit={courseSubmitHandler}>
       <Input
-        id="title"
+        id="course_id"
         element="input"
         type="text"
-        label="Title"
+        label="Course ID"
+        validators={[VALIDATOR_REQUIRE()]}
+        errorText="Please enter a valid course id."
+        onInput={inputHandler}
+      />
+
+      <Input
+        id="course_title"
+        element="input"
+        type="text"
+        label="Course Title"
         validators={[VALIDATOR_REQUIRE()]}
         errorText="Please enter a valid title."
         onInput={inputHandler}
       />
+
       <Input
+        id="credit_hour"
+        element="input"
+        type="text"
+        label="Credit Hour"
+        validators={[VALIDATOR_REQUIRE()]}
+        errorText="Please enter a valid course hour."
+        onInput={inputHandler}
+      />
+      {/* <Input
         id="description"
         element="textarea"
         label="Description"
@@ -59,7 +91,7 @@ const NewCourse = () => {
         validators={[VALIDATOR_REQUIRE()]}
         errorText="Please enter a valid address."
         onInput={inputHandler}
-      />
+      /> */}
       <Button type="submit" disabled={!formState.isValid}>
         ADD COURSE
       </Button>

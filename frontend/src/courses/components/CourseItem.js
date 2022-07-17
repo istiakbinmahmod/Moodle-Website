@@ -9,7 +9,20 @@ const CourseItem = (props) => {
   return (
     <li className="course-item">
       <Card className="course-item__content">
-        <Link to={`/${props.id}/places`}>
+        <Link to={`/courses/${props.course_id}`}>
+          {/* <Link to={`/${props.course_ud}/places`}> */}
+          {/* <div className="course-item__image">
+            <Avatar image={props.image} alt={props.name} />
+          </div> */}
+          <div className="course-item__info">
+            <h2>{props.course_title}</h2>
+            <h3>
+              {props.credit_hour}{" "}
+              {props.credit_hour === 1 ? "Credit Hour" : "Credit Hours"}
+            </h3>
+          </div>
+        </Link>
+        {/* <Link to={`/${props.id}/places`}>
           <div className="course-item__image">
             <Avatar image={props.image} alt={props.name} />
           </div>
@@ -19,7 +32,7 @@ const CourseItem = (props) => {
               {props.placeCount} {props.placeCount === 1 ? "Place" : "Places"}
             </h3>
           </div>
-        </Link>
+        </Link> */}
       </Card>
     </li>
   );

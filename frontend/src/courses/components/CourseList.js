@@ -19,11 +19,15 @@ const CourseList = (props) => {
     <ul className="courses-list">
       {props.items.map((user) => (
         <CourseItem
-          key={user.id}
-          id={user.id}
-          image={user.image}
-          name={user.name}
-          placeCount={user.places}
+          key={user.course_id}
+          course_id={user.course_id}
+          course_title={user.course_title}
+          credit_hour={user.credit_hour}
+          // key={user.id}
+          // id={user.id}
+          // image={user.image}
+          // name={user.name}
+          // placeCount={user.places}
         />
       ))}
     </ul>

@@ -14,6 +14,11 @@ const NavLinks = (props) => {
           ALL COURSES
         </NavLink>
       </li>
+      <li>
+        <NavLink to="/sessions" exact>
+          ALL SESSIONS
+        </NavLink>
+      </li>
       {/* {auth.isLoggedIn && (
         <li>
           <NavLink to="/u1/places">CREATE USER</NavLink>
