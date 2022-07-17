@@ -14,24 +14,12 @@ const Courses = () => {
   //   },
   const COURSES = [
     {
-      course_id: "405",
-      course_title: "Computer Security",
-      credit_hour: 3,
-    },
-    {
-      course_id: "406",
-      course_title: "Computer Security Sessional",
-      credit_hour: 3,
-    },
-    {
-      course_id: "409",
-      course_title: "Computer Graphics",
-      credit_hour: 3,
-    },
-    {
-      course_id: "410",
-      course_title: "Computer Graphics Sessional",
-      credit_hour: 3,
+      courseID: "CSE 405",
+      sessionID: "Jan 2020",
+      courseTitle: "Computer Security",
+      courseDescription: "Computer Security",
+      courseCreditHour: 3,
+      participants: [],
     },
   ];
 

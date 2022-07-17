@@ -16,6 +16,17 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+
+  next();
+});
+
 app.use("/api/users", usersRoutes);
 app.use("/api/admin", adminRoutes); // => //this one is for admin-routes.js
 app.use("/api/courses", coursesRoutes); // => //this one is for course-routes.js
@@ -34,8 +45,8 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error occurred!" });
 });
 
-router.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname+'index.html'));
+router.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname + "index.html"));
 });
 
 // app.use('/', router);

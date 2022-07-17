@@ -41,6 +41,11 @@ const NavLinks = (props) => {
       )}
       {auth.isLoggedIn && (
         <li>
+          <NavLink to="/api/admin/create-session">CREATE SESSION</NavLink>
+        </li>
+      )}
+      {auth.isLoggedIn && (
+        <li>
           <NavLink to="/api/admin/delete-course">DELETE COURSE</NavLink>
         </li>
       )}
