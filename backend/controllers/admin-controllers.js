@@ -361,7 +361,7 @@ const adminCreateUser = async(req, res, next) => {
 const getUsersList = async(req, res, next) => {
     let users;
     try {
-        users = await User.find();
+        users = await User.find({}, '-password');
     } catch (err) {
         const error = new HttpError(
             "Failed to fetch users, please try again.",
@@ -373,7 +373,7 @@ const getUsersList = async(req, res, next) => {
         const error = new HttpError("Could not find users.", 404);
         return next(error);
     }
-    res.json({ users: users });
+    res.json({ users: users.map((user => user.toObject({ getters: true }))) });
 };
 
 const adminEditUser = (req, res, next) => {};
@@ -465,6 +465,31 @@ const adminDeleteSession = async(req, res, next) => { // Delete session
 }
 
 const adminGetSessionList = async(req, res, next) => { // Get session list
+    let sessions;
+    try {
+        sessions = await Session.find();
+    } catch (err) {
+        const error = new HttpError(
+            "Failed to fetch sessions, please try again.",
+            500
+        );
+        return next(error);
+    }
+    if (!sessions) {
+        const error = new HttpError("Could not find sessions.", 404);
+        return next(error);
+    }
+    res.json({ sessions: sessions });
+}
+
+const adminGetSessionBySessionID = async(req, res, next) => { // Get session by sessionID
+    const sessionID = req.params.sessionID;
+    const session = await Session.findOne({ sessionID });
+    if (!session) {
+        const error = new HttpError("Could not find session.", 404);
+        return next(error);
+    }
+    res.json({ session: session });
 }
 
 exports.getAdmin = getAdmin;
@@ -482,3 +507,4 @@ exports.adminCreateSession = adminCreateSession;
 exports.adminDeleteSession = adminDeleteSession;
 exports.adminGetSessionList = adminGetSessionList;
 exports.adminEditSession = adminEditSession;
+exports.adminGetSessionBySessionID = adminGetSessionBySessionID;
