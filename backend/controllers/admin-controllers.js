@@ -267,6 +267,7 @@ const adminDeleteCourse = async(req, res, next) => {
     let course;
     try {
         course = await Course.findById(courseID).populate("participants");
+        sess = await Session.findById(course.sessionID);
     } catch (err) {
         const error = new HttpError(
             "Something went wrong, could not find course.",
@@ -286,6 +287,8 @@ const adminDeleteCourse = async(req, res, next) => {
             user.courses.pull(course);
             await user.save({ session: session });
         }
+        sess.courses.pull(course);
+        await sess.save({ session: session });
         await session.commitTransaction();
     } catch (err) {
         const error = new HttpError(
