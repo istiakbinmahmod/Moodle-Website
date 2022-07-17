@@ -39,18 +39,28 @@ const getCoursesByUserId = async(req, res, next) => {
         return next(new HttpError('Could not find a user for this id.', 404));
         //throw new HttpError("Could not find a user for this id.", 404);
     }
-    let coursesOfUser = [];
-    for (let i = 0; i < user.courses.length; i++) {
-        const course = await Course.findById(user.courses[i]);
-        if (!course) {
-            console.log(err);
-            return next(new HttpError('Could not find a course for this id.', 404));
-            // throw new HttpError("Could not find a course for this id.", 404);
-        }
-        coursesOfUser.push(course);
+    // let coursesOfUser = [];
+    // for (let i = 0; i < user.courses.length; i++) {
+    //     const course = await Course.findById(user.courses[i]);
+    //     if (!course) {
+    //         console.log(err);
+    //         return next(new HttpError('Could not find a course for this id.', 404));
+    //         // throw new HttpError("Could not find a course for this id.", 404);
+    //     }
+    //     coursesOfUser.push(course);
+    // }
+    // res.json({ coursesOfUser });
+    let coursesOfUser;
+    try {
+        coursesOfUser = await User.findById(userId).populate('courses');
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Something went wrong, could not get courses.', 500));
     }
-    res.json({ coursesOfUser });
-
+    if (!coursesOfUser || coursesOfUser.length === 0) {
+        return next(new HttpError('Could not get courses, no courses found.', 404));
+    }
+    res.json({ courses: coursesOfUser.courses.map(course => course.toObject({ getters: true })) });
 }
 
 
