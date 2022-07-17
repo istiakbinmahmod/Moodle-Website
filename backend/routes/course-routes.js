@@ -40,6 +40,6 @@ router.delete('/:courseID', adminControllers.adminDeleteCourse); // => localhost
 
 router.get('/get/courses/:sessionID', coursesControllers.getCourseBySessionID); // => localhost:5000/admin/get-course to get a course
 
-
+router.get('get/session/:sessionID', coursesControllers.getSessionNameBySessionId); // => localhost:5000/admin/get-sessions to get all the sessions
 
 module.exports = router;

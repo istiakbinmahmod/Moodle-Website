@@ -91,7 +91,20 @@ const getCourseBySessionID = async(req, res, next) => {
     res.json({ courses: courseOfSession.courses.toObject({ getters: true }) });
 };
 
+const getSessionNameBySessionId = async(req, res, next) => {
+    const sessionID = req.params.sessionID;
+    const session = await Session.findById(sessionID);
+    if (!session) {
+        console.log(err);
+        return next(new HttpError("Could not find a session for this id.", 404));
+    }
+    const sessionName = session.sessionID;
+    res.json({ sessionName });
+}
+
+
 exports.getCourseById = getCourseById;
 exports.getCoursesList = getCoursesList;
 exports.getUsersByCourseId = getUsersByCourseId;
 exports.getCourseBySessionID = getCourseBySessionID;
+exports.getSessionNameBySessionId = getSessionNameBySessionId;
