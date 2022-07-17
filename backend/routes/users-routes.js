@@ -5,7 +5,7 @@ const usersController = require('../controllers/users-controllers');
 
 const router = express.Router();
 
-router.get('/', usersController.getUsers);
+router.get('/:uid', usersController.getUserById);
 router.post('/login', usersController.login);
 router.get('/:uid/courses', usersController.getCoursesByUserId); // => localhost:5000/users/:uid/courses to show all the courses he/she's enrolled in
 

@@ -12,6 +12,8 @@ router.get('/', coursesControllers.getCoursesList); // => localhost:5000/courses
 
 router.get('/:courseID', coursesControllers.getCourseById); // => localhost:5000/courses/:courseID to show a course by its ID
 
+router.get('/:courseID/users', coursesControllers.getUsersByCourseId); // => localhost:5000/courses/:courseID/users to show all the users enrolled in a course
+
 router.post(
     '/', [
         check('courseID').not().isEmpty(),
