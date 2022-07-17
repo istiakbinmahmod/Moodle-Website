@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import Avatar from "../../shared/components/UIElements/Avatar";
 import Card from "../../shared/components/UIElements/Card";
+import "../../shared/components/Navigation/NavLinks.css";
 import "./SessionItem.css";
 
 const SessionItem = (props) => {
@@ -27,10 +28,20 @@ const SessionItem = (props) => {
               {"End Date : "}
               {props.endDate}
             </h2>
-            <h2>
+            <ul className="nav-links">
+              <li>
+                <NavLink to={`/get/courses/${props.sessionID}`} exact>
+                  SEE ALL COURSES
+                </NavLink>
+              </li>
+            </ul>
+            {/* <NavLink to="/" exact>
+              SEE ALL COURSES
+            </NavLink> */}
+            {/* <h2>
               {"Courses : "}
               {props.courses}
-            </h2>
+            </h2> */}
             {/* {props.courses.map((course) => (
               <h2>
                 {"Course : siuu"}

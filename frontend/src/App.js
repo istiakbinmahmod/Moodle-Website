@@ -42,6 +42,15 @@ const App = () => {
         <Route path="/get/sessions" exact>
           <Sessions />
         </Route>
+        <Route path="/get/sessions" exact>
+          <Sessions />
+        </Route>
+        <Route path="/get/courses/:sessionId">
+          <UpdatePlace />
+        </Route>
+        <Route path="/sessions/:sessionId">
+          <UpdatePlace />
+        </Route>
         <Route path="/api/admin/create/user" exact>
           <NewUser />
         </Route>
@@ -69,6 +78,7 @@ const App = () => {
         <Route path="/sessions/:sessionId">
           <UpdatePlace />
         </Route>
+
         <Redirect to="/" />
       </Switch>
     );

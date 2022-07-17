@@ -1,29 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import CourseList from "../components/CourseList";
-// import UsersList from '../components/UsersList';
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const Courses = () => {
-  // const COURSES = [
-  //   {
-  //     id: "410",
-  //     name: "Computer Graphics Sessional",
-  //     image:
-  //       "https://images.pexels.com/photos/839011/pexels-photo-839011.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  //     places: 3,
-  //   },
-  const COURSES = [
-    {
-      courseID: "CSE 405",
-      sessionID: "Jan 2020",
-      courseTitle: "Computer Security",
-      courseDescription: "Computer Security",
-      courseCreditHour: 3,
-      participants: [],
-    },
-  ];
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [loadedCourses, setLoadedCourses] = useState();
 
-  return <CourseList items={COURSES} />;
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const responseData = await sendRequest(
+          "http://localhost:5000/api/courses"
+        );
+
+        setLoadedCourses(responseData.courses);
+      } catch (err) {}
+    };
+    fetchCourses();
+  }, [sendRequest]);
+
+  return (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && (
+        <div className="center">
+          <LoadingSpinner />
+        </div>
+      )}
+      {!isLoading && loadedCourses && <CourseList items={loadedCourses} />}
+    </React.Fragment>
+  );
+
+  // return <CourseList items={COURSES} />;
 };
 
 export default Courses;
