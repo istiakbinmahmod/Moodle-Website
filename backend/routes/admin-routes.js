@@ -32,6 +32,10 @@ router.post('/create-session', adminController.adminCreateSession); // => localh
 
 router.delete('/delete/session/:sessionID', adminController.adminDeleteSession); // => localhost:5000/admin/delete-session to delete a session
 
+router.get('/get/sessions', adminController.adminGetSessionList); // => localhost:5000/admin/get-sessions to get all the sessions
+
+router.get('/get/session/:sessionID', adminController.adminGetSessionBySessionID); // => localhost:5000/admin/get-session to get a session
+
 
 
 
