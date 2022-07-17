@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const HttpError = require("../models/http-error");
 const Course = require("../models/courses");
 const User = require("../models/users");
+const Session = require("../models/sessions");
 
 //const DUMMY_COURSES = require("./course-controllers").DUMMY_COURSES; // this is to get the dummy courses from the course-controllers.js
 
@@ -75,6 +76,19 @@ const adminCreateCourse = async(req, res, next) => {
         }
     }
 
+    let sessionRelatedToCourse;
+
+    try {
+        sessionRelatedToCourse = await Session.findById(sessionID);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find session.",
+            500
+        );
+        return next(error);
+    }
+
+
     const createdCourse = await Course.create({
         sessionID,
         courseID,
@@ -98,6 +112,8 @@ const adminCreateCourse = async(req, res, next) => {
             console.log(userRelatedToCourse.moodleID);
         }
 
+        sessionRelatedToCourse.courses.push(createdCourse);
+        await sessionRelatedToCourse.save({ session: session });
         await session.commitTransaction();
     } catch (err) {
         const error = new HttpError(
@@ -117,7 +133,7 @@ const adminEditCourse = async(req, res, next) => {
         throw new HttpError("Invalid inputs passed, please check your data.", 422);
     }
 
-    const { courseId, participants } = req.body;
+    const { participants } = req.body;
     const cid = req.params.courseID;
 
     let course;
@@ -400,6 +416,54 @@ const adminDeleteUser = async(req, res, next) => {
     res.status(200).json({ message: "User deleted successfully." });
 };
 
+const adminEditSession = async(req, res, next) => { // Create session
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new HttpError("Invalid inputs passed, please check your data.", 422);
+    }
+
+}
+
+const adminCreateSession = async(req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(
+            new HttpError("Invalid inputs passed, please check your data.", 422)
+        );
+    }
+
+    const {
+        sessionID,
+        courses
+    } = req.body;
+
+    const createdSession = await Session.create({
+        sessionID,
+        courses
+    });
+
+    try {
+        await createdSession.save();
+    } catch (err) {
+        const error = new HttpError(
+            "Creating Session failed, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+
+    res.json({ session: createdSession });
+};
+
+const adminDeleteSession = async(req, res, next) => { // Delete session
+
+
+}
+
+const adminGetSessionList = async(req, res, next) => { // Get session list
+}
+
 exports.getAdmin = getAdmin;
 exports.adminLogin = adminLogin;
 exports.getCoursesList = getCoursesList;
@@ -411,3 +475,7 @@ exports.getUsersList = getUsersList;
 exports.adminEditUser = adminEditUser;
 exports.adminDeleteUser = adminDeleteUser;
 exports.adminRemovesFromCourse = adminRemovesFromCourse;
+exports.adminCreateSession = adminCreateSession;
+exports.adminDeleteSession = adminDeleteSession;
+exports.adminGetSessionList = adminGetSessionList;
+exports.adminEditSession = adminEditSession;
