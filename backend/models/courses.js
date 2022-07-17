@@ -9,8 +9,6 @@ const courseSchema = new Schema({
     courseTitle: { type: String, required: true },
     courseDescription: { type: String, required: false },
     courseCreditHour: { type: Number, required: true },
-    startDate: { type: String, required: false },
-    endDate: { type: String, required: false },
     participants: [{ type: mongoose.Types.ObjectId, ref: 'User' }]
 });
 

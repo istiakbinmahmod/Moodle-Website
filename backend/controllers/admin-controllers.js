@@ -52,8 +52,6 @@ const adminCreateCourse = async(req, res, next) => {
         courseTitle,
         courseDescription,
         courseCreditHour,
-        startDate,
-        endDate,
         participants,
     } = req.body;
 
@@ -95,8 +93,6 @@ const adminCreateCourse = async(req, res, next) => {
         courseTitle,
         courseDescription,
         courseCreditHour,
-        startDate,
-        endDate,
         participants,
     });
 
@@ -437,11 +433,15 @@ const adminCreateSession = async(req, res, next) => {
 
     const {
         sessionID,
+        startDate,
+        endDate,
         courses
     } = req.body;
 
     const createdSession = await Session.create({
         sessionID,
+        startDate,
+        endDate,
         courses
     });
 
