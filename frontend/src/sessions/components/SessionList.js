@@ -20,11 +20,12 @@ const SessionList = (props) => {
     <ul className="sessions-list">
       {props.items.map((session_item) => (
         <SessionItem
-          key={session_item.session_id}
+          key={session_item.sessionID}
           sessionID={session_item.sessionID}
           startDate={session_item.startDate}
           endDate={session_item.endDate}
           courses={session_item.courses}
+          objID={session_item._id}
         />
       ))}
     </ul>

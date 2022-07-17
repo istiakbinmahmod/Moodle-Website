@@ -1,4 +1,6 @@
-import React from "react";
+// import React from "react";
+import React, { useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
 
 import Avatar from "../../shared/components/UIElements/Avatar";
@@ -6,6 +8,23 @@ import Card from "../../shared/components/UIElements/Card";
 import "./CourseItem.css";
 
 const CourseItem = (props) => {
+  //new get
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [loadedSessionID, setLoadedSessionID] = useState();
+
+  useEffect(() => {
+    const fetchSessionID = async () => {
+      try {
+        const responseData = await sendRequest(
+          "http://localhost:5000/api/users"
+        );
+
+        setLoadedSessionID(responseData.users);
+      } catch (err) {}
+    };
+    fetchSessionID();
+  }, [sendRequest]);
+  //new get
   return (
     <li className="course-item">
       <Card className="course-item__content">
