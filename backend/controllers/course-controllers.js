@@ -6,11 +6,21 @@ const User = require("../models/users");
 const Session = require("../models/sessions");
 
 const getCoursesList = async(req, res, next) => {
-    const courses = await Course.find();
-
-    res.json({
-        courses: courses.map((course) => course.toObject({ getters: true })),
-    });
+    let courses;
+    try {
+        courses = await Course.find();
+    } catch (err) {
+        const error = new HttpError(
+            "Failed to fetch courses, please try again.",
+            500
+        );
+        return next(error);
+    }
+    if (!courses) {
+        const error = new HttpError("Could not find courses.", 404);
+        return next(error);
+    }
+    res.json({ courses: courses.map((course) => course.toObject({ getters: true })) });
 };
 
 const getCourseById = (req, res, next) => {
