@@ -123,7 +123,9 @@ const adminEditCourse = async(req, res, next) => {
     let user;
     if (participants.length > 0) {
         try {
-            user = await User.findById(participants);
+            // user = await User.findById(participants);
+            user = await User.findOne({ moodleID: participants });
+            await course.participants.push(user);
         } catch (err) {
             const error = new HttpError(
                 "Something went wrong, could not find user.",
@@ -138,7 +140,7 @@ const adminEditCourse = async(req, res, next) => {
         }
     }
 
-    course.participants.push(participants);
+
 
     try {
         const session = await mongoose.startSession();
@@ -146,7 +148,8 @@ const adminEditCourse = async(req, res, next) => {
         await course.save({ session: session });
 
         for await (const id of participants) {
-            const userRelatedToCourse = await User.findById(id);
+            // const userRelatedToCourse = await User.findById(id);
+            const userRelatedToCourse = await User.findOne({ moodleID: participants });
             userRelatedToCourse.courses.push(course);
             await userRelatedToCourse.save({ session: session });
             console.log(userRelatedToCourse.moodleID);
