@@ -26,6 +26,7 @@ const CourseList = (props) => {
           courseDescription={user.courseDescription}
           courseCreditHour={user.courseCreditHour}
           participants={user.participants}
+          objID={user._id}
           // key={user.id}
           // id={user.id}
           // image={user.image}

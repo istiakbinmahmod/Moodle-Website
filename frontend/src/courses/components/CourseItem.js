@@ -1,11 +1,17 @@
 // import React from "react";
 import React, { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import "../../shared/components/Navigation/NavLinks.css";
+
+import { Link, NavLink } from "react-router-dom";
 
 import Avatar from "../../shared/components/UIElements/Avatar";
 import Card from "../../shared/components/UIElements/Card";
 import "./CourseItem.css";
+
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const CourseItem = (props) => {
   //new get
@@ -15,56 +21,72 @@ const CourseItem = (props) => {
   useEffect(() => {
     const fetchSessionID = async () => {
       try {
-        const responseData = await sendRequest(
-          "http://localhost:5000/api/users"
+        let responseData = await sendRequest(
+          `http://localhost:5000/api/courses/get/session/${props.sessionID}`
         );
 
-        setLoadedSessionID(responseData.users);
+        setLoadedSessionID(responseData.sessionName);
       } catch (err) {}
     };
     fetchSessionID();
   }, [sendRequest]);
   //new get
   return (
-    <li className="course-item">
-      <Card className="course-item__content">
-        <Link to={`/courses/${props.courseID}`}>
-          {/* <Link to={`/${props.course_ud}/places`}> */}
-          {/* <div className="course-item__image">
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {/* {isLoading && (
+        <div className="center">
+          <LoadingSpinner />
+        </div>
+      )} */}
+      {!isLoading && loadedSessionID && (
+        <li className="course-item">
+          <Card className="course-item__content">
+            <Link to={`/courses/${props.courseID}`}>
+              {/* <Link to={`/${props.course_ud}/places`}> */}
+              {/* <div className="course-item__image">
             <Avatar image={props.image} alt={props.name} />
           </div> */}
-          <div className="course-item__info">
-            <h2>
-              {"Course ID : "}
-              {props.courseID}
-            </h2>
-            <p>
-              {"Session ID : "}
-              {props.sessionID}
-            </p>
-            <p>
-              {"Course Title : "}
-              {props.courseTitle}
-            </p>
-            <p>
-              {"Course Description : "}
-              {props.courseDescription}
-            </p>
-            <p>
-              {"Credit Hour : "}
-              {props.courseCreditHour}
-            </p>
-            <p>
-              {"Course Pariticipants : "}
-              {props.participants}
-            </p>
-            {/* <h3>
+              <div className="course-item__info">
+                <h2>
+                  {"Course ID : "}
+                  {props.courseID}
+                </h2>
+                <p>
+                  {"Session ID : "}
+                  {loadedSessionID}
+                  {/* {props.sessionID} */}
+                </p>
+                <p>
+                  {"Course Title : "}
+                  {props.courseTitle}
+                </p>
+                <p>
+                  {"Course Description : "}
+                  {props.courseDescription}
+                </p>
+                <p>
+                  {"Credit Hour : "}
+                  {props.courseCreditHour}
+                </p>
+                <ul className="nav-links">
+                  <li>
+                    <NavLink to={`/api/courses/${props.objID}/users`} exact>
+                      SEE ALL PARTICIPANTS
+                    </NavLink>
+                  </li>
+                </ul>
+                {/* <p>
+                  {"Course Pariticipants : "}
+                  {props.participants}
+                </p> */}
+                {/* <h3>
               {props.credit_hour}{" "}
               {props.credit_hour === 1 ? "Credit Hour" : "Credit Hours"}
             </h3> */}
-          </div>
-        </Link>
-        {/* <Link to={`/${props.id}/places`}>
+              </div>
+            </Link>
+            {/* <Link to={`/${props.id}/places`}>
           <div className="course-item__image">
             <Avatar image={props.image} alt={props.name} />
           </div>
@@ -75,8 +97,10 @@ const CourseItem = (props) => {
             </h3>
           </div>
         </Link> */}
-      </Card>
-    </li>
+          </Card>
+        </li>
+      )}
+    </React.Fragment>
   );
 };
 

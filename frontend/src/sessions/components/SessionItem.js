@@ -30,6 +30,11 @@ const SessionItem = (props) => {
             </h2>
             <ul className="nav-links">
               <li>
+                <NavLink to={`/api/admin/create-course/${props.objID}`} exact>
+                  CREATE COURSE
+                </NavLink>
+              </li>
+              <li>
                 <NavLink to={`/api/courses/get/courses/${props.objID}`} exact>
                   SEE ALL COURSES
                 </NavLink>

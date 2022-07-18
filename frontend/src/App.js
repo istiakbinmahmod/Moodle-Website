@@ -20,6 +20,8 @@ import DeleteCourse from "./courses/pages/DeleteCourse";
 import Sessions from "./sessions/pages/Sessions";
 import NewSession from "./sessions/pages/NewSession";
 import CourseSession from "./sessions/pages/CourseSession";
+import CourseUsers from "./courses/pages/CourseUsers";
+import SessionCreateCourse from "./sessions/pages/SessionCreateCourse";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -39,6 +41,9 @@ const App = () => {
       <Switch>
         <Route path="/" exact>
           <Courses />
+        </Route>
+        <Route path="/api/courses/:courseID/users" exact>
+          <CourseUsers />
         </Route>
         <Route path="/get/sessions" exact>
           <Sessions />
@@ -63,6 +68,9 @@ const App = () => {
         </Route>
         <Route path="/api/admin/create-session" exact>
           <NewSession />
+        </Route>
+        <Route path="/api/admin/create-course/:sessionID" exact>
+          <SessionCreateCourse />
         </Route>
         <Route path="/api/admin/delete-course" exact>
           <DeleteCourse />
