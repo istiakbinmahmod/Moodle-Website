@@ -38,41 +38,23 @@ const adminLogin = (req, res, next) => {
     res.json({ message: "Logged in!" }); //this one is to send a message if login is successful
 };
 
-const adminCreateCourse = async(req, res, next) => {
+
+const adminCreateCourseForASession = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return next(
             new HttpError("Invalid inputs passed, please check your data.", 422)
         );
     }
-
+    const sessionID = req.params.sessionID;
     const {
-        sessionID,
         courseID,
         courseTitle,
         courseDescription,
-        courseCreditHour,
-        participants,
+        courseCreditHour
     } = req.body;
 
     let user;
-
-    if (participants.length > 0) {
-        try {
-            user = await User.findById(participants);
-        } catch (err) {
-            const error = new HttpError(
-                "Something went wrong, could not find user.",
-                500
-            );
-            return next(error);
-        }
-
-        if (!user) {
-            const error = new HttpError("Could not find user for provided id.", 404);
-            return next(error);
-        }
-    }
 
     let sessionRelatedToCourse;
 
@@ -91,22 +73,13 @@ const adminCreateCourse = async(req, res, next) => {
         courseID,
         courseTitle,
         courseDescription,
-        courseCreditHour,
-        participants,
+        courseCreditHour
     });
 
     try {
         const session = await mongoose.startSession();
         session.startTransaction();
         await createdCourse.save({ session: session });
-
-        for await (const id of participants) {
-            const userRelatedToCourse = await User.findById(id);
-            userRelatedToCourse.courses.push(createdCourse);
-            await userRelatedToCourse.save({ session: session });
-            console.log(userRelatedToCourse.moodleID);
-        }
-
         sessionRelatedToCourse.courses.push(createdCourse);
         await sessionRelatedToCourse.save({ session: session });
         await session.commitTransaction();
@@ -118,9 +91,8 @@ const adminCreateCourse = async(req, res, next) => {
         console.log(err);
         return next(error);
     }
-
-    res.json({ message: "Course created successfully." });
-};
+    res.json({ course: createdCourse });
+}
 
 const adminEditCourse = async(req, res, next) => {
     const errors = validationResult(req);
@@ -491,7 +463,6 @@ const adminGetSessionBySessionID = async(req, res, next) => {
 exports.getAdmin = getAdmin;
 exports.adminLogin = adminLogin;
 exports.getCoursesList = getCoursesList;
-exports.adminCreateCourse = adminCreateCourse;
 exports.adminDeleteCourse = adminDeleteCourse;
 exports.adminEditCourse = adminEditCourse;
 exports.adminCreateUser = adminCreateUser;
@@ -504,3 +475,13 @@ exports.adminDeleteSession = adminDeleteSession;
 exports.adminGetSessionList = adminGetSessionList;
 exports.adminEditSession = adminEditSession;
 exports.adminGetSessionBySessionID = adminGetSessionBySessionID;
+exports.adminCreateCourseForASession = adminCreateCourseForASession;
+exports.adminEditUser = adminEditUser;
+exports.adminDeleteUser = adminDeleteUser;
+exports.adminRemovesFromCourse = adminRemovesFromCourse;
+exports.adminCreateSession = adminCreateSession;
+exports.adminDeleteSession = adminDeleteSession;
+exports.adminGetSessionList = adminGetSessionList;
+exports.adminEditSession = adminEditSession;
+exports.adminGetSessionBySessionID = adminGetSessionBySessionID;
+exports.adminCreateCourseForASession = adminCreateCourseForASession;

@@ -11,7 +11,7 @@ router.post("/login", adminController.adminLogin); // => localhost:5000/admin/lo
 
 router.get("/courses", adminController.getCoursesList); // => localhost:5000/admin/courses  to show all the created courses
 
-router.post("/create-course", adminController.adminCreateCourse); // => localhost:5000/admin/create-course to create a new course
+router.post("/create-course/:sessionID", adminController.adminCreateCourseForASession); // => localhost:5000/admin/create-course to create a new course
 
 router.delete("/delete/course/:courseID", adminController.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
 
