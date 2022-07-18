@@ -122,22 +122,25 @@ const adminEditCourse = async(req, res, next) => {
 
     let user;
     if (participants.length > 0) {
-        try {
-            // user = await User.findById(participants);
-            user = await User.findOne({ moodleID: participants });
-            await course.participants.push(user);
-        } catch (err) {
-            const error = new HttpError(
-                "Something went wrong, could not find user.",
-                500
-            );
-            return next(error);
+        for (const id of participants) {
+            try {
+                // user = await User.findById(participants);
+                user = await User.findOne({ moodleID: id });
+                await course.participants.push(user);
+            } catch (err) {
+                const error = new HttpError(
+                    "Something went wrong, could not find user.",
+                    500
+                );
+                return next(error);
+            }
+
+            if (!user) {
+                const error = new HttpError("Could not find user for provided id.", 404);
+                return next(error);
+            }
         }
 
-        if (!user) {
-            const error = new HttpError("Could not find user for provided id.", 404);
-            return next(error);
-        }
     }
 
 
@@ -149,7 +152,7 @@ const adminEditCourse = async(req, res, next) => {
 
         for await (const id of participants) {
             // const userRelatedToCourse = await User.findById(id);
-            const userRelatedToCourse = await User.findOne({ moodleID: participants });
+            const userRelatedToCourse = await User.findOne({ moodleID: id });
             userRelatedToCourse.courses.push(course);
             await userRelatedToCourse.save({ session: session });
             console.log(userRelatedToCourse.moodleID);
