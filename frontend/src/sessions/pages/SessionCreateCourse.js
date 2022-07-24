@@ -23,10 +23,10 @@ const SessionCreateCourse = () => {
         value: "",
         isValid: false,
       },
-      sessionID: {
-        value: "",
-        isValid: false,
-      },
+      // sessionID: {
+      //   value: "",
+      //   isValid: false,
+      // },
       courseTitle: {
         value: "",
         isValid: false,
@@ -130,7 +130,7 @@ const SessionCreateCourse = () => {
           />
 
           <Button type="submit" disabled={!formState.isValid}>
-            ADD SESSION
+            ADD COURSE
           </Button>
         </form>
       )}

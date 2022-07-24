@@ -23,6 +23,9 @@ const UsersList = (props) => {
           id={user.moodleID}
           // image={user.image}
           name={user.name}
+          email={user.email}
+          phone={user.phone}
+          role={user.role}
           objID={user._id}
           // placeCount={user.places}
         />

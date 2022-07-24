@@ -40,41 +40,18 @@ const adminLogin = (req, res, next) => {
   res.json({ message: "Logged in!" }); //this one is to send a message if login is successful
 };
 
-const adminCreateCourse = async (req, res, next) => {
+const adminCreateCourseForASession = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
       new HttpError("Invalid inputs passed, please check your data.", 422)
     );
   }
-
-  const {
-    sessionID,
-    courseID,
-    courseTitle,
-    courseDescription,
-    courseCreditHour,
-    participants,
-  } = req.body;
+  const sessionID = req.params.sessionID;
+  const { courseID, courseTitle, courseDescription, courseCreditHour } =
+    req.body;
 
   let user;
-
-  if (participants.length > 0) {
-    try {
-      user = await User.findById(participants);
-    } catch (err) {
-      const error = new HttpError(
-        "Something went wrong, could not find user.",
-        500
-      );
-      return next(error);
-    }
-
-    if (!user) {
-      const error = new HttpError("Could not find user for provided id.", 404);
-      return next(error);
-    }
-  }
 
   let sessionRelatedToCourse;
 
@@ -94,21 +71,12 @@ const adminCreateCourse = async (req, res, next) => {
     courseTitle,
     courseDescription,
     courseCreditHour,
-    participants,
   });
 
   try {
     const session = await mongoose.startSession();
     session.startTransaction();
     await createdCourse.save({ session: session });
-
-    for await (const id of participants) {
-      const userRelatedToCourse = await User.findById(id);
-      userRelatedToCourse.courses.push(createdCourse);
-      await userRelatedToCourse.save({ session: session });
-      console.log(userRelatedToCourse.moodleID);
-    }
-
     sessionRelatedToCourse.courses.push(createdCourse);
     await sessionRelatedToCourse.save({ session: session });
     await session.commitTransaction();
@@ -120,8 +88,7 @@ const adminCreateCourse = async (req, res, next) => {
     console.log(err);
     return next(error);
   }
-
-  res.json({ message: "Course created successfully." });
+  res.json({ course: createdCourse });
 };
 
 const adminEditCourse = async (req, res, next) => {
@@ -153,7 +120,9 @@ const adminEditCourse = async (req, res, next) => {
   let user;
   if (participants.length > 0) {
     try {
-      user = await User.findById(participants);
+      // user = await User.findById(participants);
+      user = await User.findOne({ moodleID: participants });
+      await course.participants.push(user);
     } catch (err) {
       const error = new HttpError(
         "Something went wrong, could not find user.",
@@ -168,15 +137,16 @@ const adminEditCourse = async (req, res, next) => {
     }
   }
 
-  course.participants.push(participants);
-
   try {
     const session = await mongoose.startSession();
     session.startTransaction();
     await course.save({ session: session });
 
     for await (const id of participants) {
-      const userRelatedToCourse = await User.findById(id);
+      // const userRelatedToCourse = await User.findById(id);
+      const userRelatedToCourse = await User.findOne({
+        moodleID: participants,
+      });
       userRelatedToCourse.courses.push(course);
       await userRelatedToCourse.save({ session: session });
       console.log(userRelatedToCourse.moodleID);
@@ -478,10 +448,7 @@ const adminGetSessionList = async (req, res, next) => {
     const error = new HttpError("Could not find sessions.", 404);
     return next(error);
   }
-  // res.json({ sessions: sessions });
-  res.json({
-    sessions: sessions.map((session) => session.toObject({ getters: true })),
-  });
+  res.json({ sessions: sessions });
 };
 
 const adminGetSessionBySessionID = async (req, res, next) => {
@@ -498,7 +465,6 @@ const adminGetSessionBySessionID = async (req, res, next) => {
 exports.getAdmin = getAdmin;
 exports.adminLogin = adminLogin;
 exports.getCoursesList = getCoursesList;
-exports.adminCreateCourse = adminCreateCourse;
 exports.adminDeleteCourse = adminDeleteCourse;
 exports.adminEditCourse = adminEditCourse;
 exports.adminCreateUser = adminCreateUser;
@@ -511,3 +477,13 @@ exports.adminDeleteSession = adminDeleteSession;
 exports.adminGetSessionList = adminGetSessionList;
 exports.adminEditSession = adminEditSession;
 exports.adminGetSessionBySessionID = adminGetSessionBySessionID;
+exports.adminCreateCourseForASession = adminCreateCourseForASession;
+exports.adminEditUser = adminEditUser;
+exports.adminDeleteUser = adminDeleteUser;
+exports.adminRemovesFromCourse = adminRemovesFromCourse;
+exports.adminCreateSession = adminCreateSession;
+exports.adminDeleteSession = adminDeleteSession;
+exports.adminGetSessionList = adminGetSessionList;
+exports.adminEditSession = adminEditSession;
+exports.adminGetSessionBySessionID = adminGetSessionBySessionID;
+exports.adminCreateCourseForASession = adminCreateCourseForASession;

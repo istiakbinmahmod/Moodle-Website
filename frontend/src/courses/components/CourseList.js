@@ -19,7 +19,7 @@ const CourseList = (props) => {
     <ul className="courses-list">
       {props.items.map((user) => (
         <CourseItem
-          key={user.courseID}
+          key={user._id}
           courseID={user.courseID}
           sessionID={user.sessionID}
           courseTitle={user.courseTitle}

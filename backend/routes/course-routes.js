@@ -13,17 +13,17 @@ router.get("/:courseID", coursesControllers.getCourseById); // => localhost:5000
 
 router.get("/:courseID/users", coursesControllers.getUsersByCourseId); // => localhost:5000/courses/:courseID/users to show all the users enrolled in a course
 
-router.post(
-  "/",
-  [
-    check("courseID").not().isEmpty(),
-    check("courseTitle").not().isEmpty(),
-    check("courseCreditHour").not().isEmpty(),
-    check("courseDescription").not().isEmpty(),
-    check("sessionID").not().isEmpty(),
-  ],
-  adminControllers.adminCreateCourse // => localhost:5000/admin/create-course to create a new course
-);
+// router.post(
+//   "/",
+//   [
+//     check("courseID").not().isEmpty(),
+//     check("courseTitle").not().isEmpty(),
+//     check("courseCreditHour").not().isEmpty(),
+//     check("courseDescription").not().isEmpty(),
+//     check("sessionID").not().isEmpty(),
+//   ],
+//   adminControllers.adminCreateCourse // => localhost:5000/admin/create-course to create a new course
+// );
 
 router.patch(
   "/:courseID",

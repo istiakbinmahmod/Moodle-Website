@@ -75,6 +75,11 @@ const CourseItem = (props) => {
                       SEE ALL PARTICIPANTS
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink to={`/api/admin/edit/${props.objID}`} exact>
+                      ADD PARTICIPANT
+                    </NavLink>
+                  </li>
                 </ul>
                 {/* <p>
                   {"Course Pariticipants : "}
