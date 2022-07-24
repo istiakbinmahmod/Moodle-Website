@@ -123,55 +123,55 @@ const adminEditCourse = async(req, res, next) => {
     }
 
 
-        let user;
-        if (participants.length > 0) {
-            for (const id of participants) {
-                try {
-                    // user = await User.findById(participants);
-                    user = await User.findOne({ moodleID: id });
-                    await course.participants.push(user);
-                } catch (err) {
-                    const error = new HttpError(
-                        "Something went wrong, could not find user.",
-                        500
-                    );
-                    return next(error);
-                }
-
-                if (!user) {
-                    const error = new HttpError("Could not find user for provided id.", 404);
-                    return next(error);
-                }
+    let user;
+    if (participants.length > 0) {
+        for (const id of participants) {
+            try {
+                // user = await User.findById(participants);
+                user = await User.findOne({ moodleID: id });
+                await course.participants.push(user);
+            } catch (err) {
+                const error = new HttpError(
+                    "Something went wrong, could not find user.",
+                    500
+                );
+                return next(error);
             }
 
-        }
-
-
-
-        try {
-            const session = await mongoose.startSession();
-            session.startTransaction();
-            await course.save({ session: session });
-
-            for await (const id of participants) {
-                // const userRelatedToCourse = await User.findById(id);
-                const userRelatedToCourse = await User.findOne({ moodleID: id });
-                userRelatedToCourse.courses.push(course);
-                await userRelatedToCourse.save({ session: session });
-                console.log(userRelatedToCourse.moodleID);
+            if (!user) {
+                const error = new HttpError("Could not find user for provided id.", 404);
+                return next(error);
             }
-
-            await session.commitTransaction();
-        } catch (err) {
-            const error = new HttpError(
-                "Updating course failed, please try again.",
-                500
-            );
-            console.log(err);
-            return next(error);
         }
 
-        res.json({ course: course });
+    }
+
+
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await course.save({ session: session });
+
+        for await (const id of participants) {
+            // const userRelatedToCourse = await User.findById(id);
+            const userRelatedToCourse = await User.findOne({ moodleID: id });
+            userRelatedToCourse.courses.push(course);
+            await userRelatedToCourse.save({ session: session });
+            console.log(userRelatedToCourse.moodleID);
+        }
+
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Updating course failed, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+
+    res.json({ course: course });
 
 }
 
