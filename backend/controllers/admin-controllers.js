@@ -39,6 +39,7 @@ const adminLogin = (req, res, next) => {
 };
 
 
+
 const adminCreateCourseForASession = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -92,9 +93,10 @@ const adminCreateCourseForASession = async(req, res, next) => {
         return next(error);
     }
     res.json({ course: createdCourse });
-}
+};
 
-const adminEditCourse = async(req, res, next) => { //this is actually to enroll multiple users to a course
+
+const adminEditCourse = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         throw new HttpError("Invalid inputs passed, please check your data.", 422);
@@ -120,56 +122,58 @@ const adminEditCourse = async(req, res, next) => { //this is actually to enroll 
         return next(error);
     }
 
-    let user;
-    if (participants.length > 0) {
-        for (const id of participants) {
-            try {
-                // user = await User.findById(participants);
-                user = await User.findOne({ moodleID: id });
-                await course.participants.push(user);
-            } catch (err) {
-                const error = new HttpError(
-                    "Something went wrong, could not find user.",
-                    500
-                );
-                return next(error);
+
+        let user;
+        if (participants.length > 0) {
+            for (const id of participants) {
+                try {
+                    // user = await User.findById(participants);
+                    user = await User.findOne({ moodleID: id });
+                    await course.participants.push(user);
+                } catch (err) {
+                    const error = new HttpError(
+                        "Something went wrong, could not find user.",
+                        500
+                    );
+                    return next(error);
+                }
+
+                if (!user) {
+                    const error = new HttpError("Could not find user for provided id.", 404);
+                    return next(error);
+                }
             }
 
-            if (!user) {
-                const error = new HttpError("Could not find user for provided id.", 404);
-                return next(error);
+        }
+
+
+
+        try {
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await course.save({ session: session });
+
+            for await (const id of participants) {
+                // const userRelatedToCourse = await User.findById(id);
+                const userRelatedToCourse = await User.findOne({ moodleID: id });
+                userRelatedToCourse.courses.push(course);
+                await userRelatedToCourse.save({ session: session });
+                console.log(userRelatedToCourse.moodleID);
             }
+
+            await session.commitTransaction();
+        } catch (err) {
+            const error = new HttpError(
+                "Updating course failed, please try again.",
+                500
+            );
+            console.log(err);
+            return next(error);
         }
 
-    }
+        res.json({ course: course });
 
-
-
-    try {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        await course.save({ session: session });
-
-        for await (const id of participants) {
-            // const userRelatedToCourse = await User.findById(id);
-            const userRelatedToCourse = await User.findOne({ moodleID: id });
-            userRelatedToCourse.courses.push(course);
-            await userRelatedToCourse.save({ session: session });
-            console.log(userRelatedToCourse.moodleID);
-        }
-
-        await session.commitTransaction();
-    } catch (err) {
-        const error = new HttpError(
-            "Updating course failed, please try again.",
-            500
-        );
-        console.log(err);
-        return next(error);
-    }
-
-    res.json({ course: course });
-};
+}
 
 const adminRemovesFromCourse = async(req, res, next) => {
     const errors = validationResult(req);
@@ -289,7 +293,9 @@ const getCoursesList = async(req, res, next) => {
         const error = new HttpError("Could not find courses.", 404);
         return next(error);
     }
-    res.json({ courses: courses.map((course) => course.toObject({ getters: true })) });
+    res.json({
+        courses: courses.map((course) => course.toObject({ getters: true })),
+    });
 };
 
 const adminCreateUser = async(req, res, next) => {
@@ -489,5 +495,3 @@ exports.adminCreateSession = adminCreateSession;
 exports.adminDeleteSession = adminDeleteSession;
 exports.adminGetSessionList = adminGetSessionList;
 exports.adminEditSession = adminEditSession;
-exports.adminGetSessionBySessionID = adminGetSessionBySessionID;
-exports.adminCreateCourseForASession = adminCreateCourseForASession;

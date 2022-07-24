@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
-
+import { useHistory } from "react-router-dom";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import {
@@ -12,8 +13,7 @@ import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 const NewCourse = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [formState, inputHandler] = useForm(
     {
@@ -37,12 +37,12 @@ const NewCourse = () => {
         value: "",
         isValid: false,
       },
-      participants: [
-        {
-          value: "",
-          isValid: false,
-        },
-      ],
+      // participants: [
+      //   {
+      //     value: "",
+      //     isValid: false,
+      //   },
+      // ],
       // title: {
       //   value: "",
       //   isValid: false,
@@ -59,6 +59,7 @@ const NewCourse = () => {
     false
   );
 
+  const history = useHistory();
   // const courseSubmitHandler = (event) => {
   //   event.preventDefault();
   //   console.log(formState.inputs); // send this to the backend!
@@ -67,45 +68,29 @@ const NewCourse = () => {
   const courseSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      setIsLoading(true);
-      const response = await fetch(
+      await sendRequest(
         "http://localhost:5000/api/admin/create-course",
+        "POST",
+        JSON.stringify({
+          courseID: formState.inputs.courseID.value,
+          sessionID: formState.inputs.sessionID.value,
+          courseTitle: formState.inputs.courseTitle.value,
+          courseDescription: formState.inputs.courseDescription.value,
+          courseCreditHour: formState.inputs.courseCreditHour.value,
+          // participants: formState.inputs.participants.value,
+        }),
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            courseID: formState.inputs.courseID.value,
-            sessionID: formState.inputs.sessionID.value,
-            courseTitle: formState.inputs.courseTitle.value,
-            courseDescription: formState.inputs.courseDescription.value,
-            courseCreditHour: formState.inputs.courseCreditHour.value,
-            participants: formState.inputs.participants.value,
-          }),
+          "Content-Type": "application/json",
         }
       );
-
-      const responseData = await response.json();
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
-      console.log(responseData);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      setError(error.message || "Something went wrong");
-    }
+      history.push("/");
+    } catch (error) {}
     // console.log(formState.inputs); // send this to the backend!
-  };
-
-  const errorHandler = () => {
-    setError(null);
   };
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={errorHandler} />
+      <ErrorModal error={error} onClear={clearError} />
       <form className="course-form" onSubmit={courseSubmitHandler}>
         <Input
           id="courseID"
@@ -152,7 +137,7 @@ const NewCourse = () => {
           errorText="Please enter a valid course hour."
           onInput={inputHandler}
         />
-        <Input
+        {/* <Input
           id="participants"
           element="input"
           type="text"
@@ -160,7 +145,7 @@ const NewCourse = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid course id."
           onInput={inputHandler}
-        />
+        /> */}
         {/* <Input
         id="description"
         element="textarea"

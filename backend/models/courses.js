@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const Session = require("../models/sessions");
+
 const Schema = mongoose.Schema;
 
 const courseSchema = new Schema({

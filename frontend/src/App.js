@@ -19,6 +19,10 @@ import NewUser from "./user/pages/NewUser";
 import DeleteCourse from "./courses/pages/DeleteCourse";
 import Sessions from "./sessions/pages/Sessions";
 import NewSession from "./sessions/pages/NewSession";
+import CourseSession from "./sessions/pages/CourseSession";
+import CourseUsers from "./courses/pages/CourseUsers";
+import SessionCreateCourse from "./sessions/pages/SessionCreateCourse";
+import CourseAddParticipants from "./courses/pages/CourseAddParticipants";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -39,23 +43,23 @@ const App = () => {
         <Route path="/" exact>
           <Courses />
         </Route>
-        <Route path="/get/sessions" exact>
-          <Sessions />
+        <Route path="/api/courses/:courseID/users" exact>
+          <CourseUsers />
         </Route>
         <Route path="/get/sessions" exact>
           <Sessions />
         </Route>
-        <Route path="/get/courses/:sessionId">
-          <UpdatePlace />
+        <Route path="/get/sessions" exact>
+          <Sessions />
         </Route>
-        <Route path="/sessions/:sessionId">
-          <UpdatePlace />
+        <Route path="/api/courses/get/courses/:sessionId">
+          <CourseSession />
+        </Route>
+        <Route path="/api/admin/edit/:courseID">
+          <CourseAddParticipants />
         </Route>
         <Route path="/api/admin/create/user" exact>
           <NewUser />
-        </Route>
-        <Route path="/:userId/places" exact>
-          <UserPlaces />
         </Route>
         <Route path="/api/admin/create-course" exact>
           <NewCourse />
@@ -63,22 +67,15 @@ const App = () => {
         <Route path="/api/admin/create-session" exact>
           <NewSession />
         </Route>
+        <Route path="/api/admin/create-course/:sessionID" exact>
+          <SessionCreateCourse />
+        </Route>
         <Route path="/api/admin/delete-course" exact>
           <DeleteCourse />
         </Route>
         <Route path="/api/admin/edit-course" exact>
           <NewCourse />
         </Route>
-        <Route path="/places/:placeId">
-          <UpdatePlace />
-        </Route>
-        <Route path="/courses/:courseId">
-          <UpdatePlace />
-        </Route>
-        <Route path="/sessions/:sessionId">
-          <UpdatePlace />
-        </Route>
-
         <Redirect to="/" />
       </Switch>
     );
@@ -91,11 +88,11 @@ const App = () => {
         <Route path="/get/sessions" exact>
           <Sessions />
         </Route>
+        <Route path="/api/courses/get/courses/:sessionId">
+          <CourseSession />
+        </Route>
         <Route path="/sessions" exact>
           <Sessions />
-        </Route>
-        <Route path="/:userId/places" exact>
-          <UserPlaces />
         </Route>
         <Route path="/auth">
           <Auth />
