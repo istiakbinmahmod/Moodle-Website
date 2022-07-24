@@ -11,14 +11,12 @@ router.post("/login", adminController.adminLogin); // => localhost:5000/admin/lo
 
 router.get("/courses", adminController.getCoursesList); // => localhost:5000/admin/courses  to show all the created courses
 
-router.post(
-  "/create-course/:sessionID",
-  adminController.adminCreateCourseForASession
-); // => localhost:5000/admin/create-course to create a new course
+router.post("/create-course/:sessionID", adminController.adminCreateCourseForASession); // => localhost:5000/admin/create-course to create a new course
+
 
 router.delete("/delete/course/:courseID", adminController.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
 
-router.patch("/edit/:courseID", adminController.adminEditCourse); // => localhost:5000/admin/edit-course to edit a course
+router.post("/edit/:courseID", adminController.adminEditCourse); // => localhost:5000/admin/edit-course to edit a course
 
 router.post("/create/user", adminController.adminCreateUser); // => localhost:5000/admin/create-user to create a new user')
 

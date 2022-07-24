@@ -40,56 +40,63 @@ const adminLogin = (req, res, next) => {
   res.json({ message: "Logged in!" }); //this one is to send a message if login is successful
 };
 
-const adminCreateCourseForASession = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return next(
-      new HttpError("Invalid inputs passed, please check your data.", 422)
-    );
-  }
-  const sessionID = req.params.sessionID;
-  const { courseID, courseTitle, courseDescription, courseCreditHour } =
-    req.body;
 
-  let user;
 
-  let sessionRelatedToCourse;
+const adminCreateCourseForASession = async(req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(
+            new HttpError("Invalid inputs passed, please check your data.", 422)
+        );
+    }
+    const sessionID = req.params.sessionID;
+    const {
+        courseID,
+        courseTitle,
+        courseDescription,
+        courseCreditHour
+    } = req.body;
 
-  try {
-    sessionRelatedToCourse = await Session.findById(sessionID);
-  } catch (err) {
-    const error = new HttpError(
-      "Something went wrong, could not find session.",
-      500
-    );
-    return next(error);
-  }
+    let user;
 
-  const createdCourse = await Course.create({
-    sessionID,
-    courseID,
-    courseTitle,
-    courseDescription,
-    courseCreditHour,
-  });
+    let sessionRelatedToCourse;
 
-  try {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    await createdCourse.save({ session: session });
-    sessionRelatedToCourse.courses.push(createdCourse);
-    await sessionRelatedToCourse.save({ session: session });
-    await session.commitTransaction();
-  } catch (err) {
-    const error = new HttpError(
-      "Creating course failed, please try again.",
-      500
-    );
-    console.log(err);
-    return next(error);
-  }
-  res.json({ course: createdCourse });
-};
+    try {
+        sessionRelatedToCourse = await Session.findById(sessionID);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find session.",
+            500
+        );
+        return next(error);
+    }
+
+    const createdCourse = await Course.create({
+        sessionID,
+        courseID,
+        courseTitle,
+        courseDescription,
+        courseCreditHour
+    });
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await createdCourse.save({ session: session });
+        sessionRelatedToCourse.courses.push(createdCourse);
+        await sessionRelatedToCourse.save({ session: session });
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Creating course failed, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+    res.json({ course: createdCourse });
+}
+
 
 const adminEditCourse = async (req, res, next) => {
   const errors = validationResult(req);
@@ -131,38 +138,62 @@ const adminEditCourse = async (req, res, next) => {
       return next(error);
     }
 
-    if (!user) {
-      const error = new HttpError("Could not find user for provided id.", 404);
-      return next(error);
-    }
-  }
+    if (!course) {
+        const error = new HttpError("Could not find course for provided id.", 404);
 
-  try {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    await course.save({ session: session });
-
-    for await (const id of participants) {
-      // const userRelatedToCourse = await User.findById(id);
-      const userRelatedToCourse = await User.findOne({
-        moodleID: participants,
-      });
-      userRelatedToCourse.courses.push(course);
-      await userRelatedToCourse.save({ session: session });
-      console.log(userRelatedToCourse.moodleID);
+        return next(error);
     }
 
-    await session.commitTransaction();
-  } catch (err) {
-    const error = new HttpError(
-      "Updating course failed, please try again.",
-      500
-    );
-    console.log(err);
-    return next(error);
-  }
+    let user;
+    if (participants.length > 0) {
+        for (const id of participants) {
+            try {
+                // user = await User.findById(participants);
+                user = await User.findOne({ moodleID: id });
+                await course.participants.push(user);
+            } catch (err) {
+                const error = new HttpError(
+                    "Something went wrong, could not find user.",
+                    500
+                );
+                return next(error);
+            }
 
-  res.json({ course: course });
+            if (!user) {
+                const error = new HttpError("Could not find user for provided id.", 404);
+                return next(error);
+            }
+        }
+
+    }
+
+
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await course.save({ session: session });
+
+        for await (const id of participants) {
+            // const userRelatedToCourse = await User.findById(id);
+            const userRelatedToCourse = await User.findOne({ moodleID: id });
+            userRelatedToCourse.courses.push(course);
+            await userRelatedToCourse.save({ session: session });
+            console.log(userRelatedToCourse.moodleID);
+        }
+
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Updating course failed, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+
+    res.json({ course: course });
+
 };
 
 const adminRemovesFromCourse = async (req, res, next) => {
@@ -486,4 +517,3 @@ exports.adminDeleteSession = adminDeleteSession;
 exports.adminGetSessionList = adminGetSessionList;
 exports.adminEditSession = adminEditSession;
 exports.adminGetSessionBySessionID = adminGetSessionBySessionID;
-exports.adminCreateCourseForASession = adminCreateCourseForASession;
