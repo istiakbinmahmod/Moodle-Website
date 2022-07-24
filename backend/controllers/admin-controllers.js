@@ -94,7 +94,7 @@ const adminCreateCourseForASession = async(req, res, next) => {
     res.json({ course: createdCourse });
 }
 
-const adminEditCourse = async(req, res, next) => {
+const adminEditCourse = async(req, res, next) => { //this is actually to enroll multiple users to a course
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         throw new HttpError("Invalid inputs passed, please check your data.", 422);
