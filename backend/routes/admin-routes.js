@@ -16,15 +16,18 @@ router.post("/create-course/:sessionID", adminController.adminCreateCourseForASe
 
 router.delete("/delete/course/:courseID", adminController.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
 
-router.post("/edit/:courseID", adminController.adminEditCourse); // => localhost:5000/admin/edit-course to edit a course
+router.patch("/edit/:courseID", adminController.adminEditCourse); // => localhost:5000/admin/edit-course to edit a course
 
 router.post("/create/user", adminController.adminCreateUser); // => localhost:5000/admin/create-user to create a new user')
+
+router.post("/create/teacher", adminController.adminCreateTeacher); // => localhost:5000/admin/create-teacher to create a new teacher')
+router.post("/create/student", adminController.adminCreateStudent); // => localhost:5000/admin/create-student to create a new student')
 
 router.get("/get/sessions", adminController.adminGetSessionList); // => localhost:5000/admin/get-sessions to get all the sessions
 
 router.get(
-  "/get/session/:sessionID",
-  adminController.adminGetSessionBySessionID
+    "/get/session/:sessionID",
+    adminController.adminGetSessionBySessionID
 ); // => localhost:5000/admin/get-session to get a session
 
 router.get("/get/users", adminController.getUsersList); // => localhost:5000/admin/create-user to create a new user')`
@@ -34,8 +37,8 @@ router.patch("/edit/user/:userID", adminController.adminEditUser); // => localho
 router.delete("/delete/user/:userID", adminController.adminDeleteUser); // => localhost:5000/admin/delete-user to delete a user
 
 router.patch(
-  "/removeUser/course/:courseID",
-  adminController.adminRemovesFromCourse
+    "/removeUser/course/:courseID",
+    adminController.adminRemovesFromCourse
 ); // => localhost:5000/admin/delete-all to delete user from course
 
 router.post("/create-session", adminController.adminCreateSession); // => localhost:5000/admin/create-session to create a new session
