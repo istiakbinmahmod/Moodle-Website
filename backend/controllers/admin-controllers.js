@@ -652,6 +652,5 @@ exports.adminCreateSession = adminCreateSession;
 exports.adminDeleteSession = adminDeleteSession;
 exports.adminGetSessionList = adminGetSessionList;
 exports.adminEditSession = adminEditSession;
-exports.adminEditSession = adminEditSession;
 exports.adminCreateStudent = adminCreateStudent;
 exports.adminCreateTeacher = adminCreateTeacher;

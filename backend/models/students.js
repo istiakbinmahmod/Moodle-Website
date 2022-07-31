@@ -12,7 +12,8 @@ const studentSchema = new Schema({
     completed_credit: { type: Number, required: false },
     remaining_credit: { type: Number, required: false },
     completed_courses: [{ type: mongoose.Types.ObjectId, ref: 'Course' }],
-    user: { type: mongoose.Types.ObjectId, ref: 'User' }
+    user: { type: mongoose.Types.ObjectId, ref: 'User' },
+    private_files: [{ type: mongoose.Types.ObjectId, ref: 'PrivateFiles' }],
 
 });
 
