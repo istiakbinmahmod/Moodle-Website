@@ -23,6 +23,7 @@ import CourseSession from "./sessions/pages/CourseSession";
 import CourseUsers from "./courses/pages/CourseUsers";
 import SessionCreateCourse from "./sessions/pages/SessionCreateCourse";
 import CourseAddParticipants from "./courses/pages/CourseAddParticipants";
+import CourseMaterialUpload from "./courses/pages/CourseMaterialUpload";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -75,6 +76,12 @@ const App = () => {
         </Route>
         <Route path="/api/admin/edit-course" exact>
           <NewCourse />
+        </Route>
+        <Route
+          path="/api/courses/create-upload-course-materials/:courseID"
+          exact
+        >
+          <CourseMaterialUpload />
         </Route>
         <Redirect to="/" />
       </Switch>

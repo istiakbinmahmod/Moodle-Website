@@ -42,7 +42,10 @@ const CourseItem = (props) => {
       {!isLoading && loadedSessionID && (
         <li className="course-item">
           <Card className="course-item__content">
-            <Link to={`/courses/${props.courseID}`}>
+            <Link
+              to={`/api/courses/create-upload-course-materials/${props.courseID}`}
+            >
+              {/* <Link to={`/courses/${props.courseID}`}> */}
               {/* <Link to={`/${props.course_ud}/places`}> */}
               {/* <div className="course-item__image">
             <Avatar image={props.image} alt={props.name} />
