@@ -52,7 +52,21 @@ const getCoursesByUserId = async(req, res, next) => {
     res.json({ courses: coursesOfUser.courses.map(course => course.toObject({ getters: true })) });
 }
 
+const userEditProfile = async (req, res, next) =>
+{
+    const userID = req.params.uid;
+
+    const user = await User.findById(userID);
+    if(!user)
+    {
+        console.log(err);
+        return next(new HttpError('Something went wrong could not get the specific user',500));
+    }
+
+}
+
 
 exports.getUserById = getUserById;
 exports.login = login;
 exports.getCoursesByUserId = getCoursesByUserId;
+exports.userEditProfile = userEditProfile;
