@@ -43,7 +43,7 @@ const CourseItem = (props) => {
         <li className="course-item">
           <Card className="course-item__content">
             <Link
-              to={`/api/courses/create-upload-course-materials/${props.courseID}`}
+              to={`/api/courses/upload-course-materials/${props.objID}`}
             >
               {/* <Link to={`/courses/${props.courseID}`}> */}
               {/* <Link to={`/${props.course_ud}/places`}> */}
