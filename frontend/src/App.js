@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 import {
-    BrowserRouter as Router,
-    Route,
-    Redirect,
-    Switch,
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch,
 } from "react-router-dom";
 
 // import Users from "./user/pages/Users";
@@ -24,158 +24,105 @@ import CourseUsers from "./courses/pages/CourseUsers";
 import SessionCreateCourse from "./sessions/pages/SessionCreateCourse";
 import CourseAddParticipants from "./courses/pages/CourseAddParticipants";
 import CourseMaterialUpload from "./courses/pages/CourseMaterialUpload";
-
+import CourseRemoveParticipants from "./courses/pages/CourseRemoveParticipants";
 const App = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const login = useCallback(() => {
-        setIsLoggedIn(true);
-    }, []);
+  const login = useCallback(() => {
+    setIsLoggedIn(true);
+  }, []);
 
-    const logout = useCallback(() => {
-        setIsLoggedIn(false);
-    }, []);
+  const logout = useCallback(() => {
+    setIsLoggedIn(false);
+  }, []);
 
-    let routes;
+  let routes;
 
-    if (isLoggedIn) {
-        routes = ( <
-            Switch >
-            <
-            Route path = "/"
-            exact >
-            <
-            Courses / >
-            <
-            /Route> <
-            Route path = "/api/courses/:courseID/users"
-            exact >
-            <
-            CourseUsers / >
-            <
-            /Route> <
-            Route path = "/get/sessions"
-            exact >
-            <
-            Sessions / >
-            <
-            /Route> <
-            Route path = "/get/sessions"
-            exact >
-            <
-            Sessions / >
-            <
-            /Route> <
-            Route path = "/api/courses/get/courses/:sessionId" >
-            <
-            CourseSession / >
-            <
-            /Route> <
-            Route path = "/api/admin/edit/:courseID" >
-            <
-            CourseAddParticipants / >
-            <
-            /Route> <
-            Route path = "/api/admin/create/user"
-            exact >
-            <
-            NewUser / >
-            <
-            /Route> <
-            Route path = "/api/admin/create-course"
-            exact >
-            <
-            NewCourse / >
-            <
-            /Route> <
-            Route path = "/api/admin/create-session"
-            exact >
-            <
-            NewSession / >
-            <
-            /Route> <
-            Route path = "/api/admin/create-course/:sessionID"
-            exact >
-            <
-            SessionCreateCourse / >
-            <
-            /Route> <
-            Route path = "/api/admin/delete-course"
-            exact >
-            <
-            DeleteCourse / >
-            <
-            /Route> <
-            Route path = "/api/admin/edit-course"
-            exact >
-            <
-            NewCourse / >
-            <
-            /Route> <
-            Route path = "/api/courses/upload-course-materials/:courseID"
-            exact >
-            <
-            CourseMaterialUpload / >
-            <
-            /Route> <
-            Redirect to = "/" / >
-            <
-            /Switch>
-        );
-    } else {
-        routes = ( <
-            Switch >
-            <
-            Route path = "/"
-            exact >
-            <
-            Courses / >
-            <
-            /Route> <
-            Route path = "/get/sessions"
-            exact >
-            <
-            Sessions / >
-            <
-            /Route> <
-            Route path = "/api/courses/get/courses/:sessionId" >
-            <
-            CourseSession / >
-            <
-            /Route> <
-            Route path = "/sessions"
-            exact >
-            <
-            Sessions / >
-            <
-            /Route> <
-            Route path = "/auth" >
-            <
-            Auth / >
-            <
-            /Route> <
-            Redirect to = "/auth" / > {
-                /* <Route path="/api/admin/login">
+  if (isLoggedIn) {
+    routes = (
+      <Switch>
+        <Route path="/" exact>
+          <Courses />
+        </Route>{" "}
+        <Route path="/api/courses/:courseID/users" exact>
+          <CourseUsers />
+        </Route>{" "}
+        <Route path="/get/sessions" exact>
+          <Sessions />
+        </Route>{" "}
+        <Route path="/get/sessions" exact>
+          <Sessions />
+        </Route>{" "}
+        <Route path="/api/courses/get/courses/:sessionId">
+          <CourseSession />
+        </Route>{" "}
+        <Route path="/api/admin/edit/:courseID">
+          <CourseAddParticipants />
+        </Route>{" "}
+        <Route path="/api/admin/create/user" exact>
+          <NewUser />
+        </Route>{" "}
+        <Route path="/api/admin/create-course" exact>
+          <NewCourse />
+        </Route>{" "}
+        <Route path="/api/admin/create-session" exact>
+          <NewSession />
+        </Route>{" "}
+        <Route path="/api/admin/create-course/:sessionID" exact>
+          <SessionCreateCourse />
+        </Route>{" "}
+        <Route path="/api/admin/delete-course" exact>
+          <DeleteCourse />
+        </Route>{" "}
+        <Route path="/api/admin/edit-course" exact>
+          <NewCourse />
+        </Route>{" "}
+        <Route path="/api/courses/upload-course-materials/:courseID" exact>
+          <CourseMaterialUpload />
+        </Route>{" "}
+        <Route path="/api/admin/removeUser/course/:courseID" exact>
+          <CourseRemoveParticipants />
+        </Route>{" "}
+        <Redirect to="/" />
+      </Switch>
+    );
+  } else {
+    routes = (
+      <Switch>
+        <Route path="/" exact>
+          <Courses />
+        </Route>{" "}
+        <Route path="/get/sessions" exact>
+          <Sessions />
+        </Route>{" "}
+        <Route path="/api/courses/get/courses/:sessionId">
+          <CourseSession />
+        </Route>{" "}
+        <Route path="/sessions" exact>
+          <Sessions />
+        </Route>{" "}
+        <Route path="/auth">
+          <Auth />
+        </Route>{" "}
+        <Redirect to="/auth" />{" "}
+        {/* <Route path="/api/admin/login">
                           <Auth />
                         </Route>
-                        <Redirect to="/api/admin/login" /> */
-            } <
-            /Switch>
-        );
-    }
-
-    return ( <
-        AuthContext.Provider value = {
-            { isLoggedIn: isLoggedIn, login: login, logout: logout } } >
-        <
-        Router >
-        <
-        MainNavigation / >
-        <
-        main > { routes } < /main> <
-        /Router> <
-        /AuthContext.Provider>
+                        <Redirect to="/api/admin/login" /> */}{" "}
+      </Switch>
     );
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
+    >
+      <Router>
+        <MainNavigation />
+        <main> {routes} </main>{" "}
+      </Router>{" "}
+    </AuthContext.Provider>
+  );
 };
 
 export default App;

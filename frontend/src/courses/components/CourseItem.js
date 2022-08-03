@@ -83,6 +83,14 @@ const CourseItem = (props) => {
                       ADD PARTICIPANT
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to={`/api/admin/removeUser/course/${props.objID}`}
+                      exact
+                    >
+                      REMOVE PARTICIPANT{" "}
+                    </NavLink>{" "}
+                  </li>{" "}
                 </ul>
                 {/* <p>
                   {"Course Pariticipants : "}

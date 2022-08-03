@@ -10,17 +10,6 @@ const FileUpload = (props) => {
 
   const filePickerRef = useRef();
 
-  //   useEffect(() => {
-  //     if (!file) {
-  //       return;
-  //     }
-  //     const fileReader = new FileReader();
-  //     fileReader.onload = () => {
-  //       setPreviewUrl(fileReader.result);
-  //     };
-  //     fileReader.readAsDataURL(file);
-  //   }, [file]);
-
   const pickedHandler = (event) => {
     let pickedFile;
     let fileIsValid = isValid;
@@ -49,17 +38,13 @@ const FileUpload = (props) => {
         type="file"
         accept=".jpg,.png,.jpeg,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt, .rtf"
         onChange={pickedHandler}
-      />
+      />{" "}
       <div className={`file-upload ${props.center && "center"}`}>
-        {/* <div className="image-upload__preview">
-          {previewUrl && <img src={previewUrl} alt="Preview" />}
-          {!previewUrl && <p>Please pick an image.</p>}
-        </div> */}
         <Button type="button" onClick={pickFileHandler}>
-          PICK FILE
-        </Button>
-      </div>
-      {!isValid && <p>{props.errorText}</p>}
+          PICK FILE{" "}
+        </Button>{" "}
+      </div>{" "}
+      {!isValid && <p> {props.errorText} </p>}{" "}
     </div>
   );
 };

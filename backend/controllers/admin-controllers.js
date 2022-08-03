@@ -91,85 +91,8 @@ const adminCreateCourseForASession = async(req, res, next) => {
     res.json({ course: createdCourse });
 };
 
-// const adminEditCourse = async(req, res, next) => {
-//     //this one is to enroll multiple users to a course
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//         throw new HttpError("Invalid inputs passed, please check your data.", 422);
-//     }
-
-//     const { participants } = req.body;
-//     const cid = req.params.courseID;
-
-//     let course;
-//     try {
-//         course = await Course.findById(cid);
-//     } catch (err) {
-//         const error = new HttpError(
-//             "Something went wrong, could not find course.",
-//             500
-//         );
-//         return next(error);
-//     }
-
-//     if (!course) {
-//         const error = new HttpError("Could not find course for provided id.", 404);
-
-//         return next(error);
-//     }
-
-//     let user;
-//     if (participants.length > 0) {
-//         for (const id of participants) {
-//             try {
-//                 // user = await User.findById(participants);
-//                 user = await User.findOne({ moodleID: id });
-//                 await course.participants.push(user);
-//             } catch (err) {
-//                 const error = new HttpError(
-//                     "Something went wrong, could not find user.",
-//                     500
-//                 );
-//                 return next(error);
-//             }
-
-//             if (!user) {
-//                 const error = new HttpError(
-//                     "Could not find user for provided id.",
-//                     404
-//                 );
-//                 return next(error);
-//             }
-//         }
-//     }
-
-//     try {
-//         const session = await mongoose.startSession();
-//         session.startTransaction();
-//         await course.save({ session: session });
-
-//         for await (const id of participants) {
-//             // const userRelatedToCourse = await User.findById(id);
-//             const userRelatedToCourse = await User.findOne({ moodleID: id });
-//             userRelatedToCourse.courses.push(course);
-//             await userRelatedToCourse.save({ session: session });
-//             console.log(userRelatedToCourse.moodleID);
-//         }
-
-//         await session.commitTransaction();
-//     } catch (err) {
-//         const error = new HttpError(
-//             "Updating course failed, please try again.",
-//             500
-//         );
-//         console.log(err);
-//         return next(error);
-//     }
-
-//     res.json({ course: course });
-// };
-
-const adminRemovesFromCourse = async(req, res, next) => {
+const adminEditCourse = async(req, res, next) => {
+    //this one is to enroll multiple users to a course
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         throw new HttpError("Invalid inputs passed, please check your data.", 422);
@@ -197,8 +120,88 @@ const adminRemovesFromCourse = async(req, res, next) => {
 
     let user;
     if (participants.length > 0) {
+        for (const id of participants) {
+            try {
+                // user = await User.findById(participants);
+                user = await User.findOne({ moodleID: id });
+                //course = await Course.findById(cid);
+                course.participants.push(user);
+            } catch (err) {
+                const error = new HttpError(
+                    "Something went wrong, could not find user.",
+                    500
+                );
+                return next(error);
+            }
+
+            if (!user) {
+                const error = new HttpError(
+                    "Could not find user for provided id.",
+                    404
+                );
+                return next(error);
+            }
+        }
+    }
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await course.save({ session: session });
+
+        for await (const id of participants) {
+            // const userRelatedToCourse = await User.findById(id);
+            const userRelatedToCourse = await User.findOne({ moodleID: id });
+            userRelatedToCourse.courses.push(course);
+            await userRelatedToCourse.save({ session: session });
+            console.log(userRelatedToCourse.moodleID);
+        }
+
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Updating course failed, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+
+    res.json({ course: course });
+};
+
+const adminRemovesFromCourse = async(req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new HttpError("Invalid inputs passed, please check your data.", 422);
+    }
+
+    const { participants } = req.body;
+    const cid = req.params.courseID;
+
+    let course;
+    try {
+        course = await Course.findById(cid);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find course.",
+            500
+        );
+        return next(error);
+    }
+
+    if (!course) {
+        const error = new HttpError("Could not find course for provided id.", 404);
+
+        return next(error);
+    }
+
+
+    let user;
+    if (participants.length > 0) {
         try {
-            user = await User.findById(participants);
+            user = await User.findOne({ moodleID: participants })
+            await course.participants.pull(user);
         } catch (err) {
             const error = new HttpError(
                 "Something went wrong, could not find user.",
@@ -214,12 +217,14 @@ const adminRemovesFromCourse = async(req, res, next) => {
     }
 
     try {
-        course.participants.pull(participants);
+
         const session = await mongoose.startSession();
         session.startTransaction();
         await course.save({ session: session });
-        user.courses.pull(course);
-        await user.save({ session: session });
+        const userRelatedToCourse = await User.findOne({ moodleID: participants });
+        userRelatedToCourse.courses.pull(course);
+        await userRelatedToCourse.save({ session: session });
+        console.log(userRelatedToCourse.moodleID);
         await session.commitTransaction();
     } catch (err) {
         const error = new HttpError(
@@ -466,80 +471,80 @@ const adminGetSessionBySessionID = async(req, res, next) => {
     res.json({ session: session });
 };
 
-const adminEditCourse = async(req, res, next) => { //enrol to a course one by one
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        throw new HttpError("Invalid inputs passed, please check your data.", 422);
-    }
+// const adminEditCourse = async(req, res, next) => { //enrol to a course one by one
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//         throw new HttpError("Invalid inputs passed, please check your data.", 422);
+//     }
 
-    const { participants } = req.body;
-    const cid = req.params.courseID;
+//     const { participants } = req.body;
+//     const cid = req.params.courseID;
 
-    let course;
-    try {
-        course = await Course.findById(cid);
-    } catch (err) {
-        const error = new HttpError(
-            "Something went wrong, could not find course.",
-            500
-        );
-        return next(error);
-    }
+//     let course;
+//     try {
+//         course = await Course.findById(cid);
+//     } catch (err) {
+//         const error = new HttpError(
+//             "Something went wrong, could not find course.",
+//             500
+//         );
+//         return next(error);
+//     }
 
-    if (!course) {
-        const error = new HttpError("Could not find course for provided id.", 404);
+//     if (!course) {
+//         const error = new HttpError("Could not find course for provided id.", 404);
 
-        return next(error);
-    }
+//         return next(error);
+//     }
 
-    let user;
-    if (participants.length > 0) {
-        try {
-            // user = await User.findById(participants);
-            user = await User.findOne({ moodleID: participants });
-            await course.participants.push(user);
-        } catch (err) {
-            const error = new HttpError(
-                "Something went wrong, could not find user.",
-                500
-            );
-            return next(error);
-        }
+//     let user;
+//     if (participants.length > 0) {
+//         try {
+//             // user = await User.findById(participants);
+//             user = await User.findOne({ moodleID: participants });
+//             await course.participants.push(user);
+//         } catch (err) {
+//             const error = new HttpError(
+//                 "Something went wrong, could not find user.",
+//                 500
+//             );
+//             return next(error);
+//         }
 
-        if (!user) {
-            const error = new HttpError("Could not find user for provided id.", 404);
-            return next(error);
-        }
-    }
+//         if (!user) {
+//             const error = new HttpError("Could not find user for provided id.", 404);
+//             return next(error);
+//         }
+//     }
 
-    try {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        await course.save({ session: session });
+//     try {
+//         const session = await mongoose.startSession();
+//         session.startTransaction();
+//         await course.save({ session: session });
 
-        // for await (const id of participants) 
-        {
-            // const userRelatedToCourse = await User.findById(id);
-            const userRelatedToCourse = await User.findOne({
-                moodleID: participants,
-            });
-            userRelatedToCourse.courses.push(course);
-            await userRelatedToCourse.save({ session: session });
-            console.log(userRelatedToCourse.moodleID);
-        }
+//         // for await (const id of participants) 
+//         {
+//             // const userRelatedToCourse = await User.findById(id);
+//             const userRelatedToCourse = await User.findOne({
+//                 moodleID: participants,
+//             });
+//             userRelatedToCourse.courses.push(course);
+//             await userRelatedToCourse.save({ session: session });
+//             console.log(userRelatedToCourse.moodleID);
+//         }
 
-        await session.commitTransaction();
-    } catch (err) {
-        const error = new HttpError(
-            "Updating course failed, please try again.",
-            500
-        );
-        console.log(err);
-        return next(error);
-    }
+//         await session.commitTransaction();
+//     } catch (err) {
+//         const error = new HttpError(
+//             "Updating course failed, please try again.",
+//             500
+//         );
+//         console.log(err);
+//         return next(error);
+//     }
 
-    res.json({ course: course });
-};
+//     res.json({ course: course });
+// };
 
 const adminCreateStudent = async(req, res, next) => {
     const errors = validationResult(req);
