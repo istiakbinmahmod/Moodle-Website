@@ -198,7 +198,8 @@ const adminRemovesFromCourse = async(req, res, next) => {
     let user;
     if (participants.length > 0) {
         try {
-            user = await User.findById(participants);
+            user = await User.findOne({moodleID: participants});
+            await course.participants.pull(user);
         } catch (err) {
             const error = new HttpError(
                 "Something went wrong, could not find user.",
@@ -214,12 +215,15 @@ const adminRemovesFromCourse = async(req, res, next) => {
     }
 
     try {
-        course.participants.pull(participants);
+        
         const session = await mongoose.startSession();
         session.startTransaction();
         await course.save({ session: session });
         user.courses.pull(course);
-        await user.save({ session: session });
+        const userRelatedToCourse = await User.findOne({moodleID: participants});
+        userRelatedToCourse.course.pull(course);
+        await userRelatedToCourse.save({session:session});
+        console.log(userRelatedToCourse.moodleID);
         await session.commitTransaction();
     } catch (err) {
         const error = new HttpError(
