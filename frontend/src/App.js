@@ -62,9 +62,9 @@ const App = () => {
         <Route path="/api/admin/create/user" exact>
           <NewUser />
         </Route>{" "}
-        <Route path="/api/admin/create-course" exact>
+        {/* <Route path="/api/admin/create-course" exact>
           <NewCourse />
-        </Route>{" "}
+        </Route>{" "} */}
         <Route path="/api/admin/create-session" exact>
           <NewSession />
         </Route>{" "}

@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import DropDownSelect from "../../shared/components/FormElements/DropDownSelect";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -12,9 +13,29 @@ import "./CourseForm.css";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
+let courseParticipants;
+
 const CourseRemoveParticipants = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [loadedUsers, setLoadedUsers] = useState();
   const courseID = useParams().courseID;
+
+  useEffect(() => {
+    const fetchCourseParticipants = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/courses/${courseID}/users`
+        );
+        courseParticipants = responseData.users.map((usr) => ({
+          value: usr.moodleID,
+          label: usr.moodleID,
+        }));
+        console.log(courseParticipants);
+        setLoadedUsers(responseData.users);
+      } catch (err) {}
+    };
+    fetchCourseParticipants();
+  }, [sendRequest]);
 
   const [formState, inputHandler] = useForm(
     {
@@ -52,15 +73,16 @@ const CourseRemoveParticipants = () => {
       <form className="course-form" onSubmit={enrolSubmitHandler}>
         {" "}
         {isLoading && <LoadingSpinner asOverlay />}{" "}
-        <Input
-          id="moodleID"
-          element="input"
-          type="text"
-          label="Student Moodle ID"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid moodle id."
-          onInput={inputHandler}
-        />{" "}
+        {!isLoading && loadedUsers && (
+          <DropDownSelect
+            id="moodleID"
+            label="Moodle ID"
+            validators={[VALIDATOR_REQUIRE()]}
+            errorText="Please enter a valid moodle id."
+            onInput={inputHandler}
+            options={courseParticipants}
+          />
+        )}
         <Button type="submit" disabled={!formState.isValid}>
           REMOVE USER{" "}
         </Button>{" "}
