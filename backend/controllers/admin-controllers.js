@@ -200,7 +200,11 @@ const adminRemovesFromCourse = async(req, res, next) => {
     let user;
     if (participants.length > 0) {
         try {
+<<<<<<< HEAD
             user = await User.findOne({ moodleID: participants })
+=======
+            user = await User.findOne({moodleID: participants});
+>>>>>>> 350dcbb8f4907fad5a64fb1d9f00eb6fe4d4b70e
             await course.participants.pull(user);
         } catch (err) {
             const error = new HttpError(
@@ -217,6 +221,7 @@ const adminRemovesFromCourse = async(req, res, next) => {
     }
 
     try {
+<<<<<<< HEAD
 
         const session = await mongoose.startSession();
         session.startTransaction();
@@ -224,6 +229,16 @@ const adminRemovesFromCourse = async(req, res, next) => {
         const userRelatedToCourse = await User.findOne({ moodleID: participants });
         userRelatedToCourse.courses.pull(course);
         await userRelatedToCourse.save({ session: session });
+=======
+        
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await course.save({ session: session });
+        user.courses.pull(course);
+        const userRelatedToCourse = await User.findOne({moodleID: participants});
+        userRelatedToCourse.course.pull(course);
+        await userRelatedToCourse.save({session:session});
+>>>>>>> 350dcbb8f4907fad5a64fb1d9f00eb6fe4d4b70e
         console.log(userRelatedToCourse.moodleID);
         await session.commitTransaction();
     } catch (err) {

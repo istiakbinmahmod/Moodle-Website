@@ -106,6 +106,8 @@ const getSessionNameBySessionId = async(req, res, next) => {
     res.json({ sessionName });
 };
 
+
+
 const uploadCourseMaterials = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -159,7 +161,7 @@ const uploadCourseMaterials = async(req, res, next) => {
     }
 
     res.json({ message: "Course materials uploaded successfully." });
-}
+};
 
 
 exports.getCourseById = getCourseById;
@@ -167,4 +169,6 @@ exports.getCoursesList = getCoursesList;
 exports.getUsersByCourseId = getUsersByCourseId;
 exports.getCourseBySessionID = getCourseBySessionID;
 exports.getSessionNameBySessionId = getSessionNameBySessionId;
+
 exports.uploadCourseMaterials = uploadCourseMaterials;
+
