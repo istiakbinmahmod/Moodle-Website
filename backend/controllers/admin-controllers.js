@@ -53,10 +53,11 @@ const adminCreateCourseForASession = async(req, res, next) => {
 
     let user;
 
-    let sessionRelatedToCourse;
+    let sessionRelatedToCourse, sessionName;
 
     try {
         sessionRelatedToCourse = await Session.findById(sessionID);
+        sessionName = sessionRelatedToCourse.sessionID;
     } catch (err) {
         const error = new HttpError(
             "Something went wrong, could not find session.",
@@ -68,6 +69,7 @@ const adminCreateCourseForASession = async(req, res, next) => {
     const createdCourse = await Course.create({
         sessionID,
         courseID,
+        sessionName,
         courseTitle,
         courseDescription,
         courseCreditHour,

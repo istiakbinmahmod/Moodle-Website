@@ -7,6 +7,7 @@ const Schema = mongoose.Schema;
 const courseSchema = new Schema({
     courseID: { type: String, required: true },
     sessionID: { type: mongoose.Types.ObjectId, ref: "Session" },
+    sessionName: { type: String, required: false },
     courseTitle: { type: String, required: true },
     courseDescription: { type: String, required: false },
     courseCreditHour: { type: Number, required: true },
