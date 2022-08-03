@@ -103,9 +103,65 @@ const getSessionNameBySessionId = async (req, res, next) => {
   const sessionName = session.sessionID;
   res.json({ sessionName });
 };
+const uploadCourseMaterials = async(req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      return next(
+          new HttpError("Invalid inputs passed, please check your data.", 422)
+      );
+  }
+
+  if (req.files === null) {
+      return next(new HttpError("No file was uploaded", 422));
+  }
+
+  // console.log(req.file.path);
+
+  //  const url = req.protocol + "://" + req.get("host");
+
+
+  const courseId = req.params.courseID;
+
+  const createdCourseMaterials = new CourseMaterials({
+      // fileName: courseMaterials.fileName,
+      // fileType: courseMaterials.fileType,
+      file: req.file.path,
+      course: courseId,
+      // uploader: req.userData.userId,
+  });
+
+  const relatedCourse = await Course.findById(courseId);
+  if (!relatedCourse) {
+      return next(new HttpError("Could not find a course for this id.", 404));
+  }
+
+  // const uploaderOfmaterial = await User.findById(req.userData.userId);
+  // if (!uploaderOfmaterial) {
+  //     return next(new HttpError("Could not find a user for this id.", 404));
+  // }
+
+  try {
+      await createdCourseMaterials.save();
+      const sess = await mongoose.startSession();
+      sess.startTransaction();
+      await createdCourseMaterials.save({ session: sess });
+      await relatedCourse.courseMaterials.push(createdCourseMaterials);
+      await relatedCourse.save({ session: sess });
+      await sess.commitTransaction();
+
+
+  } catch (err) {
+      console.log(err);
+      return next(new HttpError("Something went wrong, could not upload course materials.", 500));
+  }
+
+  res.json({ message: "Course materials uploaded successfully." });
+}
+
 
 exports.getCourseById = getCourseById;
 exports.getCoursesList = getCoursesList;
 exports.getUsersByCourseId = getUsersByCourseId;
 exports.getCourseBySessionID = getCourseBySessionID;
 exports.getSessionNameBySessionId = getSessionNameBySessionId;
+exports.uploadCourseMaterials = uploadCourseMaterials;
