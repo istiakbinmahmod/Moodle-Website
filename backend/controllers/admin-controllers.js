@@ -1,6 +1,7 @@
 const uuid = require("uuid/v4"); // this is to generate unique id
 const { validationResult } = require("express-validator"); //this one is to validate the inputs
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const HttpError = require("../models/http-error");
 const Course = require("../models/courses");
@@ -558,10 +559,21 @@ const adminCreateStudent = async(req, res, next) => {
 
     const { moodleID, email, password } = req.body;
 
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 12);
+    } catch (err) {
+        const error = new HttpError(
+            "Could not create user, please try again.",
+            500
+        );
+        return next(error);
+    }
+
     const student = new User({
         moodleID,
         email,
-        password,
+        password: hashedPassword,
         role: "student",
     });
 
@@ -599,10 +611,22 @@ const adminCreateTeacher = async(req, res, next) => {
 
     const { moodleID, email, password } = req.body;
 
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 12);
+    } catch (err) {
+        const error = new HttpError(
+            "Could not create user, please try again.",
+            500
+        );
+        return next(error);
+    }
+
+
     const teacher = new User({
         moodleID,
         email,
-        password,
+        password: hashedPassword,
         role: "teacher",
     });
 
