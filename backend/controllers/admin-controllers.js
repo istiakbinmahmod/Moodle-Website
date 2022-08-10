@@ -1,3 +1,6 @@
+const express = require("express");
+const router = express.Router();
+
 const uuid = require("uuid/v4"); // this is to generate unique id
 const { validationResult } = require("express-validator"); //this one is to validate the inputs
 const mongoose = require("mongoose");
@@ -10,6 +13,7 @@ const User = require("../models/users");
 const Session = require("../models/sessions");
 const Student = require("../models/students");
 const Teacher = require("../models/teachers");
+const checkAuth = require("../middleware/check-auth");
 
 //const DUMMY_COURSES = require("./course-controllers").DUMMY_COURSES; // this is to get the dummy courses from the course-controllers.js
 
@@ -31,7 +35,7 @@ const adminLogin = (req, res, next) => {
     const { email, password } = req.body;
 
     const identifiedAdmin = DUMMY_ADMIN.find((admin) => admin.email === email); //this one is to find the admin with the email
-    if (!identifiedUser || identifiedUser.password !== password) {
+    if (!identifiedAdmin || identifiedAdmin.password !== password) {
         //this one is to check if the password is correct
         throw new HttpError(
             "Could not identify admin, credentials seem to be wrong.",
@@ -39,8 +43,27 @@ const adminLogin = (req, res, next) => {
         ); //this one is to throw an error if the password is wrong
     }
 
-    res.json({ message: "Logged in!" }); //this one is to send a message if login is successful
+    //this one is to create a token
+    let token;
+
+    try {
+        token = jwt.sign({ userId: identifiedAdmin.id, email: identifiedAdmin.email },
+            "supersecret_dont_share", { expiresIn: "1h" }
+        );
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError("Something went wrong, could not login.", 500));
+    }
+
+    res.json({
+        admin: identifiedAdmin,
+        token: token,
+    });
+
+    // res.json({ message: "Logged in!" }); //this one is to send a message if login is successful
 };
+router.use(checkAuth);
+
 
 const adminCreateCourseForASession = async(req, res, next) => {
     const errors = validationResult(req);

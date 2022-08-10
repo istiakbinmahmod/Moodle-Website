@@ -7,6 +7,10 @@ const Session = require("../models/sessions");
 const fs = require("fs");
 const path = require("path");
 const CourseMaterials = require("../models/course_materials");
+const checkAuth = require("../middleware/check-auth");
+const express = require("express");
+const router = express.Router();
+
 const getCoursesList = async(req, res, next) => {
     let courses;
     try {
@@ -107,7 +111,7 @@ const getSessionNameBySessionId = async(req, res, next) => {
 };
 
 
-
+router.use(checkAuth);
 const uploadCourseMaterials = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -171,4 +175,3 @@ exports.getCourseBySessionID = getCourseBySessionID;
 exports.getSessionNameBySessionId = getSessionNameBySessionId;
 
 exports.uploadCourseMaterials = uploadCourseMaterials;
-

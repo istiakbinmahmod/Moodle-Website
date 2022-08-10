@@ -6,6 +6,8 @@ const User = require("../models/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const checkAuth = require("../middleware/check-auth");
+const express = require("express");
+const router = express.Router();
 
 const getUserById = async(req, res, next) => {
     const userId = req.params.uid;
@@ -58,6 +60,8 @@ const login = async(req, res, next) => {
         token: token
     });
 };
+
+router.use(checkAuth);
 
 const getCoursesByUserId = async(req, res, next) => {
     const userId = req.params.uid;
