@@ -5,6 +5,7 @@ const Course = require("../models/courses");
 const User = require("../models/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const checkAuth = require("../middleware/check-auth");
 
 const getUserById = async(req, res, next) => {
     const userId = req.params.uid;
