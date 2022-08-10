@@ -25,6 +25,9 @@ import SessionCreateCourse from "./sessions/pages/SessionCreateCourse";
 import CourseAddParticipants from "./courses/pages/CourseAddParticipants";
 import CourseMaterialUpload from "./courses/pages/CourseMaterialUpload";
 import CourseRemoveParticipants from "./courses/pages/CourseRemoveParticipants";
+import NewStudent from "./user/pages/NewStudent";
+import NewTeacher from "./user/pages/NewTeacher";
+import UserAuth from "./user/pages/UserAuth";
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -61,6 +64,12 @@ const App = () => {
         </Route>{" "}
         <Route path="/api/admin/create/user" exact>
           <NewUser />
+        </Route>{" "}
+        <Route path="/api/admin/create/student" exact>
+          <NewStudent />
+        </Route>{" "}
+        <Route path="/api/admin/create/teacher" exact>
+          <NewTeacher />
         </Route>{" "}
         {/* <Route path="/api/admin/create-course" exact>
           <NewCourse />
@@ -104,11 +113,10 @@ const App = () => {
         <Route path="/auth">
           <Auth />
         </Route>{" "}
+        <Route path="/user">
+          <UserAuth />
+        </Route>{" "}
         <Redirect to="/auth" />{" "}
-        {/* <Route path="/api/admin/login">
-                          <Auth />
-                        </Route>
-                        <Redirect to="/api/admin/login" /> */}{" "}
       </Switch>
     );
   }

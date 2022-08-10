@@ -29,16 +29,22 @@ const NavLinks = (props) => {
           <NavLink to="/u1/places">CREATE USER</NavLink>
         </li>
       )} */}
-      {auth.isLoggedIn && (
+      {/* {auth.isLoggedIn && (
         <li>
           <NavLink to="/api/admin/create/user">CREATE USER</NavLink>
         </li>
-      )}
-      {/* {auth.isLoggedIn && (
-        <li>
-          <NavLink to="/api/admin/create-course">CREATE COURSE</NavLink>
-        </li>
       )} */}
+      {auth.isLoggedIn && (
+        <li>
+          <NavLink to="/api/admin/create/student">CREATE STUDENT</NavLink>
+        </li>
+      )}
+      {auth.isLoggedIn && (
+        <li>
+          <NavLink to="/api/admin/create/teacher">CREATE TEACHER</NavLink>
+        </li>
+      )}
+      {/* {auth.isLoggedIn && */}
       {auth.isLoggedIn && (
         <li>
           <NavLink to="/api/admin/create-session">CREATE SESSION</NavLink>
@@ -57,6 +63,11 @@ const NavLinks = (props) => {
       {!auth.isLoggedIn && (
         <li>
           <NavLink to="/auth">ADMIN LOGIN</NavLink>
+        </li>
+      )}
+      {!auth.isLoggedIn && (
+        <li>
+          <NavLink to="/user">USER LOGIN</NavLink>
         </li>
       )}
       {auth.isLoggedIn && (
