@@ -581,7 +581,7 @@ const adminCreateStudent = async(req, res, next) => {
         );
     }
 
-    const { moodleID, email, password } = req.body;
+    const { moodleID, name, email, password } = req.body;
 
     let hashedPassword;
     try {
@@ -596,6 +596,7 @@ const adminCreateStudent = async(req, res, next) => {
 
     const student = new User({
         moodleID,
+        name: name,
         email,
         password: hashedPassword,
         role: "student",
@@ -648,7 +649,7 @@ const adminCreateTeacher = async(req, res, next) => {
         );
     }
 
-    const { moodleID, email, password } = req.body;
+    const { moodleID, name, email, password } = req.body;
 
     let hashedPassword;
     try {
@@ -664,6 +665,7 @@ const adminCreateTeacher = async(req, res, next) => {
 
     const teacher = new User({
         moodleID,
+        name: name,
         email,
         password: hashedPassword,
         role: "teacher",
