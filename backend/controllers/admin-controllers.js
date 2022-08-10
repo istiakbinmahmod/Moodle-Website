@@ -2,6 +2,7 @@ const uuid = require("uuid/v4"); // this is to generate unique id
 const { validationResult } = require("express-validator"); //this one is to validate the inputs
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const HttpError = require("../models/http-error");
 const Course = require("../models/courses");
@@ -598,8 +599,23 @@ const adminCreateStudent = async(req, res, next) => {
         return next(error);
     }
 
-    res.json({ student: student });
+    let token;
+    try {
+        token = jwt.sign({ userId: student.id, email: student.email },
+            'supersecret_dont_share', { expiresIn: "1h" }
+        );
+    } catch (err) {
+        const error = new HttpError(
+            "Creating Student failed, please try again.",
+            500
+        );
+    }
+
+
+
+    res.json({ student: student, token: token, userId: student.id });
 }
+
 
 const adminCreateTeacher = async(req, res, next) => {
     const errors = validationResult(req);
@@ -650,7 +666,19 @@ const adminCreateTeacher = async(req, res, next) => {
         return next(error);
     }
 
-    res.json({ teacher: teacher });
+    let token;
+    try {
+        token = jwt.sign({ userId: teacher.id, email: teacher.email },
+            'supersecret_dont_share', { expiresIn: "1h" }
+        );
+    } catch (err) {
+        const error = new HttpError(
+            "Creating teacher failed, please try again.",
+            500
+        );
+    }
+
+    res.json({ teacher: teacher, token: token, userId: teacher.id });
 }
 
 
