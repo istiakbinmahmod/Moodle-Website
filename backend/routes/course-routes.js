@@ -25,7 +25,8 @@ router.patch(
         check("courseDescription").not().isEmpty(),
         check("sessionID").not().isEmpty(),
     ],
-    adminControllers.adminEditCourse // => localhost:5000/admin/edit-course to edit a course (only the title and credit hour)
+    adminControllers.adminEnrollUser
+    // => localhost:5000/admin/edit-course
 );
 
 // router.post("/upload-course-materials/:courseID", uploadFile.single('file'), coursesControllers.uploadCourseMaterials); // => localhost:5000/courses/upload-course-materials/:courseID to upload a course materials

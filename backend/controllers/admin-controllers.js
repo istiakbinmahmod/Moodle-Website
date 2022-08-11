@@ -118,7 +118,7 @@ const adminCreateCourseForASession = async(req, res, next) => {
     res.json({ course: createdCourse });
 };
 
-const adminEditCourse = async(req, res, next) => {
+const adminEnrollUser = async(req, res, next) => {
     //this one is to enroll multiple users to a course
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -496,7 +496,7 @@ const adminGetSessionBySessionID = async(req, res, next) => {
     res.json({ session: session });
 };
 
-// const adminEditCourse = async(req, res, next) => { //enrol to a course one by one
+// const adminEnrollUser = async(req, res, next) => { //enrol to a course one by one
 //     const errors = validationResult(req);
 //     if (!errors.isEmpty()) {
 //         throw new HttpError("Invalid inputs passed, please check your data.", 422);
@@ -703,7 +703,7 @@ exports.getAdmin = getAdmin;
 exports.adminLogin = adminLogin;
 exports.getCoursesList = getCoursesList;
 exports.adminDeleteCourse = adminDeleteCourse;
-exports.adminEditCourse = adminEditCourse;
+exports.adminEnrollUser = adminEnrollUser;
 exports.adminCreateUser = adminCreateUser;
 exports.getUsersList = getUsersList;
 exports.adminEditUser = adminEditUser;
