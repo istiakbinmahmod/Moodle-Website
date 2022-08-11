@@ -24,6 +24,10 @@ const CourseMaterialUpload = () => {
         value: null,
         isValid: false,
       },
+      description: {
+        value: "",
+        isValid: false,
+      }
     },
     false
   );
@@ -35,8 +39,10 @@ const CourseMaterialUpload = () => {
     const formData = new FormData();
     formData.append("file", formState.inputs.file.value);
     formData.append("course", courseID);
-    // formData.append("uploader", 123);
-    console.log(formData);
+    formData.append("fileName", formState.inputs.file.value.name);
+    formData.append("fileType", formState.inputs.file.value.type);
+    formData.append("description", formState.inputs.description.value);
+    console.log(formData.values);
     try {
       await sendRequest(
         `http://localhost:5000/api/courses/upload-course-materials/${courseID}`,
@@ -59,6 +65,15 @@ const CourseMaterialUpload = () => {
           onInput={inputHandler}
           errorText="Please provide a file"
         />{" "}
+        <Input
+          id="description"
+          element="input"
+          type="text"
+          label="Description"
+          validators={[VALIDATOR_REQUIRE()]}
+          errorText="Please enter a valid id."
+          onInput={inputHandler}
+        />{" "}
         {}{" "}
         <Button type="submit" disabled={!formState.isValid}>
           ADD COURSE MATERIAL{" "}
@@ -69,4 +84,3 @@ const CourseMaterialUpload = () => {
 };
 
 export default CourseMaterialUpload;
-

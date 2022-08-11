@@ -111,7 +111,7 @@ const getSessionNameBySessionId = async(req, res, next) => {
 };
 
 
-router.use(checkAuth);
+
 const uploadCourseMaterials = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -124,8 +124,7 @@ const uploadCourseMaterials = async(req, res, next) => {
         return next(new HttpError("No file was uploaded", 422));
     }
 
-
-
+    console.log(req.body);
 
     const courseId = req.params.courseID;
 
@@ -140,8 +139,6 @@ const uploadCourseMaterials = async(req, res, next) => {
     if (!relatedCourse) {
         return next(new HttpError("Could not find a course for this id.", 404));
     }
-
-
 
     try {
         await createdCourseMaterials.save();

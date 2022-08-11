@@ -580,6 +580,7 @@ const adminCreateStudent = async(req, res, next) => {
     }
 
     const { moodleID, name, email, password } = req.body;
+    console.log(req.body);
 
     let hashedPassword;
     try {

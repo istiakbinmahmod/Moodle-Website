@@ -13,6 +13,7 @@ const courseSchema = new Schema({
     courseCreditHour: { type: Number, required: true },
     participants: [{ type: mongoose.Types.ObjectId, ref: "User" }],
     courseMaterials: [{ type: mongoose.Types.ObjectId, ref: "CourseMaterials" }],
+    courseAssignments: [{ type: mongoose.Types.ObjectId, ref: "Assignment" }],
 });
 
 module.exports = mongoose.model("Course", courseSchema);
