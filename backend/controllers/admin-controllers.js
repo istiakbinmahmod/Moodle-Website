@@ -13,7 +13,7 @@ const User = require("../models/users");
 const Session = require("../models/sessions");
 const Student = require("../models/students");
 const Teacher = require("../models/teachers");
-const checkAuth = require("../middleware/check-auth");
+// const checkAuth = require("../middleware/check-auth");
 
 //const DUMMY_COURSES = require("./course-controllers").DUMMY_COURSES; // this is to get the dummy courses from the course-controllers.js
 
@@ -48,7 +48,7 @@ const adminLogin = (req, res, next) => {
 
     try {
         token = jwt.sign({ userId: identifiedAdmin.id, email: identifiedAdmin.email },
-            "supersecret_dont_share", { expiresIn: "1h" }
+            "supersecret_dont_share_admin", { expiresIn: "1h" }
         );
     } catch (err) {
         console.log(err);
@@ -624,7 +624,7 @@ const adminCreateStudent = async(req, res, next) => {
     let token;
     try {
         token = jwt.sign({ userId: student.id, email: student.email },
-            "supersecret_dont_share", { expiresIn: "1h" }
+            "supersecret_dont_share_student", { expiresIn: "1h" }
         );
     } catch (err) {
         const error = new HttpError(
@@ -688,7 +688,7 @@ const adminCreateTeacher = async(req, res, next) => {
     let token;
     try {
         token = jwt.sign({ userId: teacher.id, email: teacher.email },
-            "supersecret_dont_share", { expiresIn: "1h" }
+            "supersecret_dont_share_teacher", { expiresIn: "1h" }
         );
     } catch (err) {
         const error = new HttpError(

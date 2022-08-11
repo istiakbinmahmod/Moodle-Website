@@ -18,10 +18,16 @@ const HttpError = require("./models/http-error");
 
 const app = express();
 
+
 app.use(bodyParser.json());
+app.use(forms.array());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use(cors());
+
+var multer = require("multer");
+var forms = multer();
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
