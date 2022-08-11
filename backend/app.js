@@ -10,6 +10,8 @@ const usersRoutes = require("./routes/users-routes");
 const adminRoutes = require("./routes/admin-routes"); // admin-routes.js
 const coursesRoutes = require("./routes/course-routes"); // course-routes.js
 const homeRoutes = require("./routes/home-routes"); // home-routes.js
+const studentRoutes = require("./routes/student-routes"); // student-routes.js
+const teacherRoutes = require("./routes/teacher-routes"); // teacher-routes.js
 
 
 const HttpError = require("./models/http-error");
@@ -34,6 +36,8 @@ app.use((req, res, next) => {
 app.use("/api/users", usersRoutes);
 app.use("/api/admin", adminRoutes); // => //this one is for admin-routes.js
 app.use("/api/courses", coursesRoutes); // => //this one is for course-routes.js
+app.use("/api/students", studentRoutes); // => //this one is for student-routes.js
+app.use("/api/teachers", teacherRoutes); // => //this one is for home-routes.js
 app.use("/", homeRoutes); // => //this one is for home-routes.js
 
 app.use((req, res, next) => {

@@ -125,19 +125,16 @@ const uploadCourseMaterials = async(req, res, next) => {
         return next(new HttpError("No file was uploaded", 422));
     }
 
-    // console.log(req.file.path);
 
-    //  const url = req.protocol + "://" + req.get("host");
 
 
     const courseId = req.params.courseID;
 
     const createdCourseMaterials = new CourseMaterials({
-        // fileName: courseMaterials.fileName,
-        // fileType: courseMaterials.fileType,
+
         file: req.file.path,
         course: courseId,
-        // uploader: req.userData.userId,
+
     });
 
     const relatedCourse = await Course.findById(courseId);
@@ -145,10 +142,7 @@ const uploadCourseMaterials = async(req, res, next) => {
         return next(new HttpError("Could not find a course for this id.", 404));
     }
 
-    // const uploaderOfmaterial = await User.findById(req.userData.userId);
-    // if (!uploaderOfmaterial) {
-    //     return next(new HttpError("Could not find a user for this id.", 404));
-    // }
+
 
     try {
         await createdCourseMaterials.save();
