@@ -11,7 +11,7 @@ router.get("/", adminController.getAdmin); // => localhost:5000/admin/.. if admi
 router.post("/login", adminController.adminLogin); // => localhost:5000/admin/login
 
 router.get("/courses", adminController.getCoursesList); // => localhost:5000/admin/courses  to show all the created courses
-router.use(checkAuth);
+//router.use(checkAuth);
 router.post(
     "/create-course/:sessionID",
     adminController.adminCreateCourseForASession

@@ -10,7 +10,6 @@ const CourseMaterials = require("../models/course_materials");
 const checkAuth = require("../middleware/check-auth");
 const express = require("express");
 const router = express.Router();
-const checkAuth = require("../middleware/check-auth");
 
 const getCoursesList = async(req, res, next) => {
     let courses;
