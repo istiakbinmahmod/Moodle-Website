@@ -28,20 +28,24 @@ import CourseRemoveParticipants from "./courses/pages/CourseRemoveParticipants";
 import NewStudent from "./user/pages/NewStudent";
 import NewTeacher from "./user/pages/NewTeacher";
 import UserAuth from "./user/pages/UserAuth";
+import { useAuth } from "./shared/hooks/auth-hook";
+
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { token, login, logout, userId } = useAuth();
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const login = useCallback(() => {
-    setIsLoggedIn(true);
-  }, []);
+  // const login = useCallback(() => {
+  //   setIsLoggedIn(true);
+  // }, []);
 
-  const logout = useCallback(() => {
-    setIsLoggedIn(false);
-  }, []);
+  // const logout = useCallback(() => {
+  //   setIsLoggedIn(false);
+  // }, []);
 
   let routes;
 
-  if (isLoggedIn) {
+  // if (isLoggedIn) {
+  if (token) {
     routes = (
       <Switch>
         <Route path="/" exact>
@@ -123,8 +127,18 @@ const App = () => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
+      value={{
+        isLoggedIn: !!token,
+        token: token,
+        userId: userId,
+        login: login,
+        logout: logout,
+      }}
     >
+      {/* <AuthContext.Provider
+      value={{ isLoggedIn: isLoggedIn,
+         login: login, logout: logout }}
+    > */}
       <Router>
         <MainNavigation />
         <main> {routes} </main>{" "}

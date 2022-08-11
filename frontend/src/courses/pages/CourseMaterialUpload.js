@@ -13,8 +13,10 @@ import "./CourseForm.css";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import axios from "axios";
+import { AuthContext } from "../../shared/context/auth-context";
 
 const CourseMaterialUpload = () => {
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const courseID = useParams().courseID;
 
@@ -24,10 +26,6 @@ const CourseMaterialUpload = () => {
         value: null,
         isValid: false,
       },
-      description: {
-        value: "",
-        isValid: false,
-      }
     },
     false
   );
@@ -36,18 +34,19 @@ const CourseMaterialUpload = () => {
 
   const courseMatrialUploadHandler = async (event) => {
     event.preventDefault();
-    const formData = new FormData();
-    formData.append("file", formState.inputs.file.value);
-    formData.append("course", courseID);
-    formData.append("fileName", formState.inputs.file.value.name);
-    formData.append("fileType", formState.inputs.file.value.type);
-    formData.append("description", formState.inputs.description.value);
-    console.log(formData.values);
     try {
+      const formData = new FormData();
+      formData.append("file", formState.inputs.file.value);
+      formData.append("course", courseID);
+      // formData.append("uploader", 123);
+      console.log(formData);
       await sendRequest(
         `http://localhost:5000/api/courses/upload-course-materials/${courseID}`,
         "POST",
-        formData
+        formData,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
       );
       history.push("/");
     } catch (error) {}
@@ -64,15 +63,6 @@ const CourseMaterialUpload = () => {
           id="file"
           onInput={inputHandler}
           errorText="Please provide a file"
-        />{" "}
-        <Input
-          id="description"
-          element="input"
-          type="text"
-          label="Description"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid id."
-          onInput={inputHandler}
         />{" "}
         {}{" "}
         <Button type="submit" disabled={!formState.isValid}>
