@@ -17,17 +17,6 @@ router.get("/:courseID/users", coursesControllers.getUsersByCourseId); // => loc
 
 // );
 
-router.patch(
-    "/:courseID", [
-        check("courseID").not().isEmpty(),
-        check("courseTitle").not().isEmpty(),
-        check("courseCreditHour").not().isEmpty(),
-        check("courseDescription").not().isEmpty(),
-        check("sessionID").not().isEmpty(),
-    ],
-    adminControllers.adminEnrollUser
-    // => localhost:5000/admin/edit-course
-);
 
 // router.post("/upload-course-materials/:courseID", uploadFile.single('file'), coursesControllers.uploadCourseMaterials); // => localhost:5000/courses/upload-course-materials/:courseID to upload a course materials
 router.post(
@@ -40,7 +29,7 @@ router.post(
     coursesControllers.uploadCourseMaterials
 ); // => localhost:5000/courses/upload-course-materials/:courseID to upload a course materials
 
-router.delete("/:courseID", adminControllers.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
+
 
 router.get("/get/courses/:sessionID", coursesControllers.getCourseBySessionID); // => localhost:5000/admin/get-course to get a course
 
