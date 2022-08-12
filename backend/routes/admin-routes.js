@@ -9,9 +9,10 @@ const router = express.Router();
 router.get("/", adminController.getAdmin); // => localhost:5000/admin/.. if admin is logged in this page will be shown and if not it will redirect to login page
 
 router.post("/login", adminController.adminLogin); // => localhost:5000/admin/login
+// router.use(checkAuth);
 
 router.get("/courses", adminController.getCoursesList); // => localhost:5000/admin/courses  to show all the created courses
-//router.use(checkAuth);
+
 router.post(
     "/create-course/:sessionID",
     adminController.adminCreateCourseForASession

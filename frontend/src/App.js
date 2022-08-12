@@ -57,9 +57,6 @@ const App = () => {
         <Route path="/get/sessions" exact>
           <Sessions />
         </Route>{" "}
-        <Route path="/get/sessions" exact>
-          <Sessions />
-        </Route>{" "}
         <Route path="/api/courses/get/courses/:sessionId">
           <CourseSession />
         </Route>{" "}
@@ -76,8 +73,8 @@ const App = () => {
           <NewTeacher />
         </Route>{" "}
         {/* <Route path="/api/admin/create-course" exact>
-          <NewCourse />
-        </Route>{" "} */}
+                          <NewCourse />
+                        </Route>{" "} */}{" "}
         <Route path="/api/admin/create-session" exact>
           <NewSession />
         </Route>{" "}
@@ -136,9 +133,9 @@ const App = () => {
       }}
     >
       {/* <AuthContext.Provider
-      value={{ isLoggedIn: isLoggedIn,
-         login: login, logout: logout }}
-    > */}
+                  value={{ isLoggedIn: isLoggedIn,
+                     login: login, logout: logout }}
+                > */}{" "}
       <Router>
         <MainNavigation />
         <main> {routes} </main>{" "}

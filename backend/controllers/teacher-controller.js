@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Course = require("../models/courses");
 const CourseMaterials = require("../models/course_materials");
 const Assignment = require("../models/assignment");
+const Submissions = require("../models/submissions")
 
 const uploadCourseMaterials = async(req, res, next) => {
     const errors = validationResult(req);
@@ -82,19 +83,12 @@ const deleteCourseMaterials = async(req, res, next) => {
         );
     }
 
-    const { courseMaterialsId } = req.body;
-    const courseId = req.params.courseID;
+    const courseMaterialsId = req.body.courseMaterialsId;
+    console.log(courseMaterialsId);
+    const cid = req.params.courseID;
+    console.log(cid);
 
-    let course;
-    try {
-        course = await Course.findById(courseId);
-    } catch (err) {
-        const error = new HttpError(
-            "Something went wrong, could not find course.",
-            500
-        );
-        return next(error);
-    }
+    const course = await Course.findById(cid);
 
     if (!course) {
         const error = new HttpError(
@@ -161,17 +155,34 @@ const uploadCourseAssignment = async(req, res, next) => {
 
     const courseId = req.params.courseID;
 
-    const createdAssignment = new Assignment({
-        file: req.file.path,
-        course: courseId,
-        title: req.body.title,
-        description: req.body.description,
-        dueDate: req.body.dueDate,
-        cutOffDate: req.body.cutOffDate,
-        marks: req.body.marks,
-        is_active: req.body.is_active,
-        created_at: new Date(),
-    });
+    let createdAssignment;
+    if (req.files === null) {
+        createdAssignment = new Assignment({
+            file: null,
+            course: courseId,
+            title: req.body.title,
+            description: req.body.description,
+            dueDate: req.body.dueDate,
+            cutOffDate: req.body.cutOffDate,
+            marks: req.body.marks,
+            is_active: req.body.is_active,
+            created_at: new Date(),
+        });
+    } else {
+        createdAssignment = new Assignment({
+            file: req.file.path,
+            course: courseId,
+            title: req.body.title,
+            description: req.body.description,
+            dueDate: req.body.dueDate,
+            cutOffDate: req.body.cutOffDate,
+            marks: req.body.marks,
+            is_active: req.body.is_active,
+            created_at: new Date(),
+        });
+    }
+
+
 
     const relatedCourse = await Course.findById(courseId);
     if (!relatedCourse) {
@@ -226,7 +237,14 @@ const updateCourseAssignment = async(req, res, next) => {
     }
 
     assignment.title = req.body.title;
-    assignment.file = req.body.file;
+    if (req.files === null) {
+        console.log("It should be null"); //The probelm is when I don't upload a file the req.file is  not null but it is undefined. Most probably the problem is in the formData.
+        assignment.file = null;
+    } else {
+        console.log("why?");
+        console.log(req.file.length);
+        assignment.file = req.file.path;
+    }
     assignment.description = req.body.description;
     assignment.dueDate = req.body.dueDate;
     assignment.cutOffDate = req.body.cutOffDate;
@@ -298,15 +316,90 @@ const getCourseAssignmentByAssignmentD = async(req, res, next) => {
 };
 
 const deleteCourseAssignment = async(req, res, next) => {
-    const assignmentId = req.params.assignmentID;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(
+            new HttpError("Invalid inputs passed, please check your data.", 422)
+        );
+    }
+
+    const assignmentId = req.body.assignmentId;
+    const courseId = req.params.courseID;
+
+    let course;
+    try {
+        course = await Course.findById(courseId);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find course.",
+            500
+        );
+        return next(error);
+    }
+    if (!course) {
+        const error = new HttpError(
+            "Could not find course for this course id.",
+            404
+        );
+        return next(error);
+    }
+
+    let assignment;
+
+    try {
+        assignment = await Assignment.findById(assignmentId).populate('course');
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find assignment.",
+            500
+        );
+        return next(error);
+    }
+
+    if (!assignment) {
+        const error = new HttpError(
+            "Could not find assignment for this assignment id.",
+            404
+        );
+        return next(error);
+    }
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await assignment.remove({ session: sess });
+        await course.courseAssignments.pull(assignment);
+        await course.save({ session: sess });
+        await sess.commitTransaction();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Something went wrong, could not delete assignment.", 500)
+        );
+    }
+
+    res.json({ message: "Assignment deleted successfully.", course: course });
 
 
 };
 
+// the teacher should be able to view  and download the submissions of the students for a specific course assignment
+
+// the teacher should be able to view the submissions and download of the students for a specific course assignment for a specific student
+
+//the teacher should be able to open a forum post for a specific course
+
+//  the teacher can have some private files
+
+
+
+
 exports.uploadCourseMaterials = uploadCourseMaterials;
 exports.getCourseMaterials = getCourseMaterials;
 exports.deleteCourseMaterials = deleteCourseMaterials;
+
 exports.uploadCourseAssignment = uploadCourseAssignment;
 exports.updateCourseAssignment = updateCourseAssignment;
 exports.getAllCourseAssignments = getAllCourseAssignments;
 exports.getCourseAssignmentByAssignmentD = getCourseAssignmentByAssignmentD;
+exports.deleteCourseAssignment = deleteCourseAssignment;

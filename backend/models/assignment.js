@@ -6,7 +6,7 @@ const assignmentSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: false },
     dueDate: { type: Date, required: true, Default: Date.now },
-    file: { type: String, required: true },
+    file: { type: String, required: false },
     submitted_assignments: [{ type: mongoose.Types.ObjectId, ref: 'Submission' }], // submissions of the assignment
     is_active: { type: Boolean, default: true, required: false },
     created_at: { type: Date, default: Date.now },

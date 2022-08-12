@@ -63,6 +63,8 @@ const login = async(req, res, next) => {
         return next(new HttpError("Something went wrong, could not login.", 500));
     }
 
+    console.log(req.userData.userId);
+
     res.json({
         userId: existingUser.id,
         moodleID: existingUser.moodleID,

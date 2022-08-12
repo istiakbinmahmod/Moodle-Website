@@ -14,6 +14,7 @@ const studentSchema = new Schema({
     completed_courses: [{ type: mongoose.Types.ObjectId, ref: 'Course' }],
     user: { type: mongoose.Types.ObjectId, ref: 'User' },
     private_files: [{ type: mongoose.Types.ObjectId, ref: 'PrivateFiles' }],
+    submitted_assignments: [{ type: mongoose.Types.ObjectId, ref: 'Submission' }],
 
 });
 
