@@ -11,7 +11,7 @@ router.get('/get-all-courses', studentController.getAllCourses); // => localhost
 
 router.use(checkAuthStudent);
 
-router.get('/get-my-courses', studentController.getMyCourses); // => localhost:5000/api/students/get-my-courses to get all the courses of a student 
+router.get('/get-my-courses', studentController.getEnrolledCourses); // => localhost:5000/api/students/get-my-courses to get all the courses of a student 
 
 router.get('/get-course-materials/:courseID', studentController.getCourseMaterials);
 
