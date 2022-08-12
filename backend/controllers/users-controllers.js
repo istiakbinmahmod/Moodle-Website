@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const checkAuth = require("../middleware/check-auth");
 const express = require("express");
 const router = express.Router();
-const PrivateFile = require("../models/private-files");
+const PrivateFile = require("../models/private_files");
 
 const getUserById = async(req, res, next) => {
     const userId = req.params.uid;
