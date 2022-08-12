@@ -19,7 +19,6 @@ const DeleteCourse = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedCourses, setLoadedCourses] = useState();
   const history = useHistory();
-  // {!isLoading && loadedCourses && <CourseList items={loadedCourses} />}
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -56,7 +55,6 @@ const DeleteCourse = () => {
       );
       history.push("/");
     } catch (error) {}
-    // console.log(formState.inputs); // send this to the backend!
   };
 
   return (

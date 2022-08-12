@@ -6,11 +6,7 @@ import {
   Switch,
 } from "react-router-dom";
 
-// import Users from "./user/pages/Users";
 import NewCourse from "./courses/pages/NewCourse";
-import NewPlace from "./places/pages/NewPlace";
-import UserPlaces from "./places/pages/UserPlaces";
-import UpdatePlace from "./places/pages/UpdatePlace";
 import Auth from "./user/pages/Auth";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
@@ -32,19 +28,9 @@ import { useAuth } from "./shared/hooks/auth-hook";
 
 const App = () => {
   const { token, login, logout, userId } = useAuth();
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // const login = useCallback(() => {
-  //   setIsLoggedIn(true);
-  // }, []);
-
-  // const logout = useCallback(() => {
-  //   setIsLoggedIn(false);
-  // }, []);
 
   let routes;
 
-  // if (isLoggedIn) {
   if (token) {
     routes = (
       <Switch>
@@ -72,9 +58,6 @@ const App = () => {
         <Route path="/api/admin/create/teacher" exact>
           <NewTeacher />
         </Route>{" "}
-        {/* <Route path="/api/admin/create-course" exact>
-                          <NewCourse />
-                        </Route>{" "} */}{" "}
         <Route path="/api/admin/create-session" exact>
           <NewSession />
         </Route>{" "}
@@ -132,10 +115,6 @@ const App = () => {
         logout: logout,
       }}
     >
-      {/* <AuthContext.Provider
-                  value={{ isLoggedIn: isLoggedIn,
-                     login: login, logout: logout }}
-                > */}{" "}
       <Router>
         <MainNavigation />
         <main> {routes} </main>{" "}

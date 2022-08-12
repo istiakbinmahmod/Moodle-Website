@@ -36,8 +36,6 @@ const CourseSession = () => {
       {!isLoading && loadedCourses && <CourseList items={loadedCourses} />}
     </React.Fragment>
   );
-
-  // return <CourseList items={COURSES} />;
 };
 
 export default CourseSession;

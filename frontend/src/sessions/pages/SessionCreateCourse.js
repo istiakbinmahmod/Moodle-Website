@@ -23,10 +23,6 @@ const SessionCreateCourse = () => {
         value: "",
         isValid: false,
       },
-      // sessionID: {
-      //   value: "",
-      //   isValid: false,
-      // },
       courseTitle: {
         value: "",
         isValid: false,
@@ -39,12 +35,6 @@ const SessionCreateCourse = () => {
         value: "",
         isValid: false,
       },
-      // courses: [
-      //   {
-      //     value: "",
-      //     isValid: true,
-      //   },
-      // ],
     },
     false
   );
@@ -53,7 +43,6 @@ const SessionCreateCourse = () => {
 
   const courseSubmitHandler = async (event) => {
     event.preventDefault();
-    // console.log(formState.inputs); // send this to the backend!
     try {
       await sendRequest(
         `http://localhost:5000/api/admin/create-course/${sessionID}`,
@@ -69,24 +58,12 @@ const SessionCreateCourse = () => {
           "Content-Type": "application/json",
         }
       );
-    } catch (error) {
-      // setIsLoading(false);
-      // setError(error.message || "Something went wrong");
-    }
+    } catch (error) {}
   };
-
-  // const errorHandler = () => {
-  //   setError(null);
-  // };
-
-  // const sessionSubmitHandler = (event) => {
-  //   event.preventDefault();
-  //   console.log(formState.inputs); // send this to the backend!
-  // };
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={/*errorHandler*/ clearError} />
+      <ErrorModal error={error} onClear={clearError} />
       {!isLoading && (
         <form className="session-form" onSubmit={courseSubmitHandler}>
           <Input

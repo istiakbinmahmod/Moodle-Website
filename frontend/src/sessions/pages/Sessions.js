@@ -1,35 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 import SessionList from "../components/SessionList";
-// import UsersList from '../components/UsersList';
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
-
+import { AuthContext } from "../../shared/context/auth-context";
 const Sessions = () => {
-  // const SESSIONS = [
-  //   {
-  //     sessionID: "Jan 2020",
-  //     startDate: "2020-01-01",
-  //     endDate: "2020-01-01",
-  //     courses: [],
-  //   },
-  // ];
-  // return <SessionList items={SESSIONS} />;
-
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedSessions, setLoadedSessions] = useState();
-  // const [loadedSessionsWithCourses, setLoadedSessionsWithCourses] = useState();
 
   useEffect(() => {
     const fetchSessions = async () => {
       try {
+        const formData = new FormData();
         const responseData = await sendRequest(
-          "http://localhost:5000/api/admin/get/sessions"
+          "http://localhost:5000/api/admin/get/sessions",
+          "GET",
+          null,
+          {
+            Authorization: "Bearer " + auth.token,
+          }
         );
 
         setLoadedSessions(responseData.sessions);
-        // setLoadedSessionsWithCourses(responseData.sessionsWithCourses);
       } catch (err) {}
     };
     fetchSessions();
@@ -43,12 +37,7 @@ const Sessions = () => {
           <LoadingSpinner asOverlay />
         </div>
       )}
-      {!isLoading && loadedSessions && (
-        <SessionList
-          items={loadedSessions}
-          // items_crs={loadedSessionsWithCourses}
-        />
-      )}
+      {!isLoading && loadedSessions && <SessionList items={loadedSessions} />}
     </React.Fragment>
   );
 };

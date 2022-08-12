@@ -50,7 +50,6 @@ const UserAuth = () => {
       console.log(responseData, "istiak");
       auth.login(responseData.userId, responseData.token);
       console.log(responseData.token);
-      // auth.login(responseData.userId, responseData.token);
     } catch (error) {}
   };
   return (

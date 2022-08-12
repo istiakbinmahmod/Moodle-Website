@@ -13,7 +13,7 @@ const Courses = () => {
     const fetchCourses = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:5000/api/admin/courses"
+          "http://localhost:5000/api/courses"
         );
 
         setLoadedCourses(responseData.courses);
@@ -24,17 +24,15 @@ const Courses = () => {
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />{" "}
+      <ErrorModal error={error} onClear={clearError} />
       {isLoading && (
         <div className="center">
           <LoadingSpinner />
         </div>
-      )}{" "}
-      {!isLoading && loadedCourses && <CourseList items={loadedCourses} />}{" "}
+      )}
+      {!isLoading && loadedCourses && <CourseList items={loadedCourses} />}
     </React.Fragment>
   );
-
-  // return <CourseList items={COURSES} />;
 };
 
 export default Courses;

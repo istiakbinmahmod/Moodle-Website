@@ -48,26 +48,24 @@ const NewStudent = () => {
     event.preventDefault();
 
     try {
-      const formData = new FormData();
-      formData.append("moodleID", formState.inputs.moodle_id.value);
-      formData.append("name", formState.inputs.user_name.value);
-      formData.append("email", formState.inputs.email_id.value);
-      formData.append("password", formState.inputs.password.value);
-      console.log(formData.values);
+      // const formData = new FormData();
+      // formData.append("moodleID", formState.inputs.moodle_id.value);
+      // formData.append("name", formState.inputs.user_name.value);
+      // formData.append("email", formState.inputs.email_id.value);
+      // formData.append("password", formState.inputs.password.value);
+      // console.log(formData.values);
       await sendRequest(
         "http://localhost:5000/api/admin/create/student",
         "POST",
-        formData,
-        // JSON.stringify({
-        //   moodleID: formState.inputs.moodle_id.value,
-        //   name: formState.inputs.user_name.value,
-        //   email: formState.inputs.email_id.value,
-        //   password: formState.inputs.password.value,
-        // }),
-        // {
-        //   "Content-Type": "application/json",
-        //   // }
+        // formData,
+        JSON.stringify({
+          moodleID: formState.inputs.moodle_id.value,
+          name: formState.inputs.user_name.value,
+          email: formState.inputs.email_id.value,
+          password: formState.inputs.password.value,
+        }),
         {
+          "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
         }
       );

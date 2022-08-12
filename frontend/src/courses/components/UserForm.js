@@ -8,7 +8,6 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
-// import "./CourseForm.css";
 import "../pages/CourseForm.css";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
@@ -43,7 +42,6 @@ const UserForm = () => {
       );
       history.push("/");
     } catch (error) {}
-    // console.log(formState.inputs); // send this to the backend!
   };
 
   return (
@@ -95,31 +93,6 @@ const UserForm = () => {
           errorText="Please enter a valid course hour."
           onInput={inputHandler}
         />
-        {/* <Input
-          id="participants"
-          element="input"
-          type="text"
-          label="Course Participants"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid course id."
-          onInput={inputHandler}
-        /> */}
-        {/* <Input
-        id="description"
-        element="textarea"
-        label="Description"
-        validators={[VALIDATOR_MINLENGTH(5)]}
-        errorText="Please enter a valid description (at least 5 characters)."
-        onInput={inputHandler}
-      />
-      <Input
-        id="address"
-        element="input"
-        label="Address"
-        validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid address."
-        onInput={inputHandler}
-      /> */}
         <Button type="submit" disabled={!formState.isValid}>
           ADD COURSE
         </Button>

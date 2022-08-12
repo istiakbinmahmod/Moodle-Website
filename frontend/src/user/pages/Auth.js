@@ -49,7 +49,6 @@ const Auth = () => {
       );
       console.log(responseData, "istiak");
       auth.login(responseData.userId, responseData.token);
-      // auth.login(responseData.userId, responseData.token);
     } catch (error) {}
   };
   return (

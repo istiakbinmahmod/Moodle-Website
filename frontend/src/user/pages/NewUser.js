@@ -1,4 +1,3 @@
-// import React from "react";
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 
@@ -33,18 +32,6 @@ const NewUser = () => {
         value: "",
         isValid: false,
       },
-      // phone_num: {
-      //   value: "",
-      //   isValid: false,
-      // },
-      // date_of_birth: {
-      //   value: "",
-      //   isValid: false,
-      // },
-      // address: {
-      //   value: "",
-      //   isValid: false,
-      // },
       password: {
         value: "",
         isValid: false,
@@ -53,18 +40,6 @@ const NewUser = () => {
         value: "",
         isValid: false,
       },
-      // title: {
-      //   value: "",
-      //   isValid: false,
-      // },
-      // description: {
-      //   value: "",
-      //   isValid: false,
-      // },
-      // address: {
-      //   value: "",
-      //   isValid: false,
-      // },
     },
     false
   );
@@ -81,9 +56,6 @@ const NewUser = () => {
           moodleID: formState.inputs.moodle_id.value,
           name: formState.inputs.user_name.value,
           email: formState.inputs.email_id.value,
-          // password: formState.inputs.phone_num.value,
-          // date_of_birth: formState.inputs.date_of_birth.value,
-          // address: formState.inputs.address.value,
           password: formState.inputs.password.value,
           role: formState.inputs.role.value,
         }),
@@ -93,7 +65,6 @@ const NewUser = () => {
       );
       history.push("/");
     } catch (error) {}
-    // console.log(formState.inputs); // send this to the backend!
   };
 
   return (
@@ -128,33 +99,6 @@ const NewUser = () => {
           errorText="Please enter a valid email."
           onInput={inputHandler}
         />
-        {/* <Input
-          id="phone_num"
-          element="input"
-          type="text"
-          label="Phone Number"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid phone number."
-          onInput={inputHandler}
-        /> */}
-        {/* <Input
-          id="date_of_birth"
-          element="input"
-          type="text"
-          label="Date of Birth"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid date of birth."
-          onInput={inputHandler}
-        /> */}
-        {/* <Input
-          id="address"
-          element="input"
-          type="text"
-          label="Address"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid address."
-          onInput={inputHandler}
-        /> */}
         <Input
           id="password"
           element="input"
@@ -164,35 +108,6 @@ const NewUser = () => {
           errorText="Please enter a valid password."
           onInput={inputHandler}
         />
-
-        {/* <Input
-            name="role"
-            id="role"
-            element="input"
-            // type="text"
-            type="radio"
-            value="student"
-            label="Role"
-            validators={[VALIDATOR_REQUIRE()]}
-            errorText="Please enter a valid role."
-            initialValue="student/teacher"
-            onInput={inputHandler}
-          />
-          student
-          <Input
-            name="role"
-            id="role"
-            element="input"
-            // type="text"
-            type="radio"
-            value="teacher"
-            label="Role"
-            validators={[VALIDATOR_REQUIRE()]}
-            errorText="Please enter a valid role."
-            initialValue="student/teacher"
-            onInput={inputHandler}
-          />
-          teacher */}
         <Input
           id="role"
           element="input"
@@ -202,34 +117,6 @@ const NewUser = () => {
           errorText="Please enter a valid role."
           onInput={inputHandler}
         ></Input>
-        {/* <option value="student">Student</option>
-          <option value="teacher">Teacher</option> */}
-        {/* </Input> */}
-
-        {/* <select value="role" id="role" onChange={inputHandler}>
-          <option value="grapefruit">Grapefruit</option>
-          <option value="lime">Lime</option>
-          <option value="coconut">Coconut</option>
-          <option value="mango">Mango</option>
-        </select> */}
-
-        {/* <Input
-        id="description"
-        element="textarea"
-        label="Description"
-        // validators={[VALIDATOR_REQUIRE()]}
-        validators={[VALIDATOR_MINLENGTH(5)]}
-        errorText="Please enter a valid description (at least 5 characters)."
-        onInput={inputHandler}
-      />
-      <Input
-        id="address"
-        element="input"
-        label="Address"
-        validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid address."
-        onInput={inputHandler}
-      /> */}
         <Button type="submit" disabled={!formState.isValid}>
           ADD USER
         </Button>

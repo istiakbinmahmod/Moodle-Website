@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-// import CourseList from "../../courses/components/CourseList";
 import UsersList from "../../user/components/UsersList";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
@@ -37,8 +36,6 @@ const CourseUsers = () => {
       {!isLoading && loadedUsers && <UsersList items={loadedUsers} />}
     </React.Fragment>
   );
-
-  // return <CourseList items={COURSES} />;
 };
 
 export default CourseUsers;

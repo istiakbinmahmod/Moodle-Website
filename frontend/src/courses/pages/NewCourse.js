@@ -37,33 +37,11 @@ const NewCourse = () => {
         value: "",
         isValid: false,
       },
-      // participants: [
-      //   {
-      //     value: "",
-      //     isValid: false,
-      //   },
-      // ],
-      // title: {
-      //   value: "",
-      //   isValid: false,
-      // },
-      // description: {
-      //   value: "",
-      //   isValid: false,
-      // },
-      // address: {
-      //   value: "",
-      //   isValid: false,
-      // },
     },
     false
   );
 
   const history = useHistory();
-  // const courseSubmitHandler = (event) => {
-  //   event.preventDefault();
-  //   console.log(formState.inputs); // send this to the backend!
-  // };
 
   const courseSubmitHandler = async (event) => {
     event.preventDefault();
@@ -77,7 +55,6 @@ const NewCourse = () => {
           courseTitle: formState.inputs.courseTitle.value,
           courseDescription: formState.inputs.courseDescription.value,
           courseCreditHour: formState.inputs.courseCreditHour.value,
-          // participants: formState.inputs.participants.value,
         }),
         {
           "Content-Type": "application/json",
@@ -85,7 +62,6 @@ const NewCourse = () => {
       );
       history.push("/");
     } catch (error) {}
-    // console.log(formState.inputs); // send this to the backend!
   };
 
   return (
@@ -137,31 +113,6 @@ const NewCourse = () => {
           errorText="Please enter a valid course hour."
           onInput={inputHandler}
         />
-        {/* <Input
-          id="participants"
-          element="input"
-          type="text"
-          label="Course Participants"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid course id."
-          onInput={inputHandler}
-        /> */}
-        {/* <Input
-        id="description"
-        element="textarea"
-        label="Description"
-        validators={[VALIDATOR_MINLENGTH(5)]}
-        errorText="Please enter a valid description (at least 5 characters)."
-        onInput={inputHandler}
-      />
-      <Input
-        id="address"
-        element="input"
-        label="Address"
-        validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid address."
-        onInput={inputHandler}
-      /> */}
         <Button type="submit" disabled={!formState.isValid}>
           ADD COURSE
         </Button>

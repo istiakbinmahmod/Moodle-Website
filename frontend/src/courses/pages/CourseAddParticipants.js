@@ -43,10 +43,7 @@ const CourseAddParticipants = () => {
         `http://localhost:5000/api/admin/edit/${courseID}`,
         "PATCH",
         JSON.stringify({
-          // participants: formState.inputs.moodleID.value,
           participants: formState.inputs.moodleID.value,
-          // participants: formState.inputs.moodleID.map((item) => item.value),
-          //   courseID: courseID,
         }),
         {
           "Content-Type": "application/json",
