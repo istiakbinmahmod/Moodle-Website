@@ -12,12 +12,13 @@ import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
+import { AuthContext } from "../../shared/context/auth-context";
 import { useForm } from "../../shared/hooks/form-hook";
 import "./UserForm.css";
 
 const NewTeacher = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
+  const auth = useContext(AuthContext);
   const [formState, inputHandler] = useForm(
     {
       moodle_id: {
@@ -56,6 +57,7 @@ const NewTeacher = () => {
         }),
         {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
         }
       );
       history.push("/");
@@ -64,9 +66,10 @@ const NewTeacher = () => {
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />
+      <ErrorModal error={error} onClear={clearError} />{" "}
       <form className="user-form" onSubmit={userSubmitHandler}>
-        {isLoading && <LoadingSpinner asOverlay />}
+        {" "}
+        {isLoading && <LoadingSpinner asOverlay />}{" "}
         <Input
           id="moodle_id"
           element="input"
@@ -75,7 +78,7 @@ const NewTeacher = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid id."
           onInput={inputHandler}
-        />
+        />{" "}
         <Input
           id="user_name"
           element="input"
@@ -84,7 +87,7 @@ const NewTeacher = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid name."
           onInput={inputHandler}
-        />
+        />{" "}
         <Input
           id="email_id"
           element="input"
@@ -93,7 +96,7 @@ const NewTeacher = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid email."
           onInput={inputHandler}
-        />
+        />{" "}
         <Input
           id="password"
           element="input"
@@ -102,11 +105,11 @@ const NewTeacher = () => {
           validators={[VALIDATOR_MINLENGTH(6)]}
           errorText="Please enter a valid password."
           onInput={inputHandler}
-        />
+        />{" "}
         <Button type="submit" disabled={!formState.isValid}>
-          ADD TEACHER
-        </Button>
-      </form>
+          ADD TEACHER{" "}
+        </Button>{" "}
+      </form>{" "}
     </React.Fragment>
   );
 };

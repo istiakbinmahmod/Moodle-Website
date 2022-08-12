@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
             return next(error);
         }
 
-        const decodedToken = jwt.verify(token, 'supersecret_dont_share_admin');
+        const decodedToken = jwt.verify(token, "supersecret_dont_share_admin");
         req.userData = { userId: decodedToken.userId };
         next();
 
