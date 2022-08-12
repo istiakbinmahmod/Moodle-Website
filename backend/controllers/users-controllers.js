@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const checkAuth = require("../middleware/check-auth");
 const express = require("express");
 const router = express.Router();
+const PrivateFile = require("../models/private-files");
 
 const getUserById = async(req, res, next) => {
     const userId = req.params.uid;
@@ -73,7 +74,6 @@ const login = async(req, res, next) => {
     });
 };
 
-router.use(checkAuth);
 
 const getCoursesByUserId = async(req, res, next) => {
     const userId = req.params.uid;
@@ -114,7 +114,132 @@ const userEditProfile = async(req, res, next) => {
     }
 };
 
+const uploadPrivateFiles = async(req, res, next) => {
+    const userID = req.userData.userId;
+    const user = await User.findById(userID);
+
+    if (!user) {
+        console.log(err);
+        return next(
+            new HttpError("Something went wrong could not get the specific user", 500)
+        );
+    }
+
+    const createdPrivateFile = new PrivateFile({
+        user: userID,
+        fileName: req.file.originalname,
+        filePath: req.file.path,
+        fileType: req.file.mimetype
+    });
+
+    try {
+        await createdPrivateFile.save();
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await createdPrivateFile.save({ session: session });
+        await user.privateFiles.push(createdPrivateFile);
+        await user.save({ session: session });
+        await session.commitTransaction();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Something went wrong, could not upload file.", 500)
+        );
+    }
+
+    res.status(201).json({
+        message: "File uploaded successfully!",
+        createdPrivateFile: createdPrivateFile,
+        user: user
+    });
+
+};
+
+const getAllPrivateFiles = async(req, res, next) => {
+    const userID = req.userData.userId;
+    const user = await User.findById(userID);
+
+    if (!user) {
+        console.log(err);
+        return next(
+            new HttpError("Something went wrong could not get the specific user", 500)
+        );
+    }
+
+    let privateFiles;
+    try {
+        privateFiles = await PrivateFile.find({ user: userID });
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Something went wrong, could not get the private files.", 500)
+        );
+    }
+    if (!privateFiles || privateFiles.length === 0) {
+        return next(
+            new HttpError("Could not get the private files, no private files found.", 404)
+        );
+    }
+    res.json({
+        privateFiles: privateFiles.map((privateFile) =>
+            privateFile.toObject({ getters: true })
+        ),
+    });
+};
+
+
+const getPrivateFileByID = async(req, res, next) => {
+    const privateFileID = req.params.privateFileID;
+    const privateFile = await PrivateFile.findById(privateFileID);
+    if (!privateFile) {
+        console.log(err);
+        return next(new HttpError("Could not find a private file for this id.", 404));
+    }
+    res.json({ privateFile: privateFile });
+};
+
+const deletePrivateFileByID = async(req, res, next) => {
+    const privateFileID = req.params.privateFileID;
+    const privateFile = await PrivateFile.findById(privateFileID).populate("user");
+
+    if (!privateFile) {
+        console.log(err);
+        return next(new HttpError("Could not find a private file for this id.", 404));
+    }
+
+    let user;
+    try {
+        user = await User.findById(privateFile.user);
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError("Something went wrong, could not get the user.", 500));
+    }
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await privateFile.remove({ session: sess });
+        await user.privateFiles.pull(privateFile);
+        await user.save({ session: sess });
+        await sess.commitTransaction();
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError("Something went wrong, could not delete the file.", 500));
+    }
+
+    res.status(200).json({
+        message: "File deleted successfully!"
+    });
+};
+
+
+
+
 exports.getUserById = getUserById;
 exports.login = login;
 exports.getCoursesByUserId = getCoursesByUserId;
 exports.userEditProfile = userEditProfile;
+exports.uploadPrivateFiles = uploadPrivateFiles;
+exports.getAllPrivateFiles = getAllPrivateFiles;
+exports.getPrivateFileByID = getPrivateFileByID;
+exports.deletePrivateFileByID = deletePrivateFileByID;
