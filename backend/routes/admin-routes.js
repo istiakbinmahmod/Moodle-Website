@@ -18,6 +18,8 @@ router.post(
     adminController.adminCreateCourseForASession
 ); // => localhost:5000/admin/create-course to create a new course
 
+
+
 router.delete("/delete/course/:courseID", adminController.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
 
 router.patch("/edit/:courseID", adminController.adminEnrollUser); // => localhost:5000/admin/edit-course to edit a course
@@ -58,8 +60,9 @@ router.patch(
         check("sessionID").not().isEmpty(),
     ],
     adminController.adminEnrollUser
-    // => localhost:5000/admin/edit-course
+    // => localhost:5000/admin/edit-course/:courseID to edit a course
 );
+
 
 
 module.exports = router;

@@ -12,7 +12,7 @@ const userSchema = new Schema({
     image: { type: String, required: false },
     phone: { type: String, required: false },
     address: { type: String, required: false },
-    accessTime: { type: String, required: false },
+    accessTime: { type: String, required: false, default: Date.now },
     role: { type: String, required: true }, //student, teacher, admin
     courses: [{ type: mongoose.Types.ObjectId, ref: 'Course' }], //this is the courses that the user is taking right now
     privateFiles: [{ type: mongoose.Types.ObjectId, ref: 'PrivateFiles' }] //this is the private files that the user has uploaded

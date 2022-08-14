@@ -9,6 +9,10 @@ const checkAuth = require("../middleware/check-auth");
 const express = require("express");
 const router = express.Router();
 const PrivateFile = require("../models/private_files");
+const Forum = require("../models/course-forum");
+const ForumPost = require("../models/course-forum");
+const PostReply = require("../models/post-reply");
+const { ConnectionCheckOutStartedEvent } = require("mongodb");
 
 const getUserById = async(req, res, next) => {
     const userId = req.params.uid;
@@ -51,20 +55,16 @@ const login = async(req, res, next) => {
             token = jwt.sign({ userId: existingUser.id, moodleID: existingUser.moodleID },
                 "supersecret_dont_share_student", { expiresIn: "1h" }
             );
-
         }
         if (existingUser.role === "teacher") {
             token = jwt.sign({ userId: existingUser.id, moodleID: existingUser.moodleID },
                 "supersecret_dont_share_teacher", { expiresIn: "1h" }
             );
         }
-
     } catch (err) {
         console.log(err);
         return next(new HttpError("Something went wrong, could not login.", 500));
     }
-
-
 
     res.json({
         userId: existingUser.id,
@@ -73,7 +73,6 @@ const login = async(req, res, next) => {
         token: token,
     });
 };
-
 
 const getCoursesByUserId = async(req, res, next) => {
     const userId = req.params.uid;
@@ -129,7 +128,7 @@ const uploadPrivateFiles = async(req, res, next) => {
         user: userID,
         fileName: req.file.originalname,
         filePath: req.file.path,
-        fileType: req.file.mimetype
+        fileType: req.file.mimetype,
     });
 
     try {
@@ -150,9 +149,8 @@ const uploadPrivateFiles = async(req, res, next) => {
     res.status(201).json({
         message: "File uploaded successfully!",
         createdPrivateFile: createdPrivateFile,
-        user: user
+        user: user,
     });
-
 };
 
 const getAllPrivateFiles = async(req, res, next) => {
@@ -172,12 +170,18 @@ const getAllPrivateFiles = async(req, res, next) => {
     } catch (err) {
         console.log(err);
         return next(
-            new HttpError("Something went wrong, could not get the private files.", 500)
+            new HttpError(
+                "Something went wrong, could not get the private files.",
+                500
+            )
         );
     }
     if (!privateFiles || privateFiles.length === 0) {
         return next(
-            new HttpError("Could not get the private files, no private files found.", 404)
+            new HttpError(
+                "Could not get the private files, no private files found.",
+                404
+            )
         );
     }
     res.json({
@@ -187,24 +191,29 @@ const getAllPrivateFiles = async(req, res, next) => {
     });
 };
 
-
 const getPrivateFileByID = async(req, res, next) => {
     const privateFileID = req.params.privateFileID;
     const privateFile = await PrivateFile.findById(privateFileID);
     if (!privateFile) {
         console.log(err);
-        return next(new HttpError("Could not find a private file for this id.", 404));
+        return next(
+            new HttpError("Could not find a private file for this id.", 404)
+        );
     }
     res.json({ privateFile: privateFile });
 };
 
 const deletePrivateFileByID = async(req, res, next) => {
     const privateFileID = req.params.privateFileID;
-    const privateFile = await PrivateFile.findById(privateFileID).populate("user");
+    const privateFile = await PrivateFile.findById(privateFileID).populate(
+        "user"
+    );
 
     if (!privateFile) {
         console.log(err);
-        return next(new HttpError("Could not find a private file for this id.", 404));
+        return next(
+            new HttpError("Could not find a private file for this id.", 404)
+        );
     }
 
     let user;
@@ -212,7 +221,9 @@ const deletePrivateFileByID = async(req, res, next) => {
         user = await User.findById(privateFile.user);
     } catch (err) {
         console.log(err);
-        return next(new HttpError("Something went wrong, could not get the user.", 500));
+        return next(
+            new HttpError("Something went wrong, could not get the user.", 500)
+        );
     }
 
     try {
@@ -224,13 +235,426 @@ const deletePrivateFileByID = async(req, res, next) => {
         await sess.commitTransaction();
     } catch (err) {
         console.log(err);
-        return next(new HttpError("Something went wrong, could not delete the file.", 500));
+        return next(
+            new HttpError("Something went wrong, could not delete the file.", 500)
+        );
     }
 
     res.status(200).json({
-        message: "File deleted successfully!"
+        message: "File deleted successfully!",
     });
 };
+
+const updateProfile = async(req, res, next) => {
+    const userID = req.userData.userId;
+    const user = await User.findById(userID);
+    if (!user) {
+        console.log(err);
+        return next(
+            new HttpError("Something went wrong could not get the specific user", 500)
+        );
+    }
+
+    user.name = req.body.name;
+    if (typeof req.files === "undefined") {
+        console.log("No images were uploaded");
+    } else {
+        user.image = req.file.path;
+    }
+    user.phone = req.body.phone;
+    user.address = req.body.address;
+
+    try {
+        await user.save();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Something went wrong, could not update the user.", 500)
+        );
+    }
+
+    res.status(200).json({
+        message: "User Info updated successfully!",
+        user: user,
+    });
+};
+
+const changePassword = async(req, res, next) => {
+    const userID = req.userData.userId;
+    const user = await User.findById(userID);
+    if (!user) {
+        console.log(err);
+        return next(
+            new HttpError("Something went wrong could not get the specific user", 500)
+        );
+    }
+
+    const isValidOldPassword = await bcrypt.compare(
+        req.body.oldPassword,
+        user.password
+
+    );
+
+    if (!isValidOldPassword) {
+        return next(
+            new HttpError("Old password is incorrect.", 403)
+        );
+    }
+
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(req.body.newPassword, 12);
+    } catch (err) {
+        const error = new HttpError(
+            "Could not create user, please try again.",
+            500
+        );
+        return next(error);
+
+    }
+
+    user.password = hashedPassword;
+
+    try {
+        await user.save();
+    } catch (err) {
+        const error = new HttpError(
+            "Chaning password, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+
+    res.status(200).json({
+        message: "Password changed successfully!",
+        user: user,
+    });
+
+}
+
+const userPostinForum = async(req, res, next) => {
+    const courseID = req.params.courseID;
+    const userID = req.userData.userId;
+    const user = await User.findById(userID);
+
+    // now check if that course has that user in the participants list
+
+    let course;
+
+    try {
+        course = await Course.findById(courseID);
+    } catch (err) {
+        const error = new HttpError(
+            "Couldn't find the course",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+    // if course.particpants has that user
+    const coursesOfUser = await User.find({
+        participants: userID
+    });
+
+    if (coursesOfUser.length > 0) {
+        return next(
+            new HttpError("You are already in this course", 403)
+        );
+    }
+
+    const forum = await Forum.findById(course.forum);
+
+    if (!forum) {
+        return next(
+            new HttpError("Could not find the forum for this course.", 404)
+        );
+    }
+
+    const post = new ForumPost({
+        user: user,
+        forum: forum,
+        postDescription: req.body.postDescription,
+        postDate: new Date(),
+    });
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await post.save({ session: session });
+        await forum.posts.push(post);
+        await forum.save({ session: session });
+        await sess.commitTransaction();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not create the post, please try again.", 500)
+        );
+    }
+
+    res.status(200).json({
+        message: "Post created successfully!",
+        post: post,
+    });
+};
+
+const getForumPosts = async(req, res, next) => {
+    const courseID = req.params.courseID;
+
+    const forum = await Forum.findOne({ course: courseID });
+    if (!forum) {
+        console.log(err);
+        return next(
+            new HttpError("Could not find the forum for this course.", 404)
+        );
+    }
+
+    let posts;
+    try {
+        posts = await ForumPost.find({ forum: forum._id }).populate("user");
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not get the posts for this forum.", 500)
+        );
+    }
+
+    res.status(200).json({
+        message: "Posts fetched successfully!",
+        posts: posts,
+    });
+};
+
+const getForumPost = async(req, res, next) => {
+    const postID = req.params.postID;
+
+    let post;
+    try {
+        post = await ForumPost.findById(postID).populate("user");
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not get the post for this forum.", 500)
+        );
+    }
+
+    res.status(200).json({
+        message: "Post fetched successfully!",
+        post: post,
+    });
+};
+
+const replyToForumPost = async(req, res, next) => {
+    const postID = req.params.postID;
+    const userID = req.userData.userId;
+    const user = await User.findById(userID);
+
+    let post;
+    try {
+        post = await ForumPost.findById(postID);
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not get the post for this forum.", 500)
+        );
+    }
+
+    const reply = new PostReply({
+        replyDescription: req.body.replyDescription,
+        replyDate: new Date(),
+        user: user,
+        post: post,
+    });
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await reply.save({ session: session });
+        await post.replies.push(reply);
+        await post.save({ session: session });
+        await session.commitTransaction();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not create the reply, please try again.", 500)
+        );
+    }
+
+    res.status(200).json({
+        message: "Reply created successfully!",
+        reply: reply,
+    });
+};
+
+const getRepliesOfForumPost = async(req, res, next) => {
+    const postID = req.params.postID;
+
+    let post;
+    try {
+        post = await ForumPost.findById(postID);
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not get the post for this forum.", 500)
+        );
+    }
+
+    let replies;
+    try {
+        replies = await PostReply.find({ post: post._id }).populate("user");
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not get the replies for this post.", 500)
+        );
+    }
+
+    res.status(200).json({
+        message: "Replies fetched successfully!",
+        replies: replies,
+    });
+};
+
+const deleteForumPost = async(req, res, next) => {
+
+    const postID = req.params.postID;
+
+    let post;
+    try {
+        post = await ForumPost.findById(postID);
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not get the post for this forum.", 500)
+        );
+    }
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await post.remove({ session: session });
+        //also need to delete the replies
+        for (reply in post.replies) {
+            await PostReply.findByIdAndRemove(reply, { session: session });
+        }
+        const forumRelatedtoPost = await Forum.findById(post.forum);
+        await forumRelatedtoPost.posts.pull(post);
+        await forumRelatedtoPost.save({ session: session });
+        await session.commitTransaction();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not delete the post, please try again.", 500)
+        );
+    }
+
+    res.status(200).json({
+        message: "Post deleted successfully!",
+    });
+
+};
+
+const deleteReplyOfForumPost = async(req, res, next) => {
+    const replyID = req.params.replyID;
+
+    let reply;
+    try {
+        reply = await PostReply.findById(replyID);
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not get the reply for this post.", 500)
+        );
+    }
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await reply.remove({ session: session });
+        const postRelatedtoReply = await ForumPost.findById(reply.post);
+        await postRelatedtoReply.replies.pull(reply);
+        await postRelatedtoReply.save({ session: session });
+        await session.commitTransaction();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not delete the reply, please try again.", 500)
+        );
+    }
+
+    res.status(200).json({
+        message: "Reply deleted successfully!",
+    });
+};
+
+const editPost = async(req, res, next) => {
+    const postID = req.params.postID;
+
+    let post;
+    try {
+        post = await ForumPost.findById(postID);
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not get the post for this forum.", 500)
+        );
+    }
+
+    post.postDescription = req.body.postDescription;
+    post.postDate = new Date();
+
+    try {
+        await post.save();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not edit the post, please try again.", 500)
+        );
+    }
+
+    res.status(200).json({
+
+        message: "Post edited successfully!",
+        post: post,
+
+    });
+};
+
+const editReply = async(req, res, next) => {
+
+    const replyID = req.params.replyID;
+
+    let reply;
+    try {
+        reply = await PostReply.findById(replyID);
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not get the reply for this post.", 500)
+        );
+    }
+
+    reply.replyDescription = req.body.replyDescription;
+    reply.replyDate = new Date();
+
+    try {
+        await reply.save();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError("Could not edit the reply, please try again.", 500)
+        );
+    }
+
+    res.status(200).json({
+
+        message: "Reply edited successfully!",
+        reply: reply,
+
+    });
+
+};
+
 
 
 
@@ -243,3 +667,14 @@ exports.uploadPrivateFiles = uploadPrivateFiles;
 exports.getAllPrivateFiles = getAllPrivateFiles;
 exports.getPrivateFileByID = getPrivateFileByID;
 exports.deletePrivateFileByID = deletePrivateFileByID;
+exports.updateProfile = updateProfile;
+exports.changePassword = changePassword;
+exports.userPostinForum = userPostinForum;
+exports.getForumPosts = getForumPosts;
+exports.getForumPost = getForumPost;
+exports.replyToForumPost = replyToForumPost;
+exports.getRepliesOfForumPost = getRepliesOfForumPost;
+exports.deleteForumPost = deleteForumPost;
+exports.deleteReplyOfForumPost = deleteReplyOfForumPost;
+exports.editPost = editPost;
+exports.editReply = editReply;

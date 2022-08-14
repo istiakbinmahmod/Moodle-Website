@@ -13,6 +13,7 @@ const User = require("../models/users");
 const Session = require("../models/sessions");
 const Student = require("../models/students");
 const Teacher = require("../models/teachers");
+const Forum = require("../models/course-forum");
 // const checkAuth = require("../middleware/check-auth");
 
 //const DUMMY_COURSES = require("./course-controllers").DUMMY_COURSES; // this is to get the dummy courses from the course-controllers.js
@@ -64,59 +65,6 @@ const adminLogin = (req, res, next) => {
 };
 
 
-
-const adminCreateCourseForASession = async(req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return next(
-            new HttpError("Invalid inputs passed, please check your data.", 422)
-        );
-    }
-    const sessionID = req.params.sessionID;
-    const { courseID, courseTitle, courseDescription, courseCreditHour } =
-    req.body;
-
-    let user;
-
-    let sessionRelatedToCourse, sessionName;
-
-    try {
-        sessionRelatedToCourse = await Session.findById(sessionID);
-        sessionName = sessionRelatedToCourse.sessionID;
-    } catch (err) {
-        const error = new HttpError(
-            "Something went wrong, could not find session.",
-            500
-        );
-        return next(error);
-    }
-
-    const createdCourse = await Course.create({
-        sessionID,
-        courseID,
-        sessionName,
-        courseTitle,
-        courseDescription,
-        courseCreditHour,
-    });
-
-    try {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        await createdCourse.save({ session: session });
-        sessionRelatedToCourse.courses.push(createdCourse);
-        await sessionRelatedToCourse.save({ session: session });
-        await session.commitTransaction();
-    } catch (err) {
-        const error = new HttpError(
-            "Creating course failed, please try again.",
-            500
-        );
-        console.log(err);
-        return next(error);
-    }
-    res.json({ course: createdCourse });
-};
 
 const adminEnrollUser = async(req, res, next) => {
     //this one is to enroll multiple users to a course
@@ -698,6 +646,87 @@ const adminCreateTeacher = async(req, res, next) => {
     }
 
     res.json({ teacher: teacher, token: token, userId: teacher.id });
+};
+
+const adminCreateCourseForASession = async(req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(
+            new HttpError("Invalid inputs passed, please check your data.", 422)
+        );
+    }
+    const sessionID = req.params.sessionID;
+    const { courseID, courseTitle, courseDescription, courseCreditHour } =
+    req.body;
+
+    let sessionRelatedToCourse, sessionName, forumName;
+
+    try {
+        sessionRelatedToCourse = await Session.findById(sessionID);
+        sessionName = sessionRelatedToCourse.sessionID;
+        forumName = sessionName + " Forum";
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find session.",
+            500
+        );
+        return next(error);
+    }
+
+
+
+    const createdCourse = await Course.create({
+        sessionID,
+        courseID,
+        sessionName,
+        courseTitle,
+        courseDescription,
+        courseCreditHour,
+    });
+
+
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await createdCourse.save({ session: session });
+        sessionRelatedToCourse.courses.push(createdCourse);
+        await sessionRelatedToCourse.save({ session: session });
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Creating course failed, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+
+    const createdForum = await Forum.create({
+        forumName: courseID + forumName,
+        course: createdCourse
+    });
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await createdForum.save({ session: session });
+        const forumRelatedCourse = await Course.findById(createdCourse._id);
+        forumRelatedCourse.forum = createdForum;
+        await forumRelatedCourse.save({ session: session });
+        await session.commitTransaction();
+    } catch (err) {
+        const error = new HttpError(
+            "Creating forum failed, please try again.",
+            500
+        );
+        console.log(err);
+        return next(error);
+    }
+
+
+
+    res.json({ course: createdCourse, forum: createdForum });
 };
 
 exports.getAdmin = getAdmin;

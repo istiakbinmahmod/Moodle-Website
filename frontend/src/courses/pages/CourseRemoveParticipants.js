@@ -12,6 +12,7 @@ import { useForm } from "../../shared/hooks/form-hook";
 import "./CourseForm.css";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import { AuthContext } from "../../shared/context/auth-context";
 
 let courseParticipants;
 
@@ -19,6 +20,7 @@ const CourseRemoveParticipants = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedUsers, setLoadedUsers] = useState();
   const courseID = useParams().courseID;
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
     const fetchCourseParticipants = async () => {
@@ -61,6 +63,7 @@ const CourseRemoveParticipants = () => {
         }),
         {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
         }
       );
       history.push("/");
@@ -82,7 +85,7 @@ const CourseRemoveParticipants = () => {
             onInput={inputHandler}
             options={courseParticipants}
           />
-        )}
+        )}{" "}
         <Button type="submit" disabled={!formState.isValid}>
           REMOVE USER{" "}
         </Button>{" "}

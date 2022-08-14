@@ -237,12 +237,11 @@ const updateCourseAssignment = async(req, res, next) => {
     }
 
     assignment.title = req.body.title;
-    if (req.files === null) {
+    if (typeof req.files === 'undefined') {
         console.log("It should be null"); //The probelm is when I don't upload a file the req.file is  not null but it is undefined. Most probably the problem is in the formData.
-        assignment.file = null;
     } else {
         console.log("why?");
-        console.log(req.file.length);
+        //console.log(req.file.length);
         assignment.file = req.file.path;
     }
     assignment.description = req.body.description;

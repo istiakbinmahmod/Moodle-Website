@@ -11,9 +11,15 @@ import "./SessionForm.css";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 
 const NewSession = () => {
+  
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const auth = useContext(AuthContext);
+  console.log(
+    "auth.token: ",
+);
   const [formState, inputHandler] = useForm(
     {
       sessionID: {
@@ -45,6 +51,7 @@ const NewSession = () => {
         }),
         {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
         }
       );
     } catch (error) {}
@@ -52,7 +59,7 @@ const NewSession = () => {
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={/*errorHandler*/ clearError} />
+      <ErrorModal error={error} onClear={/*errorHandler*/ clearError} />{" "}
       <form className="session-form" onSubmit={sessionSubmitHandler}>
         <Input
           id="sessionID"
@@ -63,31 +70,28 @@ const NewSession = () => {
           errorText="Please enter a valid session id."
           onInput={inputHandler}
         />
-
         <Input
           id="startDate"
           element="input"
-          type="text"
+          type="datetime-local"
           label="Start Date"
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid start date."
           onInput={inputHandler}
         />
-
         <Input
           id="endDate"
           element="input"
-          type="text"
+          type="datetime-local"
           label="End Date"
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid end date."
           onInput={inputHandler}
         />
-
         <Button type="submit" disabled={!formState.isValid}>
-          ADD SESSION
-        </Button>
-      </form>
+          ADD SESSION{" "}
+        </Button>{" "}
+      </form>{" "}
     </React.Fragment>
   );
 };
