@@ -14,41 +14,40 @@ const uploadCourseMaterials = async(req, res, next) => {
         );
     }
 
-    if (req.files === null) {
-        return next(new HttpError("No file was uploaded", 422));
-    }
+
 
     const courseId = req.params.courseID;
+    console.log(req.body.file);
 
-    const createdCourseMaterials = new CourseMaterials({
-        file: req.file.path,
-        course: courseId,
-    });
+    // const createdCourseMaterials = new CourseMaterials({
+    //     file: req.body.file,
+    //     course: courseId,
+    // });
 
-    const relatedCourse = await Course.findById(courseId);
-    if (!relatedCourse) {
-        return next(new HttpError("Could not find a course for this id.", 404));
-    }
+    // const relatedCourse = await Course.findById(courseId);
+    // if (!relatedCourse) {
+    //     return next(new HttpError("Could not find a course for this id.", 404));
+    // }
 
-    try {
-        await createdCourseMaterials.save();
-        const sess = await mongoose.startSession();
-        sess.startTransaction();
-        await createdCourseMaterials.save({ session: sess });
-        await relatedCourse.courseMaterials.push(createdCourseMaterials);
-        await relatedCourse.save({ session: sess });
-        await sess.commitTransaction();
-    } catch (err) {
-        console.log(err);
-        return next(
-            new HttpError(
-                "Something went wrong, could not upload course materials.",
-                500
-            )
-        );
-    }
+    // try {
+    //     await createdCourseMaterials.save();
+    //     const sess = await mongoose.startSession();
+    //     sess.startTransaction();
+    //     await createdCourseMaterials.save({ session: sess });
+    //     await relatedCourse.courseMaterials.push(createdCourseMaterials);
+    //     await relatedCourse.save({ session: sess });
+    //     await sess.commitTransaction();
+    // } catch (err) {
+    //     console.log(err);
+    //     return next(
+    //         new HttpError(
+    //             "Something went wrong, could not upload course materials.",
+    //             500
+    //         )
+    //     );
+    // }
 
-    res.json({ courseMaterials: createdCourseMaterials });
+    // res.json({ courseMaterials: createdCourseMaterials });
 };
 
 const getCourseMaterials = async(req, res, next) => {

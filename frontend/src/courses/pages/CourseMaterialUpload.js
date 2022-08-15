@@ -1,9 +1,12 @@
-import React, { useState, useContext } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import NewFileUpload from "../../shared/components/FormElements/NewFileUpload";
 import FileUpload from "../../shared/components/FormElements/FileUpload";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import storage from "../../firebase";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -23,7 +26,7 @@ const CourseMaterialUpload = () => {
   const [formState, inputHandler] = useForm(
     {
       file: {
-        value: null,
+        value: "",
         isValid: false,
       },
     },
@@ -33,7 +36,7 @@ const CourseMaterialUpload = () => {
   const [formState2, inputHandler2] = useForm(
     {
       file2: {
-        value: null,
+        value: "",
         isValid: false,
       },
       title: {
@@ -47,8 +50,7 @@ const CourseMaterialUpload = () => {
       dueDate: {
         value: Date.now(),
         isValid: false,
-      }
-
+      },
     },
     false
   );
@@ -59,7 +61,10 @@ const CourseMaterialUpload = () => {
     event.preventDefault();
     try {
       const formData = new FormData();
+      // formData.append("file", localStorage.getItem("fileurl")); 
+      // console.log(localStorage.getItem("fileurl"));  
       formData.append("file", formState.inputs.file.value);
+      // console.log(formState.inputs.file.value);
       formData.append("course", courseID);
       // formData.append("uploader", 123);
       console.log(formData);
@@ -86,7 +91,7 @@ const CourseMaterialUpload = () => {
       formData.append("description", formState2.inputs.description.value);
       formData.append("dueDate", formState2.inputs.dueDate.value);
       // formData.append("uploader", 123);
-      console.log(formData);
+      // console.log(formData);
       await sendRequest(
         `http://localhost:5000/api/teachers/upload-course-assignment/${courseID}`,
         "POST",
@@ -99,15 +104,51 @@ const CourseMaterialUpload = () => {
     } catch (error) {}
   };
 
+  const [loadedCourseMaterials, setLoadedCourseMaterials] = useState();
+
+  useEffect(() => {
+    const fetchCourseMaterials = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/teachers/get-materials/${courseID}`
+        );
+
+        setLoadedCourseMaterials(responseData.courseMaterials);
+      } catch (err) {}
+    };
+    fetchCourseMaterials();
+  }, [sendRequest]);
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
+      {loadedCourseMaterials &&
+        loadedCourseMaterials.map((mat) => {
+          return (
+            <div className="center">
+              {" "}
+              {/* <h1>{mat.title}</h1>
+                                        <p>{mat.description}</p> */}{" "}
+              {/* <a href={mat.file} download> {mat.file} </a> */}{" "}
+              <Link to={mat.file} target="__blank" download>
+                {" "}
+                Download {mat.file}{" "}
+              </Link>{" "}
+            </div>
+          );
+        })}{" "}
       <form className="course-form" onSubmit={courseMatrialUploadHandler}>
         {" "}
         {isLoading && <LoadingSpinner asOverlay />}{" "}
         <FileUpload
+        // name="file"
+        // label="Choose Image"
+        // handleInputState={handleInputState}
+        // type="image"
+        // value={data.img}
           center
           id="file"
+          type="file"
           onInput={inputHandler}
           errorText="Please provide a file"
         />{" "}
@@ -133,7 +174,7 @@ const CourseMaterialUpload = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid title."
           onInput={inputHandler2}
-        />
+        />{" "}
         <Input
           id="description"
           element="input"
@@ -142,7 +183,7 @@ const CourseMaterialUpload = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid description."
           onInput={inputHandler2}
-        />
+        />{" "}
         <Input
           id="dueDate"
           element="input"
@@ -151,7 +192,7 @@ const CourseMaterialUpload = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid date."
           onInput={inputHandler2}
-        />
+        />{" "}
         {}{" "}
         <Button type="submit" disabled={!formState2.isValid}>
           ADD COURSE ASSIGNMENT{" "}

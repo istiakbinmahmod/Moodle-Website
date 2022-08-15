@@ -27,5 +27,8 @@ router.delete('/delete-submission/:submissionID', studentController.deleteSubmis
 
 router.get('get-submission/:assignmentID', studentController.getSubmissionByAssignmentID);
 
+router.get('/download-course-material/:courseMaterialID', studentController.downloadCourseMaterial);
+
+router.get('/download-course-assignment/:assignmentID', studentController.downloadAssignmentMaterial);
 
 module.exports = router;

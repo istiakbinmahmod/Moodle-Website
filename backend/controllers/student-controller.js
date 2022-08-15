@@ -323,6 +323,82 @@ const getSubmissionByAssignmentID = async(req, res, next) => { //get my submissi
     res.json({ submission: submission });
 };
 
+const downloadCourseMaterial = async(req, res, next) => { //download a course material
+    const courseMaterialID = req.params.courseMaterialID;
+
+    let courseMaterial;
+    try {
+        courseMaterial = await CourseMaterials.findById(courseMaterialID);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find course material.",
+            500
+        );
+        return next(error);
+    }
+
+    if (!courseMaterial) {
+        const error = new HttpError(
+            "Could not find course material for this course material id.",
+            404
+        );
+        return next(error);
+
+    }
+
+    try {
+        res.download(courseMaterial.file);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not download course material.",
+            500
+        );
+        return next(error);
+    }
+
+    res.status(200).json({ courseMaterial: courseMaterial });
+
+};
+
+const downloadAssignmentMaterial = async(req, res, next) => { //download an assignment material
+    const assignmentMaterialID = req.params.assignmentMaterialID;
+
+    let assignmentMaterial;
+    try {
+        assignmentMaterial = await AssignmentMaterials.findById(assignmentMaterialID);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find assignment material.",
+            500
+        );
+        return next(error);
+    }
+
+    if (!assignmentMaterial) {
+        const error = new HttpError(
+            "Could not find assignment material for this assignment material id.",
+            404
+        );
+        return next(error);
+
+    }
+
+    try {
+        res.download(assignmentMaterial.file);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not download assignment material.",
+            500
+        );
+        return next(error);
+    }
+
+    res.status(200).json({ assignmentMaterial: assignmentMaterial });
+
+};
+
+
+
 
 
 exports.getEnrolledCourses = getEnrolledCourses;
@@ -334,3 +410,5 @@ exports.uploadSubmission = uploadSubmission;
 exports.updateSubmission = updateSubmission;
 exports.deleteSubmission = deleteSubmission;
 exports.getSubmissionByAssignmentID = getSubmissionByAssignmentID;
+exports.downloadCourseMaterial = downloadCourseMaterial;
+exports.downloadAssignmentMaterial = downloadAssignmentMaterial;
