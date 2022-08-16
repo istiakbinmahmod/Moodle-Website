@@ -93,12 +93,15 @@ const adminEnrollUser = async(req, res, next) => {
         return next(error);
     }
 
+    console.log(participants);
+
     let user;
     if (participants.length > 0) {
         for (const id of participants) {
             try {
                 // user = await User.findById(participants);
                 user = await User.findOne({ moodleID: id });
+                console.log(user);
                 //course = await Course.findById(cid);
                 course.participants.push(user);
             } catch (err) {

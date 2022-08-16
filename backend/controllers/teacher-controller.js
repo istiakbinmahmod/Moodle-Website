@@ -462,6 +462,32 @@ const markSubmissionForAssignment = async(req, res, next) => {
     res.json({ submission: submission });
 }
 
+const getEnrolledCourses = async(req, res, next) => {
+    const user = req.userData.userId;
+
+    if (!user) {
+        const error = new HttpError("Could not find user for this user id.", 404);
+        return next(error);
+    }
+
+    let enrolledCourses;
+    try {
+        enrolledCourses = await User.findById(user).populate("courses");
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find courses.",
+            500
+        );
+        return next(error);
+    }
+
+    if (!enrolledCourses) {
+        const error = new HttpError("Could not find courses for this user.", 404);
+        return next(error);
+    }
+
+    res.json({ courses: enrolledCourses.courses.toObject({ getters: true }) });
+};
 
 
 
@@ -484,3 +510,5 @@ exports.deleteCourseAssignment = deleteCourseAssignment;
 
 exports.getAllSubmissionsForAssignment = getAllSubmissionsForAssignment;
 exports.markSubmissionForAssignment = markSubmissionForAssignment;
+
+exports.getEnrolledCourses = getEnrolledCourses;

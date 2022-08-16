@@ -59,6 +59,7 @@ const DeleteCourse = () => {
 
   return (
     <form className="course-form" onSubmit={courseSubmitHandler}>
+      {" "}
       {!isLoading && loadedCourses && (
         <DropDownSelect
           id="course_id"
@@ -69,10 +70,9 @@ const DeleteCourse = () => {
           options={selectCourses}
         />
       )}
-
       <Button type="submit" disabled={!formState.isValid}>
-        DELETE COURSE
-      </Button>
+        DELETE COURSE{" "}
+      </Button>{" "}
     </form>
   );
 };
