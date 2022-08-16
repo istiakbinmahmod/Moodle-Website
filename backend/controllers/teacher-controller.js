@@ -5,7 +5,7 @@ const Course = require("../models/courses");
 const CourseMaterials = require("../models/course_materials");
 const Assignment = require("../models/assignment");
 
-const Submissions = require("../models/submissions");
+const Submission = require("../models/submissions");
 const storage = require("../firebase");
 
 const getCourseMaterials = async(req, res, next) => {
@@ -155,9 +155,6 @@ const updateCourseAssignment = async(req, res, next) => {
         );
     }
 
-    const { downloadURL } = req.file;
-    console.log(downloadURL);
-
     const assignmentId = req.params.assignmentID;
 
     let assignment;
@@ -180,13 +177,6 @@ const updateCourseAssignment = async(req, res, next) => {
     }
 
     assignment.title = req.body.title;
-    if (typeof req.files === "undefined") {
-        console.log("It should be null"); //The probelm is when I don't upload a file the req.file is  not null but it is undefined. Most probably the problem is in the formData.
-    } else {
-        console.log("why?");
-        //console.log(req.file.length);
-        assignment.file = downloadURL;
-    }
     assignment.description = req.body.description;
     assignment.dueDate = req.body.dueDate;
     assignment.cutOffDate = req.body.cutOffDate;
@@ -350,7 +340,7 @@ const uploadCourseMaterials = async(req, res, next) => {
     createdCourseMaterials = new CourseMaterials({
         file: downloadURL,
         course: courseId,
-        title: req.body.title
+        title: req.body.title,
     });
 
     const relatedCourse = await Course.findById(courseId);
@@ -380,7 +370,59 @@ const uploadCourseMaterials = async(req, res, next) => {
     res.json({ courseMaterials: createdCourseMaterials });
 };
 
-// exports.uploadCourseMaterials = uploadCourseMaterials;
+const getAllSubmissionsForAssignment = async(req, res, next) => {
+
+    const assignmentId = req.params.assignmentID;
+
+    let assignment;
+    try {
+        assignment = await Assignment.findById(assignmentId);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find assignment.",
+            500
+        );
+        return next(error);
+    }
+
+    if (!assignment) {
+        const error = new HttpError(
+            "Could not find assignment for this assignment id.",
+            404
+        );
+
+        return next(error);
+    }
+
+    let submissions;
+    try {
+        submissions = await Submission.find({ assignment: assignmentId });
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find submissions.",
+            500
+        );
+        return next(error);
+    }
+    if (!submissions) {
+
+        const error = new HttpError(
+            "Could not find submissions for this assignment id.",
+            404
+        );
+        return next(error);
+    }
+
+    res.json({ submissions: submissions });
+
+};
+
+
+
+
+
+
+exports.uploadCourseMaterials = uploadCourseMaterials;
 exports.getCourseMaterials = getCourseMaterials;
 exports.deleteCourseMaterials = deleteCourseMaterials;
 
@@ -389,4 +431,3 @@ exports.updateCourseAssignment = updateCourseAssignment;
 exports.getAllCourseAssignments = getAllCourseAssignments;
 exports.getCourseAssignmentByAssignmentD = getCourseAssignmentByAssignmentD;
 exports.deleteCourseAssignment = deleteCourseAssignment;
-exports.uploadCourseMaterials = uploadCourseMaterials;

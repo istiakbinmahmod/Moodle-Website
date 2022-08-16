@@ -13,7 +13,7 @@ router.post('/upload-material/:courseID', uploadFile.single("file"), addFilePath
 router.delete('/delete-material/:courseID', teacherController.deleteCourseMaterials); // => localhost:5000/teacher/delete-material/:materialID to delete a material
 
 router.post('/upload-course-assignment/:courseID', uploadFile.single("file"), addFilePath, teacherController.uploadCourseAssignment); // => localhost:5000/teacher/create-assignment/:courseID to create a new assignment
-router.patch('/update-course-assignment/:assignmentID', uploadFile.single("file"), addFilePath, teacherController.updateCourseAssignment); // => localhost:5000/teacher/update-assignment/:assignmentID to update an assignment
+router.patch('/update-course-assignment/:assignmentID', teacherController.updateCourseAssignment); // => localhost:5000/teacher/update-assignment/:assignmentID to update an assignment
 router.delete('/delete-course-assignment/:courseID', teacherController.deleteCourseAssignment); // => localhost:5000/teacher/delete-assignment/:assignmentID to delete an assignment
 router.get('/get-all-course-assignment/:courseID', teacherController.getAllCourseAssignments); // => localhost:5000/teacher/get-assignment/:courseID to get all the assignments of a course
 router.get('/get-course-assignment/:assignmentID', teacherController.getCourseAssignmentByAssignmentD); // => localhost:5000/teacher/get-assignment/:assignmentID to get an assignment

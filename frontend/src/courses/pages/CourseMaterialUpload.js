@@ -127,7 +127,10 @@ const CourseMaterialUpload = () => {
         loadedCourseMaterials.map((mat) => {
           return (
             <div className="center">
-              <a href={mat.file}> {mat.title} </a>{" "}
+              <Button to={`/course-materials/${mat._id}`}>
+              <a href={mat.file}> {mat.title} </a>
+              </Button>
+              {" "}
             </div>
           );
         })}{" "}
