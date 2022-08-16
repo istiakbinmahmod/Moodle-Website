@@ -18,4 +18,7 @@ router.delete('/delete-course-assignment/:courseID', teacherController.deleteCou
 router.get('/get-all-course-assignment/:courseID', teacherController.getAllCourseAssignments); // => localhost:5000/teacher/get-assignment/:courseID to get all the assignments of a course
 router.get('/get-course-assignment/:assignmentID', teacherController.getCourseAssignmentByAssignmentD); // => localhost:5000/teacher/get-assignment/:assignmentID to get an assignment
 
+router.get('/get-all-submissions/:assignmentID', teacherController.getAllSubmissionsForAssignment); // => localhost:5000/teacher/get-assignment-submissions/:assignmentID to get all the submissions of an assignment
+router.patch('/mark-submission/:submissionID', teacherController.markSubmissionForAssignment); // => localhost:5000/teacher/update-submission/:submissionID to update a submission
+
 module.exports = router;

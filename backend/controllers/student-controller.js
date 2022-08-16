@@ -108,12 +108,11 @@ const uploadSubmission = async(req, res, next) => { //upload a submission for an
         return next(error);
     }
 
-    if (req.files === null) {
-        return next(new HttpError("No file uploaded", 422));
-    }
+    const { downloadURL } = req.file;
+    console.log(downloadURL);
 
     const submission = new Submissions({
-        file: req.file.path,
+        file: downloadURL,
         assignment: assignmentId,
         user: req.userData.userId,
     });
@@ -170,11 +169,10 @@ const updateSubmission = async(req, res, next) => { //update a submission for an
         return next(error);
     }
 
-    if (req.files === null) {
-        return next(new HttpError("No file uploaded", 422));
-    }
+    const { downloadURL } = req.file;
+    console.log(downloadURL);
 
-    submission.file = req.file.path;
+    submission.file = downloadURL;
 
     try {
         await submission.save();

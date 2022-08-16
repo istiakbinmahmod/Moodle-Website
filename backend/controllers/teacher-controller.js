@@ -417,6 +417,56 @@ const getAllSubmissionsForAssignment = async(req, res, next) => {
 
 };
 
+const markSubmissionForAssignment = async(req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(
+            new HttpError("Invalid inputs passed, please check your data.", 422)
+        );
+    }
+
+    const { grade, comments } = req.body;
+    const submissionId = req.params.submissionID;
+    let submission;
+    try {
+        submission = await Submission.findById(submissionId);
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not find submission.",
+            500
+        );
+        return next(error);
+    }
+
+    if (!submission) {
+        const error = new HttpError(
+            "Could not find submission for this submission id.",
+            404
+        );
+        return next(error);
+    }
+    submission.grade = grade;
+    submission.comments = comments;
+    submission.is_graded = true;
+
+    try {
+        await submission.save();
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not update submission.",
+            500
+        );
+        return next(error);
+    }
+
+    res.json({ submission: submission });
+}
+
+
+
+
+
+
 
 
 
@@ -431,3 +481,6 @@ exports.updateCourseAssignment = updateCourseAssignment;
 exports.getAllCourseAssignments = getAllCourseAssignments;
 exports.getCourseAssignmentByAssignmentD = getCourseAssignmentByAssignmentD;
 exports.deleteCourseAssignment = deleteCourseAssignment;
+
+exports.getAllSubmissionsForAssignment = getAllSubmissionsForAssignment;
+exports.markSubmissionForAssignment = markSubmissionForAssignment;
