@@ -92,7 +92,7 @@ const CourseMaterialUpload = () => {
       formData.append("title", formState2.inputs.title.value);
       formData.append("description", formState2.inputs.description.value);
       formData.append("dueDate", formState2.inputs.dueDate.value);
-
+      alert(formState2.inputs.file2.value);
       await sendRequest(
         `http://localhost:5000/api/teachers/upload-course-assignment/${courseID}`,
         "POST",

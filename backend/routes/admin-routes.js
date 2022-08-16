@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/", adminController.getAdmin); // => localhost:5000/admin/.. if admin is logged in this page will be shown and if not it will redirect to login page
 
 router.post("/login", adminController.adminLogin); // => localhost:5000/admin/login
-router.use(checkAuth);
+// router.use(checkAuth);
 
 router.get("/courses", adminController.getCoursesList); // => localhost:5000/admin/courses  to show all the created courses
 
@@ -63,6 +63,9 @@ router.patch(
     // => localhost:5000/admin/edit-course/:courseID to edit a course
 );
 
+router.post("/create/students", adminController.createStudentsinBulk); // => localhost:5000/admin/create-students to create a new student')
+
+router.post("/enrollStudents/:courseID", adminController.adminEnrollUserInBulk); // => localhost:5000/admin/enroll-students to enroll students in a course
 
 
 module.exports = router;
