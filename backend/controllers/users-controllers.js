@@ -10,7 +10,7 @@ const express = require("express");
 const router = express.Router();
 const PrivateFile = require("../models/private_files");
 const Forum = require("../models/course-forum");
-const ForumPost = require("../models/course-forum");
+const ForumPost = require("../models/forum-post");
 const PostReply = require("../models/post-reply");
 const { ConnectionCheckOutStartedEvent } = require("mongodb");
 
@@ -322,8 +322,6 @@ const userPostinForum = async (req, res, next) => {
   const userID = req.userData.userId;
   const user = await User.findById(userID);
 
-  // now check if that course has that user in the participants list
-
   let course;
 
   try {
@@ -333,45 +331,36 @@ const userPostinForum = async (req, res, next) => {
     console.log(err);
     return next(error);
   }
-  // if course.particpants has that user
-  const coursesOfUser = await User.find({
-    participants: userID,
-  });
 
-  if (coursesOfUser.length > 0) {
-    return next(new HttpError("You are already in this course", 403));
+  let forum = await Forum.findById(course.forum);
+
+  if (!forum) {
+    return next(
+      new HttpError("Could not find the forum for this course.", 404)
+    );
   }
 
-  const forum = await Forum.findById(course.forum);
-
-    if (!forum) {
-        return next(
-            new HttpError("Could not find the forum for this course.", 404)
-        );
-    }
-
-    const post = new ForumPost({
-        user: user,
-        forum: forum,
-        title: req.body.title,
-        postDescription: req.body.postDescription,
-        postDate: new Date(),
-    });
-
+  const post = new ForumPost({
+    user: user,
+    forum: forum,
+    title: req.body.title,
+    postDescription: req.body.postDescription,
+    postDate: new Date(),
+    author : user.name,
+  });
   try {
     const session = await mongoose.startSession();
     session.startTransaction();
     await post.save({ session: session });
     await forum.posts.push(post);
     await forum.save({ session: session });
-    await sess.commitTransaction();
+    await session.commitTransaction();
   } catch (err) {
     console.log(err);
     return next(
       new HttpError("Could not create the post, please try again.", 500)
     );
   }
-
 
   res.status(200).json({
     message: "Post created successfully!",
@@ -439,6 +428,7 @@ const replyToForumPost = async (req, res, next) => {
     replyDate: new Date(),
     user: user,
     post: post,
+    replier: user.name,
   });
 
   try {
@@ -565,21 +555,19 @@ const editPost = async (req, res, next) => {
   post.postDescription = req.body.postDescription;
   post.postDate = new Date();
 
-    try {
-        await post.save();
-    } catch (err) {
-        console.log(err);
-        return next(
-            new HttpError("Could not edit the post, please try again.", 500)
-        );
-    }
+  try {
+    await post.save();
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError("Could not edit the post, please try again.", 500)
+    );
+  }
 
-    res.status(200).json({
-
-        message: "Post edited successfully!",
-        post: post,
-
-    });
+  res.status(200).json({
+    message: "Post edited successfully!",
+    post: post,
+  });
 };
 
 const editReply = async (req, res, next) => {
@@ -627,14 +615,15 @@ const getForumByCourseID = async (req, res, next) => {
     forums = await Forum.find({ course: course._id });
   } catch (err) {
     console.log(err);
-    return next(new HttpError("Could not get the forums for this course.", 500));
+    return next(
+      new HttpError("Could not get the forums for this course.", 500)
+    );
   }
 
   res.status(200).json({
     message: "Forums fetched successfully!",
     forums: forums,
   });
-
 };
 
 exports.getUserById = getUserById;

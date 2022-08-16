@@ -12,6 +12,7 @@ const forumPostSchema = new Schema({
     forum: { type: mongoose.Types.ObjectId, ref: "Course-Forum" },
     user: { type: mongoose.Types.ObjectId, ref: "User" },
     replies: [{ type: mongoose.Types.ObjectId, ref: "Post-Reply" }],
+    author: { type: String, required: false },
 });
 
 module.exports = mongoose.model("Forum-Post", forumPostSchema);

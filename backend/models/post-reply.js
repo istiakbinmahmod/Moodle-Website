@@ -11,6 +11,7 @@ const postReplySchema = new Schema({
     replyDate: { type: Date, default: Date.now },
     post: { type: mongoose.Types.ObjectId, ref: "Forum-Post" },
     user: { type: mongoose.Types.ObjectId, ref: "User" },
+    replier: { type: String, required: false },
 });
 
 module.exports = mongoose.model("Post-Reply", postReplySchema);
