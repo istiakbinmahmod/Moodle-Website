@@ -473,6 +473,7 @@ const getRepliesOfForumPost = async (req, res, next) => {
   res.status(200).json({
     message: "Replies fetched successfully!",
     replies: replies,
+    post : post,
   });
 };
 
