@@ -364,6 +364,7 @@ const userPostinForum = async(req, res, next) => {
     const post = new ForumPost({
         user: user,
         forum: forum,
+        title: req.body.title,
         postDescription: req.body.postDescription,
         postDate: new Date(),
     });
@@ -589,7 +590,6 @@ const editPost = async(req, res, next) => {
             new HttpError("Could not get the post for this forum.", 500)
         );
     }
-
     post.postDescription = req.body.postDescription;
     post.postDate = new Date();
 

@@ -6,6 +6,7 @@ const user = require("../models/users");
 const Schema = mongoose.Schema;
 
 const forumPostSchema = new Schema({
+    title: { type: String, required: false },
     postDescription: { type: String, required: true },
     postDate: { type: Date, default: Date.now },
     forum: { type: mongoose.Types.ObjectId, ref: "Course-Forum" },
