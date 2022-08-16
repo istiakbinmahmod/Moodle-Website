@@ -101,17 +101,7 @@ const getCoursesByUserId = async(req, res, next) => {
     });
 };
 
-const userEditProfile = async(req, res, next) => {
-    const userID = req.params.uid;
 
-    const user = await User.findById(userID);
-    if (!user) {
-        console.log(err);
-        return next(
-            new HttpError("Something went wrong could not get the specific user", 500)
-        );
-    }
-};
 
 const uploadPrivateFiles = async(req, res, next) => {
     const userID = req.userData.userId;
@@ -256,13 +246,11 @@ const updateProfile = async(req, res, next) => {
     }
 
     user.name = req.body.name;
-    if (typeof req.files === "undefined") {
-        console.log("No images were uploaded");
-    } else {
-        user.image = req.file.path;
-    }
+    const { downLoadURL } = req.file;
+    user.image = downLoadURL;
     user.phone = req.body.phone;
     user.address = req.body.address;
+    user.bio = req.body.bio;
 
     try {
         await user.save();

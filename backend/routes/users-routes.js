@@ -4,6 +4,7 @@ const uploadFile = require("../middleware/file-upload");
 const checkUserAuth = require("../middleware/check-auth-user");
 
 const usersController = require('../controllers/users-controllers');
+const { addFilePath } = require('../controllers/fileController');
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.post('/upload-private-file/', uploadFile.single("file"), usersController.
 router.get('/get-all-private-files/', usersController.getAllPrivateFiles); // => localhost:5000/users/get-all-private-files/ to get all the private files
 router.get('/get-private-file/:privateFileID', usersController.getPrivateFileByID); // => localhost:5000/users/get-private-file/:privateFileID to get a private file
 router.delete('/delete-private-file/:privateFileID', usersController.deletePrivateFileByID); // => localhost:5000/users/delete-private-file/:privateFileID to delete a private file
-router.patch('/update-profile', uploadFile.single("file"), usersController.updateProfile); // => localhost:5000/users/update-profile to update a user's profile
+router.patch('/update-profile', uploadFile.single("file"), addFilePath, usersController.updateProfile); // => localhost:5000/users/update-profile to update a user's profile
 router.patch('/update-password', usersController.changePassword); // => localhost:5000/users/update-password to update a user's password
 router.post('/post/:courseID', usersController.userPostinForum); // => localhost:5000/users/post/:courseID to post a message in a course )
 router.get('/get-all-posts/:courseID', usersController.getForumPosts); // => localhost:5000/users/get-all-posts/:courseID to get all the posts in a course
