@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const path = require("path");
 const cors = require("cors");
 
+const multer = require("multer");
+
 const router = express.Router();
 const fs = require("fs");
 const usersRoutes = require("./routes/users-routes");
@@ -22,7 +24,6 @@ const app = express();
 
 app.use(bodyParser.json());
 
-// var multer = require("multer");
 // var forms = multer();
 
 // app.use(forms.array());
@@ -30,6 +31,17 @@ app.use(bodyParser.json());
 
 
 app.use(cors());
+
+
+const {
+    ref,
+    uploadBytes,
+    listAll,
+    deleteObject,
+} = require("firebase/storage");
+
+const storage = require("./firebase");
+app.use(express.json());
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");

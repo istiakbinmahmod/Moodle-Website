@@ -4,51 +4,9 @@ const mongoose = require("mongoose");
 const Course = require("../models/courses");
 const CourseMaterials = require("../models/course_materials");
 const Assignment = require("../models/assignment");
-const Submissions = require("../models/submissions")
 
-const uploadCourseMaterials = async(req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return next(
-            new HttpError("Invalid inputs passed, please check your data.", 422)
-        );
-    }
-
-
-
-    const courseId = req.params.courseID;
-    console.log(req.body.file);
-
-    // const createdCourseMaterials = new CourseMaterials({
-    //     file: req.body.file,
-    //     course: courseId,
-    // });
-
-    // const relatedCourse = await Course.findById(courseId);
-    // if (!relatedCourse) {
-    //     return next(new HttpError("Could not find a course for this id.", 404));
-    // }
-
-    // try {
-    //     await createdCourseMaterials.save();
-    //     const sess = await mongoose.startSession();
-    //     sess.startTransaction();
-    //     await createdCourseMaterials.save({ session: sess });
-    //     await relatedCourse.courseMaterials.push(createdCourseMaterials);
-    //     await relatedCourse.save({ session: sess });
-    //     await sess.commitTransaction();
-    // } catch (err) {
-    //     console.log(err);
-    //     return next(
-    //         new HttpError(
-    //             "Something went wrong, could not upload course materials.",
-    //             500
-    //         )
-    //     );
-    // }
-
-    // res.json({ courseMaterials: createdCourseMaterials });
-};
+const Submissions = require("../models/submissions");
+const storage = require("../firebase");
 
 const getCourseMaterials = async(req, res, next) => {
     const courseId = req.params.courseID;
@@ -147,41 +105,24 @@ const uploadCourseAssignment = async(req, res, next) => {
             new HttpError("Invalid inputs passed, please check your data.", 422)
         );
     }
-
-    if (req.files === null) {
-        return next(new HttpError("No Assignment was uploaded", 422));
-    }
+    const { downloadURL } = req.file;
+    console.log(downloadURL);
 
     const courseId = req.params.courseID;
 
     let createdAssignment;
-    if (req.files === null) {
-        createdAssignment = new Assignment({
-            file: null,
-            course: courseId,
-            title: req.body.title,
-            description: req.body.description,
-            dueDate: req.body.dueDate,
-            cutOffDate: req.body.cutOffDate,
-            marks: req.body.marks,
-            is_active: req.body.is_active,
-            created_at: new Date(),
-        });
-    } else {
-        createdAssignment = new Assignment({
-            file: req.file.path,
-            course: courseId,
-            title: req.body.title,
-            description: req.body.description,
-            dueDate: req.body.dueDate,
-            cutOffDate: req.body.cutOffDate,
-            marks: req.body.marks,
-            is_active: req.body.is_active,
-            created_at: new Date(),
-        });
-    }
 
-
+    createdAssignment = new Assignment({
+        file: downloadURL,
+        course: courseId,
+        title: req.body.title,
+        description: req.body.description,
+        dueDate: req.body.dueDate,
+        cutOffDate: req.body.cutOffDate,
+        marks: req.body.marks,
+        is_active: req.body.is_active,
+        created_at: new Date(),
+    });
 
     const relatedCourse = await Course.findById(courseId);
     if (!relatedCourse) {
@@ -214,6 +155,9 @@ const updateCourseAssignment = async(req, res, next) => {
         );
     }
 
+    const { downloadURL } = req.file;
+    console.log(downloadURL);
+
     const assignmentId = req.params.assignmentID;
 
     let assignment;
@@ -236,12 +180,12 @@ const updateCourseAssignment = async(req, res, next) => {
     }
 
     assignment.title = req.body.title;
-    if (typeof req.files === 'undefined') {
+    if (typeof req.files === "undefined") {
         console.log("It should be null"); //The probelm is when I don't upload a file the req.file is  not null but it is undefined. Most probably the problem is in the formData.
     } else {
         console.log("why?");
         //console.log(req.file.length);
-        assignment.file = req.file.path;
+        assignment.file = downloadURL;
     }
     assignment.description = req.body.description;
     assignment.dueDate = req.body.dueDate;
@@ -345,7 +289,7 @@ const deleteCourseAssignment = async(req, res, next) => {
     let assignment;
 
     try {
-        assignment = await Assignment.findById(assignmentId).populate('course');
+        assignment = await Assignment.findById(assignmentId).populate("course");
     } catch (err) {
         const error = new HttpError(
             "Something went wrong, could not find assignment.",
@@ -377,8 +321,6 @@ const deleteCourseAssignment = async(req, res, next) => {
     }
 
     res.json({ message: "Assignment deleted successfully.", course: course });
-
-
 };
 
 // the teacher should be able to view  and download the submissions of the students for a specific course assignment
@@ -389,10 +331,56 @@ const deleteCourseAssignment = async(req, res, next) => {
 
 //  the teacher can have some private files
 
+const uploadCourseMaterials = async(req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(
+            new HttpError("Invalid inputs passed, please check your data.", 422)
+        );
+    }
 
+    const { downloadURL } = req.file;
+    console.log(downloadURL);
 
+    let createdCourseMaterials;
+    let courseId = req.params.courseID;
 
-exports.uploadCourseMaterials = uploadCourseMaterials;
+    courseId = req.params.courseID;
+
+    createdCourseMaterials = new CourseMaterials({
+        file: downloadURL,
+        course: courseId,
+        title: req.body.title
+    });
+
+    const relatedCourse = await Course.findById(courseId);
+    console.log(relatedCourse.courseID);
+    if (!relatedCourse) {
+        return next(new HttpError("Could not find a course for this id.", 404));
+    }
+
+    try {
+        await createdCourseMaterials.save();
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await createdCourseMaterials.save({ session: sess });
+        await relatedCourse.courseMaterials.push(createdCourseMaterials);
+        await relatedCourse.save({ session: sess });
+        await sess.commitTransaction();
+    } catch (err) {
+        console.log(err);
+        return next(
+            new HttpError(
+                "Something went wrong, could not upload course materials.",
+                500
+            )
+        );
+    }
+
+    res.json({ courseMaterials: createdCourseMaterials });
+};
+
+// exports.uploadCourseMaterials = uploadCourseMaterials;
 exports.getCourseMaterials = getCourseMaterials;
 exports.deleteCourseMaterials = deleteCourseMaterials;
 
@@ -401,3 +389,4 @@ exports.updateCourseAssignment = updateCourseAssignment;
 exports.getAllCourseAssignments = getAllCourseAssignments;
 exports.getCourseAssignmentByAssignmentD = getCourseAssignmentByAssignmentD;
 exports.deleteCourseAssignment = deleteCourseAssignment;
+exports.uploadCourseMaterials = uploadCourseMaterials;
