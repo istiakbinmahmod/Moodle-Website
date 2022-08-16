@@ -611,6 +611,32 @@ const editReply = async (req, res, next) => {
   });
 };
 
+const getForumByCourseID = async (req, res, next) => {
+  const courseID = req.params.courseID;
+
+  let course;
+  try {
+    course = await Course.findById(courseID);
+  } catch (err) {
+    console.log(err);
+    return next(new HttpError("Could not get the course for this forum.", 500));
+  }
+
+  let forums;
+  try {
+    forums = await Forum.find({ course: course._id });
+  } catch (err) {
+    console.log(err);
+    return next(new HttpError("Could not get the forums for this course.", 500));
+  }
+
+  res.status(200).json({
+    message: "Forums fetched successfully!",
+    forums: forums,
+  });
+
+};
+
 exports.getUserById = getUserById;
 exports.login = login;
 exports.getCoursesByUserId = getCoursesByUserId;
@@ -629,3 +655,4 @@ exports.deleteForumPost = deleteForumPost;
 exports.deleteReplyOfForumPost = deleteReplyOfForumPost;
 exports.editPost = editPost;
 exports.editReply = editReply;
+exports.getForumByCourseID = getForumByCourseID;
