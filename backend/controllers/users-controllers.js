@@ -354,7 +354,7 @@ const userPostinForum = async (req, res, next) => {
     await post.save({ session: session });
     await forum.posts.push(post);
     await forum.save({ session: session });
-    await session.commitTransaction();
+    await sessionion.commitTransaction();
   } catch (err) {
     console.log(err);
     return next(
@@ -616,7 +616,9 @@ const getForumByCourseID = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     return next(
+      
       new HttpError("Could not get the forums for this course.", 500)
+    
     );
   }
 
