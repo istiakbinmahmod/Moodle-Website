@@ -93,6 +93,29 @@ const adminEnrollUser = async(req, res, next) => {
         return next(error);
     }
 
+    for (let i = 0; i < participants.length; i++) {
+        let user;
+        try {
+            user = await User.findOne({ moodleID: participants[i] });
+            course = await Course.findById(cid);
+            if(await course.participants.includes(user._id)) {
+                console.log("User already enrolled");
+               participants.splice(i, 1);
+            }
+        } catch (err) {
+            const error = new HttpError(
+                "Something went wrong, could not find user.",
+                500
+            );
+            return next(error);
+        }
+
+        if (!user) {
+            const error = new HttpError("Could not find user for provided id.", 404);
+            return next(error);
+        }
+    }
+
     console.log(participants);
 
     let user;
@@ -101,7 +124,7 @@ const adminEnrollUser = async(req, res, next) => {
             try {
                 // user = await User.findById(participants);
                 user = await User.findOne({ moodleID: id });
-                console.log(user);
+                // console.log(user);
                 //course = await Course.findById(cid);
                 course.participants.push(user);
             } catch (err) {

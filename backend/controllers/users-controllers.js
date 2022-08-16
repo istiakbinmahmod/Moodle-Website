@@ -371,7 +371,7 @@ const userPostinForum = async (req, res, next) => {
       new HttpError("Could not create the post, please try again.", 500)
     );
   }
->>>>>>> 782fc83b734c3b91411ae1cd50c9adf8b88820d8
+
 
   res.status(200).json({
     message: "Post created successfully!",
