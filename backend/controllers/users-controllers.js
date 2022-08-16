@@ -114,11 +114,13 @@ const uploadPrivateFiles = async(req, res, next) => {
         );
     }
 
+    const { downLoadURL } = req.file;
+
     const createdPrivateFile = new PrivateFile({
         user: userID,
-        fileName: req.file.originalname,
-        filePath: req.file.path,
-        fileType: req.file.mimetype,
+
+        file: downLoadURL,
+
     });
 
     try {
@@ -650,7 +652,6 @@ const editReply = async(req, res, next) => {
 exports.getUserById = getUserById;
 exports.login = login;
 exports.getCoursesByUserId = getCoursesByUserId;
-exports.userEditProfile = userEditProfile;
 exports.uploadPrivateFiles = uploadPrivateFiles;
 exports.getAllPrivateFiles = getAllPrivateFiles;
 exports.getPrivateFileByID = getPrivateFileByID;
