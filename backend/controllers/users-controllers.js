@@ -354,7 +354,7 @@ const userPostinForum = async (req, res, next) => {
     await post.save({ session: session });
     await forum.posts.push(post);
     await forum.save({ session: session });
-    await sessionion.commitTransaction();
+    await session.commitTransaction();
   } catch (err) {
     console.log(err);
     return next(
