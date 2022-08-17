@@ -16,7 +16,9 @@ const userSchema = new Schema({
     accessTime: { type: String, required: false, default: Date.now },
     role: { type: String, required: true }, //student, teacher, admin
     courses: [{ type: mongoose.Types.ObjectId, ref: 'Course' }], //this is the courses that the user is taking right now
-    privateFiles: [{ type: mongoose.Types.ObjectId, ref: 'PrivateFiles' }] //this is the private files that the user has uploaded
+    privateFiles: [{ type: mongoose.Types.ObjectId, ref: 'PrivateFiles' }] ,//this is the private files that the user has uploaded
+  
+
 });
 
 userSchema.plugin(uniqueValidator);
