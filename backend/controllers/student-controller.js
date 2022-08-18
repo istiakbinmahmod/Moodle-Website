@@ -151,11 +151,13 @@ const updateSubmission = async (req, res, next) => {
     );
   }
 
-  const submissionId = req.params.submissionID;
+  const assignmentId = req.params.assignmentID;
+ // const submissionId = req.params.submissionID;
 
   let submission;
   try {
-    submission = await Submissions.findById(submissionId);
+    //submission = await Submissions.findById(submissionId);
+    submission = await Submissions.findOne({ assignment: assignmentId, user: req.userData.userId });
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find submission.",
@@ -200,12 +202,17 @@ const deleteSubmission = async (req, res, next) => {
   }
 
   const submissionId = req.params.submissionID;
+  const assignmentId = req.params.assignmentID;
 
   let submission;
   try {
-    submission = await Submissions.findById(submissionId).populate(
+    // submission = await Submissions.findById(submissionId).populate(
+    //   "assignment"
+    // );
+
+    submission = await Submissions.findOne({ assignment: assignmentId, user: req.userData.userId }).populate(
       "assignment"
-    );
+      );
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find submission.",

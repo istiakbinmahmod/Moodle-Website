@@ -40,14 +40,14 @@ router.post(
 );
 
 router.patch(
-  "/update-submission/:submissionID",
+  "/update-submission/:assignmentID",
   fileUpload.single("file"),
   addFilePath,
   studentController.updateSubmission
 );
 
 router.delete(
-  "/delete-submission/:submissionID",
+  "/delete-submission/:assignmentID",
   studentController.deleteSubmission
 );
 
