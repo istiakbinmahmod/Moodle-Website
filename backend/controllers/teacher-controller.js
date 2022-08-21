@@ -8,6 +8,7 @@ const Assignment = require("../models/assignment");
 const Submission = require("../models/submissions");
 const storage = require("../firebase");
 const User = require("../models/users");
+const Notification = require("../models/notifications");
 
 const getCourseMaterials = async(req, res, next) => {
     const courseId = req.params.courseID;
