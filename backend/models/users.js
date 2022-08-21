@@ -17,6 +17,7 @@ const userSchema = new Schema({
     role: { type: String, required: true }, //student, teacher, admin
     courses: [{ type: mongoose.Types.ObjectId, ref: 'Course' }], //this is the courses that the user is taking right now
     privateFiles: [{ type: mongoose.Types.ObjectId, ref: 'PrivateFiles' }] ,//this is the private files that the user has uploaded
+    notifications: [{ type: mongoose.Types.ObjectId, ref: 'Notification' }] ,//this is the notifications that the user has received
   
 
 });

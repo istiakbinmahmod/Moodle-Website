@@ -67,5 +67,7 @@ router.post("/create/students", adminController.createStudentsinBulk); // => loc
 
 router.post("/enrollStudents/:courseID", adminController.adminEnrollUserInBulk); // => localhost:5000/admin/enroll-students to enroll students in a course
 
+router.get('/get-teacher-list', adminController.adminGetTeachersList); // => localhost:5000/admin/teacher-list to get all the teachers
+router.get('/get-student-list', adminController.adminGetStudentsList); // => localhost:5000/admin/student-list to get all the students
 
 module.exports = router;

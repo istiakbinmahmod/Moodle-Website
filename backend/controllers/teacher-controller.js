@@ -145,6 +145,14 @@ const uploadCourseAssignment = async(req, res, next) => {
         );
     }
 
+    const createdNotification = new Notification({
+        user: relatedCourse.teacher,
+        title: `New assignment has been uploaded for ${relatedCourse.courseTitle}`,
+        date: new Date(),
+        course : relatedCourse._id,
+
+    });
+
     res.json({ assignment: createdAssignment });
 };
 

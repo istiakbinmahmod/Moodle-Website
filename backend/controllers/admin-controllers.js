@@ -971,6 +971,16 @@ const adminCreateCourseForASession = async (req, res, next) => {
   res.json({ course: createdCourse, forum: createdForum });
 };
 
+const adminGetTeachersList = async (req, res, next) => {
+  const teachers = await User.find({ role: "teacher" });
+  res.json({ teachers });
+}
+
+const adminGetStudentsList = async (req, res, next) => {
+  const students = await User.find({ role: "student" });
+  res.json({ students });
+}
+
 exports.getAdmin = getAdmin;
 exports.adminLogin = adminLogin;
 exports.getCoursesList = getCoursesList;
@@ -998,3 +1008,5 @@ exports.adminCreateStudent = adminCreateStudent;
 exports.adminCreateTeacher = adminCreateTeacher;
 exports.createStudentsinBulk = createStudentsinBulk;
 exports.adminEnrollUserInBulk = adminEnrollUserInBulk;
+exports.adminGetTeachersList = adminGetTeachersList;
+exports.adminGetStudentsList = adminGetStudentsList;
