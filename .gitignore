@@ -1,3 +1,7 @@
 node_modules
+backend/node_modules
+frontend/node_modules
+"Moodle Frontend/moodle-frontend/node_modules"
+"my-app/node_modules"
 backend/uploads
 frontend

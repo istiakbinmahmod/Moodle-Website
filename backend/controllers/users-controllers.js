@@ -346,7 +346,7 @@ const userPostinForum = async (req, res, next) => {
     title: req.body.title,
     postDescription: req.body.postDescription,
     postDate: new Date(),
-    author : user.name,
+    author: user.name,
   });
   try {
     const session = await mongoose.startSession();
@@ -473,7 +473,7 @@ const getRepliesOfForumPost = async (req, res, next) => {
   res.status(200).json({
     message: "Replies fetched successfully!",
     replies: replies,
-    post : post,
+    post: post,
   });
 };
 
@@ -617,9 +617,7 @@ const getForumByCourseID = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     return next(
-      
       new HttpError("Could not get the forums for this course.", 500)
-    
     );
   }
 
