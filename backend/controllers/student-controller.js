@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
       api_key:
-        "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",
+        "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",
     },
   })
 );
@@ -179,7 +179,7 @@ const uploadSubmission = async (req, res, next) => {
 
   transporter.sendMail({
     to: uploader.email,
-    from: "no-reply@moodle.com",
+    from: "mksdrrana@gmail.com",
     subject: "You have a new submission",
     text: `You have submitted for ${assignment.title} in ${assignment.course}`,
     html: `<p>You have submitted for ${assignment.title}</p>`,
