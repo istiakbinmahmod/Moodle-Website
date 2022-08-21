@@ -9,6 +9,18 @@ const User = require("../models/users");
 const Student = require("../models/students");
 const Notification = require("../models/notifications");
 
+const nodemailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport");
+
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key:
+        "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",
+    },
+  })
+);
+
 const getAllCourses = async (req, res, next) => {
   let courses;
   try {
@@ -165,9 +177,13 @@ const uploadSubmission = async (req, res, next) => {
     return next(error);
   }
 
-
-
-
+  transporter.sendMail({
+    to: uploader.email,
+    from: "no-reply@moodle.com",
+    subject: "You have a new submission",
+    text: `You have submitted for ${assignment.title} in ${assignment.course}`,
+    html: `<p>You have submitted for ${assignment.title}</p>`,
+  });
 
   res.status(201).json({ submission: submission });
 };
@@ -182,12 +198,15 @@ const updateSubmission = async (req, res, next) => {
   }
 
   const assignmentId = req.params.assignmentID;
- // const submissionId = req.params.submissionID;
+  // const submissionId = req.params.submissionID;
 
   let submission;
   try {
     //submission = await Submissions.findById(submissionId);
-    submission = await Submissions.findOne({ assignment: assignmentId, user: req.userData.userId });
+    submission = await Submissions.findOne({
+      assignment: assignmentId,
+      user: req.userData.userId,
+    });
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find submission.",
@@ -245,8 +264,6 @@ const updateSubmission = async (req, res, next) => {
     return next(error);
   }
 
-
-
   res.status(200).json({ submission: submission });
 };
 
@@ -268,9 +285,10 @@ const deleteSubmission = async (req, res, next) => {
     //   "assignment"
     // );
 
-    submission = await Submissions.findOne({ assignment: assignmentId, user: req.userData.userId }).populate(
-      "assignment"
-      );
+    submission = await Submissions.findOne({
+      assignment: assignmentId,
+      user: req.userData.userId,
+    }).populate("assignment");
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find submission.",
@@ -308,7 +326,7 @@ const deleteSubmission = async (req, res, next) => {
     );
     return next(error);
   }
-   let uploader = await User.findById(req.userData.userId);
+  let uploader = await User.findById(req.userData.userId);
   const createdNotification = new Notification({
     user: uploader,
     title: `${uploader.name} has deleted submission for ${relatedAssignment.title}`,
@@ -331,9 +349,6 @@ const deleteSubmission = async (req, res, next) => {
     );
     return next(error);
   }
-
-
-
 
   res.status(200).json({ message: "Deleted submission." });
 };
@@ -571,4 +586,5 @@ exports.deleteSubmission = deleteSubmission;
 exports.getSubmissionByAssignmentID = getSubmissionByAssignmentID;
 exports.downloadCourseMaterial = downloadCourseMaterial;
 exports.downloadAssignmentMaterial = downloadAssignmentMaterial;
-exports.testgetCompletedAndDueAssignmentsForACourse = testgetCompletedAndDueAssignmentsForACourse;
+exports.testgetCompletedAndDueAssignmentsForACourse =
+  testgetCompletedAndDueAssignmentsForACourse;
