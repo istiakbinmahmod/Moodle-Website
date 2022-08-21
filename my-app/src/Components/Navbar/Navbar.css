@@ -1,0 +1,81 @@
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 4rem;
+    border-bottom: 1px solid rgb(216, 216, 216);
+    transition: all 0.1s ease;
+    /* background: linear-gradient(rgba(7, 0, 0, 0.7), rgba(0, 0, 0, 0.7)); */
+}
+
+header menu ul{
+    display: flex;
+    list-style-type: none;
+}
+
+header menu ul li{
+    font-family: 'Inter',sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #2c3e50;
+    position: relative;
+    margin: 0 1.5rem;
+    padding-bottom: 0.6rem;
+    transition: all 0.2s ease-in;
+}
+
+header menu li::before{
+    content: '';
+    width: 0;
+    height: 3px;
+    background-color: #ffa502;
+    position: absolute;
+    bottom: 0;
+    transition: all 0.2s ease-in;
+}
+
+header menu ul li:hover::before{
+    width: 100%;
+}
+
+header menu ul li:hover{
+    color: #ffa502;
+    cursor: pointer;
+}
+
+
+header .button button{
+    width: 100px;
+    height: 40px;
+    border-radius: 100px;
+    color: white;
+    background-color: #ee5253;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    border: none;
+    transition: all 0.2s linear;
+    position: relative;
+    overflow: hidden;
+}
+
+header .button button::before{
+    content: '';
+    width: 0;
+    height: 100%;
+    background-color: #ffa502;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 0.2s ease-in;
+    z-index: -1;
+}
+
+.button button:hover::before{
+    width: 100%;
+    cursor: pointer;
+}
+
+.button button:hover{
+    background-color: transparent;
+    cursor: pointer;
+}

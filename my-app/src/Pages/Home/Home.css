@@ -1,0 +1,118 @@
+/* HERO ARE CSS STARTS FROM HERE  */
+
+.hero__area{
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('../../img/geninfo.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+}
+
+.hero__area .inner__hero{
+    padding-left: 200px;
+    width: 40%;
+}
+
+.inner__hero h3{
+    font-family: 'Poppins', sans-serif;
+    font-size: 50px;
+    font-weight: bolder;
+    color: white;
+}
+
+h3 span{
+    color: #ffa502;
+}
+
+.inner__hero p{
+    font-family: 'Inter', sans-serif;
+    margin: 1rem 0 1.5rem 0;
+    color: rgb(204, 204, 204);
+    line-height: 26px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+
+}
+
+.inner__hero .form__group{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form__group input{
+    flex: 1;
+    height: 45px;
+    border-radius: 100px;
+    padding: 0 1rem;
+    margin-right: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    border: none;
+}
+
+.form__group button{
+    border-radius: 100px;
+    width: 100px;
+    height: 48px;
+    background: #ee5253;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease-in;
+}
+
+.form__group button::before{
+    content: '';
+    width: 0;
+    height: 100%;
+    background-color: #ffa502;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 0.2s ease-in;
+    z-index: -1;
+}
+
+.form__group button:hover{
+    cursor: pointer;
+    background-color: transparent;
+    z-index: 100;
+}
+
+.form__group button:hover::before{
+    width: 100%;
+}
+
+/* HERO AREA DESIGN ENDS HERE  */
+
+
+/* RESTAURATNT AREA DESIGN STARTS FROM HERE  */
+
+.rest__area{
+    width: 60%;
+    margin: 0 auto;
+    padding: 6rem 0;
+}
+
+.rest__area .rest__cards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.rest__area h3{
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+}
+
+
+/* RESTUARANT AREA DESIGN ENDS HERE  */
