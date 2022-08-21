@@ -3,7 +3,7 @@ import React from "react";
 
 import useStyles from "../Dashboard/Teams/TeamsStyle";
 import { useState, useEffect } from "react";
-// import SideDrawer from './SideDrawer';
+import SideDrawer from "./SideDrawer";
 // import Approve from './Approve';
 
 // import AssignInstructor from './AssignInstructor';
@@ -15,20 +15,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (option === "assign") {
-      setComponent(
-        <div>
-          <AssignInstructor />
-        </div>
-      );
+      setComponent(<div>{/* <AssignInstructor /> */}</div>);
     }
 
     // else if (option === 'announcement'){
     else if (option === "approve") {
-      setComponent(
-        <div>
-          <Approve />
-        </div>
-      );
+      setComponent(<div>{/* <Approve /> */}</div>);
     } else if (option === "overview") {
       setComponent(
         <div>
