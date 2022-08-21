@@ -131,7 +131,7 @@ const SideDrawer = ({ setOption }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Moodle
+            Whiteboard
           </Typography>
         </Toolbar>
       </AppBar>
@@ -147,11 +147,7 @@ const SideDrawer = ({ setOption }) => {
         </DrawerHeader>
         <Divider />
         <List>
-          <ListItem
-            key="assign-teacher"
-            disablePadding
-            sx={{ display: "block" }}
-          >
+          <ListItem key="assign" disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -159,8 +155,8 @@ const SideDrawer = ({ setOption }) => {
                 px: 2.5,
               }}
               onClick={() => {
-                setOption("assign-teacher");
-                console.log("post clicked");
+                setOption("assign");
+                // console.log("post clicked");
               }}
             >
               <ListItemIcon
@@ -173,71 +169,7 @@ const SideDrawer = ({ setOption }) => {
                 <InstructorIcon />
               </ListItemIcon>
               <ListItemText
-                primary="Assign Teacher"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem
-            key="assign-student"
-            disablePadding
-            sx={{ display: "block" }}
-          >
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-              onClick={() => {
-                setOption("assign-student");
-                console.log("post clicked");
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <InstructorIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Assign Student"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem
-            key="create-course"
-            disablePadding
-            sx={{ display: "block" }}
-          >
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-              onClick={() => {
-                setOption("create-course");
-                console.log("post clicked");
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <InstructorIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Create Course"
+                primary="Assign Instructor"
                 sx={{ opacity: open ? 1 : 0 }}
               />
             </ListItemButton>
