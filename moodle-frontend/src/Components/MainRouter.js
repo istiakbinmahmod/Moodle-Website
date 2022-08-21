@@ -11,7 +11,7 @@ import Dashboard from "./Dashboard/Teams/Teams";
 import CouseDetail from "./CourseDetail/Course";
 import AdminDashboard from "./Admin/SuperUserDashboard";
 // import InstructorDashboard from './Admin/Instructor/InstructorBoard';
-// import SuperUserDashboard from './SuperUser/SuperUserDashboard';
+import SuperUserDashboard from "./SuperUser/SuperUserDashboard";
 
 function MainRouter() {
   return (

@@ -4,11 +4,9 @@ import React from "react";
 import useStyles from "../Dashboard/Teams/TeamsStyle";
 import { useState, useEffect } from "react";
 import SideDrawer from "./SideDrawer";
-import Approve from "./Approve";
+// import Approve from './Approve';
 
-import AssignCourseTeachers from "./AssignCourseTeachers";
-import AssignCourseStudents from "./AssignCourseStudents";
-import CreateCourse from "./CreateCourse";
+// import AssignInstructor from './AssignInstructor';
 
 const Dashboard = () => {
   const classes = useStyles();
@@ -16,33 +14,13 @@ const Dashboard = () => {
   const [option, setOption] = useState("post");
 
   useEffect(() => {
-    if (option === "assign-teacher") {
-      setComponent(
-        <div>
-          <AssignCourseTeachers />
-        </div>
-      );
-    } else if (option === "assign-student") {
-      setComponent(
-        <div>
-          <AssignCourseStudents />
-        </div>
-      );
-    } else if (option === "create-course") {
-      setComponent(
-        <div>
-          <CreateCourse />
-        </div>
-      );
+    if (option === "assign") {
+      setComponent(<div>{/* <AssignInstructor /> */}</div>);
     }
 
     // else if (option === 'announcement'){
     else if (option === "approve") {
-      setComponent(
-        <div>
-          <Approve />
-        </div>
-      );
+      setComponent(<div>{/* <Approve /> */}</div>);
     } else if (option === "overview") {
       setComponent(
         <div>
@@ -55,7 +33,7 @@ const Dashboard = () => {
   return (
     <div className={classes.root}>
       <SideDrawer setOption={setOption} />
-      <main className={classes.content}>{component}</main>
+      {/* <main className={classes.content}>{component}</main> */}
     </div>
   );
 };

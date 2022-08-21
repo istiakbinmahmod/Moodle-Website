@@ -179,7 +179,7 @@ const uploadSubmission = async (req, res, next) => {
 
   transporter.sendMail({
     to: uploader.email,
-    from: "no-reply@moodle.com",
+    from: "mksdrrana@gmail.com",
     subject: "You have a new submission",
     text: `You have submitted for ${assignment.title} in ${assignment.course}`,
     html: `<p>You have submitted for ${assignment.title}</p>`,

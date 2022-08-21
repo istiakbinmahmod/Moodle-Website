@@ -26,27 +26,27 @@ import {
 } from "@mui/material";
 import LibraryAddTwoToneIcon from "@mui/icons-material/LibraryAddTwoTone";
 
+let coursesList = [];
+let studentsList = [];
+
 const Assign = () => {
   const auth = useContext(AuthContext);
   const [courseId, setCourseId] = useState();
   //   const [grade, setGrade] = useState();
-  const [instructorId, setInstructor] = useState();
+  const [studentId, setStudentId] = useState();
 
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [courseList, setCourseList] = useState();
+  const [loadedCourseList, setLoadedCourseList] = useState();
   //course._id, courseID, sessionName
-  const [instructorList, setInstructorList] = useState();
+  const [loadedStudentsList, setLoadedStudentsList] = useState();
   //_id, moodleID, name
 
   const navigate = useNavigate();
   const getToken = localStorage.getItem("token");
 
-  let courses = [];
-  let instructors = [];
-
   let url = "http://localhost:5000/api/courses/";
 
-  let url2 = "http://localhost:5000/api/admin/get/users/";
+  let url2 = "http://localhost:5000/api/admin/get-student-list/";
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -56,45 +56,42 @@ const Assign = () => {
         });
 
         // setCourseList(responseData.courses);
-        responseData.courses.map((course) =>
-          courses.push({
-            id: course._id,
-            courseID: course.courseID,
-            sessionName: course.sessionName,
+        responseData.courses.map((x) =>
+          coursesList.push({
+            id: x._id,
+            courseID: x.courseID,
+            sessionName: x.sessionName,
           })
         );
-        setCourseList(responseData.courses);
-        console.log(courses);
+        setLoadedCourseList(responseData.courses);
       } catch (err) {}
     };
     fetchCourse();
   }, [sendRequest, url, getToken]);
 
   useEffect(() => {
-    const fetchCourse = async () => {
+    const fetchStudents = async () => {
       try {
         const responseData = await sendRequest(url2, "GET", null, {
           Authorization: "Bearer " + getToken,
         });
         // setInstructorList(responseData.users);
-        responseData.users.map((user) =>
-          instructors.push({
+        responseData.students.map((user) =>
+          studentsList.push({
             id: user._id,
             moodleID: user.moodleID,
             name: user.name,
           })
         );
-        setInstructorList(responseData.users);
-        // console.log(responseData);
-        console.log(instructors);
+        setLoadedStudentsList(responseData.students);
       } catch (err) {}
     };
-    fetchCourse();
+    fetchStudents();
   }, [sendRequest, url2, getToken]);
 
   return (
     <div>
-      <Grid container direction="column" spacing={2}>
+      <Grid container direction="column" spacing={3}>
         <Grid item>
           {/* make it to center */}
           {/* assh color : #f5f5f5 */}
@@ -117,15 +114,17 @@ const Assign = () => {
                 font: "caption",
               }}
             >
-              Instructor Assignment Panel
+              Individual Student-Course Assignment Panel
             </Typography>
           </Paper>
         </Grid>
 
         <Grid item container spacing={2}>
-          <Grid item sm={2} />
+          <Grid item sm={3.5} />
 
-          {!isLoading && courseList && (
+          {!isLoading && loadedCourseList && (
+            // courses.length !== 0 && (
+            // !isLoading && courseList &&
             <Grid item>
               <Autocomplete
                 id="place-select"
@@ -135,7 +134,7 @@ const Assign = () => {
                   // console.log(newValue.id);
                   setCourseId(newValue.id);
                 }}
-                options={courses}
+                options={coursesList}
                 autoHighlight
                 getOptionLabel={(option) =>
                   option.sessionName + " , " + option.courseID
@@ -159,17 +158,19 @@ const Assign = () => {
             </Grid>
           )}
 
-          {!isLoading && instructorList && (
+          {!isLoading && loadedStudentsList && (
+            // instructors.length !== 0 && (
+            // !isLoading && instructorList &&
             <Grid item>
               <Autocomplete
                 id="place-select"
                 sx={{ width: 300 }}
-                value={instructorId}
+                value={studentId}
                 onChange={(event, newValue) => {
                   console.log("ass: ", newValue.id);
-                  setInstructor(newValue.id);
+                  setStudentId(newValue.id);
                 }}
-                options={instructors}
+                options={studentsList}
                 autoHighlight
                 getOptionLabel={(option) =>
                   option.moodleID + " , " + option.name
@@ -182,7 +183,7 @@ const Assign = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Choose an Instructor"
+                    label="Choose a Student"
                     inputProps={{
                       ...params.inputProps,
                       autoComplete: "new-password", // disable autocomplete and autofill
@@ -219,7 +220,7 @@ const Assign = () => {
               color="primary"
               style={{ marginTop: "20px", marginBottom: "20px" }}
             >
-              Assign Instructor
+              Assign Teacher
             </Button>
           </Grid>
           <Grid item sm={5} />
