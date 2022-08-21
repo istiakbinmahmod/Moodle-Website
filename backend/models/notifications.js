@@ -9,6 +9,9 @@ const notificationSchema = new Schema({
     date: { type: String, default: Date.now },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     course: { type: Schema.Types.ObjectId, ref: 'Course' },
+    course_material: { type: Schema.Types.ObjectId, ref: 'CourseMaterial' },
+    assignment: { type: Schema.Types.ObjectId, ref: 'Assignment' },
+    submission: { type: Schema.Types.ObjectId, ref: 'Submission' },
 });
 
 

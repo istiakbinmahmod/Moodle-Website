@@ -7,6 +7,7 @@ const Assignment = require("../models/assignment");
 const Submissions = require("../models/submissions");
 const User = require("../models/users");
 const Student = require("../models/students");
+const Notification = require("../models/notifications");
 
 const getAllCourses = async (req, res, next) => {
   let courses;
@@ -139,6 +140,35 @@ const uploadSubmission = async (req, res, next) => {
     return next(error);
   }
 
+  let uploader = await User.findById(req.userData.userId);
+
+  const createdNotification = new Notification({
+    user: uploader,
+    title: `${uploader.name} has submitted for ${assignment.title}`,
+    date: new Date(),
+    submission: submission,
+    assignment: assignment,
+  });
+
+  try {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    await createdNotification.save({ session: session });
+    await uploader.notifications.push(createdNotification);
+    await uploader.save({ session: session });
+    await session.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(
+      "Creating notification failed, please try again.",
+      500
+    );
+    return next(error);
+  }
+
+
+
+
+
   res.status(201).json({ submission: submission });
 };
 
@@ -188,6 +218,34 @@ const updateSubmission = async (req, res, next) => {
     );
     return next(error);
   }
+
+  let uploader = await User.findById(req.userData.userId);
+  let assignment = await Assignment.findById(assignmentId);
+
+  const createdNotification = new Notification({
+    user: uploader,
+    title: `${uploader.name} has updated a submission for ${assignment.title}`,
+    date: new Date(),
+    submission: submission,
+    assignment: assignment,
+  });
+
+  try {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    await createdNotification.save({ session: session });
+    await uploader.notifications.push(createdNotification);
+    await uploader.save({ session: session });
+    await session.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(
+      "Creating notification failed, please try again.",
+      500
+    );
+    return next(error);
+  }
+
+
 
   res.status(200).json({ submission: submission });
 };
@@ -250,6 +308,32 @@ const deleteSubmission = async (req, res, next) => {
     );
     return next(error);
   }
+   let uploader = await User.findById(req.userData.userId);
+  const createdNotification = new Notification({
+    user: uploader,
+    title: `${uploader.name} has deleted submission for ${relatedAssignment.title}`,
+    date: new Date(),
+    submission: submission,
+    assignment: relatedAssignment,
+  });
+
+  try {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    await createdNotification.save({ session: session });
+    await uploader.notifications.push(createdNotification);
+    await uploader.save({ session: session });
+    await session.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(
+      "Creating notification failed, please try again.",
+      500
+    );
+    return next(error);
+  }
+
+
+
 
   res.status(200).json({ message: "Deleted submission." });
 };

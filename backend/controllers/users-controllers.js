@@ -13,6 +13,7 @@ const Forum = require("../models/course-forum");
 const ForumPost = require("../models/forum-post");
 const PostReply = require("../models/post-reply");
 const { ConnectionCheckOutStartedEvent } = require("mongodb");
+const Notification = require("../models/notifications");
 
 const getUserById = async (req, res, next) => {
   const userId = req.params.uid;
@@ -627,6 +628,24 @@ const getForumByCourseID = async (req, res, next) => {
   });
 };
 
+const getAllNotifications = async (req, res, next) => {
+  let notifications;
+  try {
+    //find the notofications of the user in the database and sort them by date
+    notifications = await Notification.find({ user: req.userData.userId }).sort({
+      date: -1,
+    });
+  } catch (err) {
+    console.log(err);
+    return next(new HttpError("Could not get the notifications.", 500));
+  }
+
+  res.status(200).json({
+    message: "Notifications fetched successfully!",
+    notifications: notifications,
+  });
+}
+
 exports.getUserById = getUserById;
 exports.login = login;
 exports.getCoursesByUserId = getCoursesByUserId;
@@ -646,3 +665,4 @@ exports.deleteReplyOfForumPost = deleteReplyOfForumPost;
 exports.editPost = editPost;
 exports.editReply = editReply;
 exports.getForumByCourseID = getForumByCourseID;
+exports.getAllNotifications = getAllNotifications;

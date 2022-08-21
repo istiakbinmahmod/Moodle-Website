@@ -145,12 +145,14 @@ const uploadCourseAssignment = async(req, res, next) => {
             new HttpError("Something went wrong, could not upload assignment.", 500)
         );
     }
+    let uploader = await User.findById(req.userData.userId);
 
     const createdNotification = new Notification({
-        user: relatedCourse.teacher,
-        title: `New assignment has been uploaded for ${relatedCourse.courseTitle}`,
+        user: uploader,
+        title: `New assignment has been uploaded for ${relatedCourse.courseTitle} by ${uploader.name}`,
         date: new Date(),
         course : relatedCourse,
+        assignment: createdAssignment,
 
     });
 
@@ -225,6 +227,43 @@ const updateCourseAssignment = async(req, res, next) => {
             new HttpError("Something went wrong, could not update assignment.", 500)
         );
     }
+
+    let courseId = assignment.course;
+    let relatedCourse = await Course.findById(courseId);
+
+    let uploader = await User.findById(req.userData.userId);
+
+    const createdNotification = new Notification({
+        user: uploader,
+        title: `New assignment has been updated for ${relatedCourse.courseTitle} by ${uploader.name}`,
+        date: new Date(),
+        course : relatedCourse,
+        assignment: assignment,
+
+    });
+
+    let courseParticipants;
+    courseParticipants = await User.find({ course: courseId });
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await createdNotification.save({ session: sess });
+        for(let i = 0; i < courseParticipants.length; i++){
+            await courseParticipants[i].notifications.push(createdNotification);
+            await courseParticipants[i].save({ session: sess });
+        }
+        await sess.commitTransaction();
+    }
+    catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not create notification.",
+            500
+        );
+        return next(error);
+    }
+
+
 
     res.json({ assignment: assignment });
 };
@@ -367,7 +406,6 @@ const uploadCourseMaterials = async(req, res, next) => {
     let createdCourseMaterials;
     let courseId = req.params.courseID;
 
-    courseId = req.params.courseID;
 
     createdCourseMaterials = new CourseMaterials({
         file: downloadURL,
@@ -398,6 +436,38 @@ const uploadCourseMaterials = async(req, res, next) => {
             )
         );
     }
+
+    let uploader = await User.findById(req.userData.userId);
+    
+    const createdNotification = new Notification({
+        title: `New assignment has been uploaded for ${relatedCourse.courseTitle} by ${uploader.name}`,
+        user: uploader,
+        course: relatedCourse,
+        date: new Date(),
+        course_material: createdCourseMaterials,
+    });
+
+    let courseParticipants = await User.find({ course: courseId });
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await createdNotification.save({ session: sess });
+        for(let i = 0; i < courseParticipants.length; i++){
+            await courseParticipants[i].notifications.push(createdNotification);
+            await courseParticipants[i].save({ session: sess });
+        }
+        await sess.commitTransaction();
+    }
+    catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not create notification.",
+            500
+        );
+        return next(error);
+    }
+
+
 
     res.json({ courseMaterials: createdCourseMaterials });
 };
@@ -490,6 +560,34 @@ const markSubmissionForAssignment = async(req, res, next) => {
         );
         return next(error);
     }
+
+    let evaluator = await User.findById(req.userData.userId);
+
+    const createdNotification = new Notification({
+        title: `Submission for ${submission.assignment.title} has been graded by ${evaluator.name}`,
+        user: evaluator,
+        date: new Date(),
+        submission: submission,
+    });
+
+    let submitter = await User.findById(submission.user);
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await createdNotification.save({ session: sess });
+        await submitter.notifications.push(createdNotification);
+        await submitter.save({ session: sess });
+        await sess.commitTransaction();
+    }
+    catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not create notification.",
+            500
+        );
+        return next(error);
+    }
+
 
     res.json({ submission: submission });
 }
