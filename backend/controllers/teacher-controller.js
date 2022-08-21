@@ -149,9 +149,31 @@ const uploadCourseAssignment = async(req, res, next) => {
         user: relatedCourse.teacher,
         title: `New assignment has been uploaded for ${relatedCourse.courseTitle}`,
         date: new Date(),
-        course : relatedCourse._id,
+        course : relatedCourse,
 
     });
+
+    let courseParticipants;
+    courseParticipants = await User.find({ course: courseId });
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await createdNotification.save({ session: sess });
+        for(let i = 0; i < courseParticipants.length; i++){
+            await courseParticipants[i].notifications.push(createdNotification);
+            await courseParticipants[i].save({ session: sess });
+        }
+        await sess.commitTransaction();
+    }
+    catch (err) {
+        const error = new HttpError(
+            "Something went wrong, could not create notification.",
+            500
+        );
+        return next(error);
+    }
+
 
     res.json({ assignment: createdAssignment });
 };
