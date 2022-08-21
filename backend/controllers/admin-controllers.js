@@ -981,6 +981,28 @@ const adminGetStudentsList = async (req, res, next) => {
   res.json({ students });
 }
 
+const adminGetAvailableTeachersForACourse = async (req, res, next) => {
+
+  const cid = req.params.courseID;
+  let course = await Course.findById(cid);
+  console.log(course.courseTitle);
+
+  let teachers = await User.find({ role: "teacher" });
+
+  let availableTeachers = [];
+
+  for (let i = 0; i < teachers.length; i++) {
+    if (!course.participants.includes(teachers[i]._id)) {
+      const relatedTeacher = await User.findById(teachers[i]._id.toString());
+      availableTeachers.push(relatedTeacher);
+    }
+  }
+
+  res.json({ availableTeachers });
+
+
+};
+
 exports.getAdmin = getAdmin;
 exports.adminLogin = adminLogin;
 exports.getCoursesList = getCoursesList;
@@ -1010,3 +1032,4 @@ exports.createStudentsinBulk = createStudentsinBulk;
 exports.adminEnrollUserInBulk = adminEnrollUserInBulk;
 exports.adminGetTeachersList = adminGetTeachersList;
 exports.adminGetStudentsList = adminGetStudentsList;
+exports.adminGetAvailableTeachersForACourse = adminGetAvailableTeachersForACourse;
