@@ -182,7 +182,7 @@ const uploadSubmission = async (req, res, next) => {
     from: "mksdrrana@gmail.com",
     subject: "You have a new submission",
     text: `You have submitted for ${assignment.title} in ${assignment.course}`,
-    html: `<p>You have submitted for ${assignment.title}</p>`,
+    html: `<p>You have submitted for ${assignment.title} in ${assignment.course}</p>`,
   });
 
   res.status(201).json({ submission: submission });
@@ -264,6 +264,15 @@ const updateSubmission = async (req, res, next) => {
     return next(error);
   }
 
+  
+  transporter.sendMail({
+    to: uploader.email,
+    from: "mksdrrana@gmail.com",
+    subject: "You have re-submitted",
+    text: `You have re-submitted for ${assignment.title} in ${assignment.course}`,
+    html: `<p>You have re-submitted for ${assignment.title} in ${assignment.course}</p>`,
+  });
+    
   res.status(200).json({ submission: submission });
 };
 
