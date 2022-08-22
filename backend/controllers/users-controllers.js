@@ -646,6 +646,44 @@ const getAllNotifications = async (req, res, next) => {
   });
 }
 
+const deleteNotification = async (req, res, next) => {
+
+  //get the notification id from the params first
+  const notificationID = req.params.notificationID;
+  let notification;
+  try {
+    notification = await Notification.findById(notificationID).populate("user");
+  }
+  catch (err){
+    console.log(err);
+    return next(new HttpError("Could not get the notification.", 500));
+  }
+  //delete the notification from the database
+  let relatedCourse = await Course.findById(notification.course);
+  try {
+    const sessionId = await mongoose.startSession();
+    sessionId.startTransaction();
+    await notification.remove({ session: sessionId });
+    //for all particapnts of the course remove the notification from their notifications array
+    for (participant in relatedCourse.participants) {
+      let user = await User.findById(participant);
+      await user.notifications.pull(notification);
+      await user.save({ session: sessionId });
+    }
+    await sessionId.commitTransaction();
+
+  }
+  catch (err){
+    console.log(err);
+    return next(new HttpError("Could not delete the notification.", 500));
+  }
+
+  res.status(200).json({
+    message: "Notification deleted successfully!",
+  });
+
+};
+
 exports.getUserById = getUserById;
 exports.login = login;
 exports.getCoursesByUserId = getCoursesByUserId;
@@ -666,3 +704,4 @@ exports.editPost = editPost;
 exports.editReply = editReply;
 exports.getForumByCourseID = getForumByCourseID;
 exports.getAllNotifications = getAllNotifications;
+exports.deleteNotification = deleteNotification;

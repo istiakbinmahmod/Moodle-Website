@@ -48,4 +48,5 @@ router.get(
   usersController.getForumByCourseID
 ); // => localhost:5000/users/get-forum-by-course/:courseID to get all the posts in a course
 router.get("/get-notifications", usersController.getAllNotifications); // => localhost:5000/users/get-notifications to get all the notifications of a user
+router.delete("/delete-notofication/:notificationID", usersController.deleteNotification); // => localhost:5000/users/delete-notofication/:notificationID to delete a notification of a user
 module.exports = router;
