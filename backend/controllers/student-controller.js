@@ -584,6 +584,68 @@ const testgetCompletedAndDueAssignmentsForACourse = async (req, res, next) => {
   });
 };
 
+const getAllDueAssignments = async (req, res, next) => {
+  let allAssignments = [];
+  let due = [];
+  let user = await User.findById(req.params.userId);
+  //find all courses of the user
+  let courses = user.courses;
+  let student = await Student.findOne({ user: req.params.userId });
+  for (var i = 0; i < courses.length; i++) {
+    let course = await Course.findById(courses[i].toString());
+    for (var j = 0; j < course.courseAssignments.length; j++) {
+      allAssignments.push(course.courseAssignments[j].toString());
+    }
+  }
+
+  
+  let completed = student.submitted_assignments;
+
+  for (var i = 0; i < completed.length; i++) {
+    let relatedSubmission = await Submissions.findById(completed[i].toString());
+    var relatedAssignment = await Assignment.findById(
+      relatedSubmission.assignment.toString()
+    );
+    if (allAssignments.includes(relatedAssignment._id.toString())) {
+      allAssignments = allAssignments.filter(
+        (assignment) => assignment !== relatedAssignment._id.toString()
+      );
+    }
+  }
+
+
+  for (var i = 0; i < allAssignments.length; i++) {
+    due.push(await Assignment.findById(allAssignments[i]));
+  }
+
+  res.json({
+    message: "success",
+    dueAssignments: due,
+  });
+};
+
+const getAllCompletedAssignments  =async (req, res, next) =>
+{
+    let student = await Student.findOne({ user: req.params.userId });
+    let completedAssignments = [];
+     
+  let completed = student.submitted_assignments;
+
+  for (var i = 0; i < completed.length; i++) {
+    let relatedSubmission = await Submissions.findById(completed[i].toString());
+    var relatedAssignment = await Assignment.findById(
+      relatedSubmission.assignment.toString()
+    );
+    completedAssignments.push(relatedAssignment);
+  }
+
+  res.json({
+    message: "success",
+    completedAssignments: completedAssignments,
+  });
+
+};
+
 exports.getEnrolledCourses = getEnrolledCourses;
 exports.getAllCourses = getAllCourses;
 exports.getCourseMaterials = getCourseMaterials;
@@ -597,3 +659,6 @@ exports.downloadCourseMaterial = downloadCourseMaterial;
 exports.downloadAssignmentMaterial = downloadAssignmentMaterial;
 exports.testgetCompletedAndDueAssignmentsForACourse =
   testgetCompletedAndDueAssignmentsForACourse;
+
+exports.getAllDueAssignments = getAllDueAssignments;  
+exports.getAllCompletedAssignments = getAllCompletedAssignments;

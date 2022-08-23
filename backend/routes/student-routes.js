@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get("/get-all-courses", studentController.getAllCourses); // => localhost:5000/api/students/get-all-courses to get all the courses
 
-router.use(checkAuthStudent);
+// router.use(checkAuthStudent);
 
 router.get("/get-my-courses", studentController.getEnrolledCourses); // => localhost:5000/api/students/get-my-courses to get all the courses of a student
 
@@ -69,6 +69,16 @@ router.get(
 router.get(
   "/get-completed-and-due-assignments/:courseID/",
   studentController.testgetCompletedAndDueAssignmentsForACourse
+);
+
+router.get(
+  "/get-all-due-assignments/:userId",
+  studentController.getAllDueAssignments
+);
+
+router.get(
+  "/get-all-completed-assignments/:userId",
+  studentController.getAllCompletedAssignments
 );
 
 module.exports = router;
