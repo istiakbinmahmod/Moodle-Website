@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./Login/Login";
 // import Register from './Registration/Registration';
-import Dashboard from "./Dashboard/Teams/Teams";
+import Dashboard from "./Dashboard/StudentDashboard/StudentDashboard";
 // import Grade from './Dashboard/Grade/Grade';
 // import Assignment from './Dashboard/Assignment/Assignment';
 // import StudentList from './Dashboard/StudentList/StudentList';

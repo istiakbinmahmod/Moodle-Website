@@ -5,14 +5,11 @@ import Sidebar from "../Sidebar";
 import { AuthContext } from "../../Context/AuthContext";
 import { useHttpClient } from "../../Context/http-hook";
 
-// import
-// import Declarations from '../Announcement/Declarations';
-// import DueAssignment from '../../Assignments/Due';
-// import CompletedAssignment from '../../Assignments/Completed';
-
-import useStyles from "./TeamsStyle";
+import useStyles from "./StudentDashboardStyle";
 import Card_ from "./CourseCard";
+import ProfilePage from "../../Profile/ProfilePage";
 import EditProfile from "../../Profile/EditProfile";
+import CoursePanel from "../../CourseDetail/CoursePanel";
 import { Logout } from "@mui/icons-material";
 
 function Teams() {
@@ -26,7 +23,7 @@ function Teams() {
   // fetch courses from server api
   const [courses, setCourses] = useState([]);
   const [component, setComponent] = useState(<div></div>);
-  const [option, setOption] = useState("course");
+  const [option, setOption] = useState("");
 
   let url =
     localStorage.getItem("userRole") === "student"
@@ -39,8 +36,20 @@ function Teams() {
         const responseData = await sendRequest(url, "GET", null, {
           Authorization: "Bearer " + getToken,
         });
-        console.log(responseData);
         setCourses(responseData.courses);
+        setComponent(
+          <div>
+            <Typography>Your Courses</Typography>
+            <Grid container>
+              {/* return a card for every course in courses */}
+              {responseData.courses.map((course) => (
+                <Grid item xs={12} sm={6} md={4}>
+                  <Card_ course={course} key={course._id} />
+                </Grid>
+              ))}
+            </Grid>
+          </div>
+        );
       } catch (err) {}
     };
     fetchCourses();
@@ -49,35 +58,59 @@ function Teams() {
   // const handleClick = (courseId) => {
 
   useEffect(() => {
-    if (option === "profile") {
-      setComponent(
-        <div>
-          <Typography>Your Profile</Typography>
-          <EditProfile />
-        </div>
-      );
-    }
-    // else if (option === "logout") {
-    //   auth.logout();
-    //   navigate("/");
-    // }
-
-    // if (option === "course") {
-    else {
+    if (option === "course") {
       setComponent(
         <div>
           <Typography>Your Courses</Typography>
-          <Grid container>
-            {/* return a card for every course in courses */}
+          <CoursePanel courses={courses} />
+          {/* <Grid container>
             {courses.map((course) => (
               <Grid item xs={12} sm={6} md={4}>
-                <Card_ course={course} />
+                <Card_ course={course} key={course.id} />
               </Grid>
             ))}
-          </Grid>
+          </Grid> */}
         </div>
       );
+    } else if (option === "profile") {
+      console.log("profile clicked");
+      setComponent(
+        <div>
+          <Typography> Profile </Typography>
+          <ProfilePage key="profile" />
+        </div>
+      );
+      // auth.logout();
+      // navigate("/");
+    } else if (option === "edit-profile") {
+      setComponent(
+        <div>
+          <Typography> Edit Profile </Typography>
+          <EditProfile key="profile" />
+        </div>
+      );
+      // auth.logout();
+      // navigate("/");
+    } else if (option === "logout") {
+      console.log("logout clicked");
+      auth.logout();
+      navigate("/");
+      // setComponent(
+      //   <div>
+      //     <Typography> Logout </Typography>
+      //   </div>
+      // );
+      // auth.logout();
+      // navigate("/");
     }
+    // else {
+    //   setComponent(
+    //     <div>
+    //       <Typography> Profile </Typography>
+    //       <EditProfile />
+    //     </div>
+    //   );
+    // }
     // }
     //     else if (option === "due") {
     //       setComponent(

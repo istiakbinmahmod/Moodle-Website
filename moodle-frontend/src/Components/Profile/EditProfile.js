@@ -1,7 +1,7 @@
 import { Grid, Typography, Card, CardContent, Paper } from "@mui/material";
 import React from "react";
 
-import useStyles from "../Dashboard/Teams/TeamsStyle";
+import useStyles from "../Dashboard/StudentDashboard/StudentDashboardStyle";
 import { useState, useEffect, useContext } from "react";
 import {
   Button,
@@ -27,6 +27,7 @@ import { AuthContext } from "../../Components/Context/AuthContext";
 import { useHttpClient } from "../../Components/Context/http-hook";
 
 const EditProfile = (props) => {
+  console.log("profile entered");
   const auth = useContext(AuthContext);
   const userID = localStorage.getItem("userId");
   const { isLoading, error, sendRequest, clearError } = useHttpClient();

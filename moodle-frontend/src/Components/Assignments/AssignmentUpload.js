@@ -1,7 +1,7 @@
 import { Grid, Typography, Card, CardContent, Paper } from "@mui/material";
 import React from "react";
 
-import useStyles from "../Dashboard/Teams/TeamsStyle";
+import useStyles from "../Dashboard/StudentDashboard/StudentDashboardStyle";
 import { useState, useEffect } from "react";
 import {
   Button,
