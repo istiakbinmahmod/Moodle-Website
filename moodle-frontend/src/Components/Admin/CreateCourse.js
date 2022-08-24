@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 // import useStyles from "../Login/LoginStyle";
-import useStyles from "../Dashboard/Teams/TeamsStyle";
+import useStyles from "../Dashboard/StudentDashboard/StudentDashboardStyle";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../Context/AuthContext";

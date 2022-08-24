@@ -264,7 +264,6 @@ const updateSubmission = async (req, res, next) => {
     return next(error);
   }
 
-  
   transporter.sendMail({
     to: uploader.email,
     from: "mksdrrana@gmail.com",
@@ -272,7 +271,7 @@ const updateSubmission = async (req, res, next) => {
     text: `You have re-submitted for ${assignment.title} in ${assignment.course}`,
     html: `<p>You have re-submitted for ${assignment.title} in ${assignment.course}</p>`,
   });
-    
+
   res.status(200).json({ submission: submission });
 };
 
@@ -598,7 +597,6 @@ const getAllDueAssignments = async (req, res, next) => {
     }
   }
 
-  
   let completed = student.submitted_assignments;
 
   for (var i = 0; i < completed.length; i++) {
@@ -613,7 +611,6 @@ const getAllDueAssignments = async (req, res, next) => {
     }
   }
 
-
   for (var i = 0; i < allAssignments.length; i++) {
     due.push(await Assignment.findById(allAssignments[i]));
   }
@@ -624,11 +621,10 @@ const getAllDueAssignments = async (req, res, next) => {
   });
 };
 
-const getAllCompletedAssignments  =async (req, res, next) =>
-{
-    let student = await Student.findOne({ user: req.params.userId });
-    let completedAssignments = [];
-     
+const getAllCompletedAssignments = async (req, res, next) => {
+  let student = await Student.findOne({ user: req.params.userId });
+  let completedAssignments = [];
+
   let completed = student.submitted_assignments;
 
   for (var i = 0; i < completed.length; i++) {
@@ -643,7 +639,6 @@ const getAllCompletedAssignments  =async (req, res, next) =>
     message: "success",
     completedAssignments: completedAssignments,
   });
-
 };
 
 exports.getEnrolledCourses = getEnrolledCourses;
@@ -660,5 +655,5 @@ exports.downloadAssignmentMaterial = downloadAssignmentMaterial;
 exports.testgetCompletedAndDueAssignmentsForACourse =
   testgetCompletedAndDueAssignmentsForACourse;
 
-exports.getAllDueAssignments = getAllDueAssignments;  
+exports.getAllDueAssignments = getAllDueAssignments;
 exports.getAllCompletedAssignments = getAllCompletedAssignments;

@@ -16,7 +16,7 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import FolderIcon from "@mui/icons-material/Folder";
 // grade icon
 import GradeIcon from "@mui/icons-material/Grade";
-// import useStyles from "../Dashboard/TeamsStyle";
+// import useStyles from "../Dashboard/StudentDashboardStyle";
 // import Card_ from "./CourseCard";
 // import EditProfile from "../../Profile/EditProfile";
 import { Logout } from "@mui/icons-material";

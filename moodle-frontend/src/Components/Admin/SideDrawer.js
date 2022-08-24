@@ -243,6 +243,198 @@ const SideDrawer = ({ setOption }) => {
             </ListItemButton>
           </ListItem>
 
+          <ListItem
+            key="delete-course"
+            disablePadding
+            sx={{ display: "block" }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => {
+                setOption("delete-course");
+                console.log("post clicked");
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <InstructorIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Delete Course"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem
+            key="create-session"
+            disablePadding
+            sx={{ display: "block" }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => {
+                setOption("create-session");
+                console.log("post clicked");
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <InstructorIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Create Session"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem
+            key="create-student"
+            disablePadding
+            sx={{ display: "block" }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => {
+                setOption("create-student");
+                console.log("post clicked");
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <InstructorIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Create Student"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem
+            key="create-teacher"
+            disablePadding
+            sx={{ display: "block" }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => {
+                setOption("create-teacher");
+                console.log("post clicked");
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <InstructorIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Create Teacher"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          {/* <ListItem
+            key="create-teacher"
+            disablePadding
+            sx={{ display: "block" }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+                onClick={() => {
+                  setOption("create-teacher");
+                  console.log("approve clicked");
+                }}
+              >
+                <AccountTreeRoundedIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Create Teacher"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem> */}
+
+          {/* <ListItem
+            key="create-student"
+            disablePadding
+            sx={{ display: "block" }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+                onClick={() => {
+                  setOption("create-student");
+                  console.log("create-student clicked");
+                }}
+              >
+                <AccountTreeRoundedIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Create Student"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem> */}
+
           <ListItem key="approve" disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{

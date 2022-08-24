@@ -24,6 +24,7 @@ export const useAuth = () => {
         expiration: tokenExpirationDate.toISOString(),
       })
     );
+    // alert(localStorage.getItem("userData"));
     localStorage.setItem("userId", uid);
     localStorage.setItem("userRole", urole);
     localStorage.setItem("token", token);

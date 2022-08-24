@@ -1,7 +1,8 @@
 import { Card, CardActionArea, Typography } from "@mui/material";
-import useStyles from "./TeamsStyle";
+import useStyles from "../Dashboard/StudentDashboard/StudentDashboardStyle";
+import logo from "../Dashboard/StudentDashboard/assets/book-icon.png";
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ course, setCourseID, setCourseTitle }) => {
   const classes = useStyles();
 
   const {
@@ -18,9 +19,15 @@ const CourseCard = ({ course }) => {
     // ...rest
   } = course;
 
-  const courseUrl = "/my/course/" + courseTitle + "/" + course._id;
+  //   const courseUrl = "/my/course/" + courseTitle + "/" + course._id;
   return (
-    <CardActionArea href={courseUrl}>
+    <CardActionArea
+      onClick={(e) => {
+        setCourseID(course._id);
+        setCourseTitle(courseTitle);
+      }}
+      // href={courseUrl}
+    >
       <Card
         className={classes.card}
         style={{ background: "#f7f8fa", margin: "10px" }}
@@ -56,10 +63,7 @@ const CourseCard = ({ course }) => {
           </Typography>
         </div>
         <div className={classes.TeacherImg}>
-          <img
-            className={classes.courseTeacherImg}
-            src="https://www.kindpng.com/picc/m/79-793803_books-icon-study-icon-transparent-background-hd-png.png"
-          />
+          <img className={classes.courseTeacherImg} src={logo} />
         </div>
       </Card>
     </CardActionArea>

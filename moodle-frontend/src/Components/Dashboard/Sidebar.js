@@ -32,6 +32,7 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CourseMaterialIcon from "@mui/icons-material/FolderSpecialRounded";
 
 import { Grid } from "@mui/material";
+import { Edit, ExitToApp, Message, PersonOutline } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -178,11 +179,63 @@ const Sidebar = ({ setOption }) => {
             </ListItemButton>
           </ListItem>
 
-          <ListItem
-            key="Assignments_u"
-            disablePadding
-            sx={{ display: "block" }}
-          >
+          <ListItem key="profile" disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => setOption("profile")}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <PersonOutline />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  "Profile"
+                  // + "(" + localStorage.getItem("userName") + ")"
+                }
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem key="edit-profile" disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => setOption("edit-profile")}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <Edit />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  "Edit Profile"
+                  // + "(" + localStorage.getItem("userName") + ")"
+                }
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          {/* <ListItem key="profile" disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -202,19 +255,16 @@ const Sidebar = ({ setOption }) => {
               </ListItemIcon>
               <ListItemText primary="Profile" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
-          </ListItem>
-          <ListItem
-            key="assignments_f"
-            disablePadding
-            sx={{ display: "block" }}
-          >
+          </ListItem> */}
+
+          <ListItem key="forum" disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={() => setOption("completed")}
+              onClick={() => setOption("forum")}
             >
               <ListItemIcon
                 sx={{
@@ -223,12 +273,9 @@ const Sidebar = ({ setOption }) => {
                   justifyContent: "center",
                 }}
               >
-                <AssignmentTurnedInIcon />
+                <Message />
               </ListItemIcon>
-              <ListItemText
-                primary="Completed"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
+              <ListItemText primary="Forum" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
           {/* {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
@@ -256,7 +303,11 @@ const Sidebar = ({ setOption }) => {
         </List>
         <Divider />
         <List>
-          <ListItem key="files" disablePadding sx={{ display: "block" }}>
+          <ListItem
+            key="course-materials"
+            disablePadding
+            sx={{ display: "block" }}
+          >
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -280,14 +331,15 @@ const Sidebar = ({ setOption }) => {
               />
             </ListItemButton>
           </ListItem>
-          <ListItem key="notice" disablePadding sx={{ display: "block" }}>
+
+          <ListItem key="logout" disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={() => setOption("notice")}
+              onClick={() => setOption("logout")}
             >
               <ListItemIcon
                 sx={{
@@ -296,7 +348,7 @@ const Sidebar = ({ setOption }) => {
                   justifyContent: "center",
                 }}
               >
-                <NoticeICon />
+                <ExitToApp />
               </ListItemIcon>
               <ListItemText
                 primary={
