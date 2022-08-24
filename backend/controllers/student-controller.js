@@ -123,15 +123,6 @@ const uploadSubmission = async (req, res, next) => {
     return next(error);
   }
 
-  // const { downloadURL } = req.file;
-  // console.log(downloadURL);
-
-  // const submission = new Submissions({
-  //   file: downloadURL,
-  //   assignment: assignmentId,
-  //   user: req.userData.userId,
-  // });
-
   const submission = new Submissions({
     file: req.body.url,
     assignment: assignmentId,
@@ -183,13 +174,13 @@ const uploadSubmission = async (req, res, next) => {
     );
     return next(error);
   }
-
+  let relatedCourse = await Course.findById(assignment.course);
   transporter.sendMail({
     to: uploader.email,
     from: "mksdrrana@gmail.com",
     subject: "You have a new submission",
     text: `You have submitted for ${assignment.title} in ${assignment.course}`,
-    html: `<p>You have submitted for ${assignment.title} in ${assignment.course}</p>`,
+    html: `<p>You have submitted for ${assignment.title} in ${relatedCourse.courseTitle}</p>`,
   });
 
   res.status(201).json({ submission: submission });
@@ -230,10 +221,8 @@ const updateSubmission = async (req, res, next) => {
     return next(error);
   }
 
-  const { downloadURL } = req.file;
-  console.log(downloadURL);
-
-  submission.file = downloadURL;
+  submission.file = req.body.url;
+  submission.filename = req.body.filename;
 
   try {
     await submission.save();
@@ -270,13 +259,13 @@ const updateSubmission = async (req, res, next) => {
     );
     return next(error);
   }
-
+  let relatedCourse = await Course.findById(assignment.course);
   transporter.sendMail({
     to: uploader.email,
     from: "mksdrrana@gmail.com",
     subject: "You have re-submitted",
     text: `You have re-submitted for ${assignment.title} in ${assignment.course}`,
-    html: `<p>You have re-submitted for ${assignment.title} in ${assignment.course}</p>`,
+    html: `<p>You have re-submitted for ${assignment.title} in ${relatedCourse.courseTitle}</p>`,
   });
 
   res.status(200).json({ submission: submission });
@@ -296,9 +285,7 @@ const deleteSubmission = async (req, res, next) => {
 
   let submission;
   try {
-    // submission = await Submissions.findById(submissionId).populate(
-    //   "assignment"
-    // );
+   
 
     submission = await Submissions.findOne({
       assignment: assignmentId,

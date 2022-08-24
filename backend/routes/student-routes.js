@@ -41,8 +41,8 @@ router.post(
 
 router.patch(
   "/update-submission/:assignmentID",
-  fileUpload.single("file"),
-  addFilePath,
+  // fileUpload.single("file"),
+  // addFilePath,
   studentController.updateSubmission
 );
 
