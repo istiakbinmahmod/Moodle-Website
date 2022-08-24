@@ -107,15 +107,14 @@ const uploadCourseAssignment = async(req, res, next) => {
             new HttpError("Invalid inputs passed, please check your data.", 422)
         );
     }
-    const { downloadURL } = req.file;
-    console.log(downloadURL);
+  
 
     const courseId = req.params.courseID;
 
     let createdAssignment;
 
     createdAssignment = new Assignment({
-        file: downloadURL,
+        file: req.body.url,
         course: courseId,
         title: req.body.title,
         description: req.body.description,
@@ -400,15 +399,14 @@ const uploadCourseMaterials = async(req, res, next) => {
         );
     }
 
-    const { downloadURL } = req.file;
-    console.log(downloadURL);
+ 
 
     let createdCourseMaterials;
     let courseId = req.params.courseID;
 
 
     createdCourseMaterials = new CourseMaterials({
-        file: downloadURL,
+        file: req.body.url,
         course: courseId,
         title: req.body.title,
     });

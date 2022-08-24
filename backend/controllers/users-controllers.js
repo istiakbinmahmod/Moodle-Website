@@ -118,12 +118,12 @@ const uploadPrivateFiles = async (req, res, next) => {
     );
   }
 
-  const { downLoadURL } = req.file;
 
   const createdPrivateFile = new PrivateFile({
-    user: userID,
+    user: user,
 
-    file: downLoadURL,
+    file: req.body.url,
+    fileName: req.body.filename,
   });
 
   try {
@@ -251,8 +251,8 @@ const updateProfile = async (req, res, next) => {
   }
 
   user.name = req.body.name;
-  const { downLoadURL } = req.file;
-  user.image = downLoadURL;
+ 
+  user.image = req.body.url;
   user.phone = req.body.phone;
   user.address = req.body.address;
   user.bio = req.body.bio;

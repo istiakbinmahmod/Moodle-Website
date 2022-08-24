@@ -14,8 +14,8 @@ router.use(checkUserAuth);
 router.get("/:uid/courses", usersController.getCoursesByUserId); // => localhost:5000/users/:uid/courses to show all the courses he/she's enrolled in
 router.post(
   "/upload-private-file/",
-  uploadFile.single("file"),
-  addFilePath,
+  // uploadFile.single("file"),
+  // addFilePath,
   usersController.uploadPrivateFiles
 ); // => localhost:5000/users/upload-private-file/:uid to upload a private file
 router.get("/get-all-private-files/", usersController.getAllPrivateFiles); // => localhost:5000/users/get-all-private-files/ to get all the private files
@@ -29,8 +29,8 @@ router.delete(
 ); // => localhost:5000/users/delete-private-file/:privateFileID to delete a private file
 router.patch(
   "/update-profile",
-  uploadFile.single("file"),
-  addFilePath,
+  // uploadFile.single("file"),
+  // addFilePath,
   usersController.updateProfile
 ); // => localhost:5000/users/update-profile to update a user's profile
 router.patch("/update-password", usersController.changePassword); // => localhost:5000/users/update-password to update a user's password

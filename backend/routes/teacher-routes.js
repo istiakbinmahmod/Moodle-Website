@@ -15,8 +15,8 @@ router.get("/get-my-courses", teacherController.getEnrolledCourses); // => local
 router.get("/get-materials/:courseID", teacherController.getCourseMaterials); // => localhost:5000/teacher/course-materials/:courseID to get all the materials of a course
 router.post(
   "/upload-material/:courseID",
-  uploadFile.single("file"),
-  addFilePath,
+  // uploadFile.single("file"),
+  // addFilePath,
   teacherController.uploadCourseMaterials
 ); // => localhost:5000/teacher/create-material/:courseID to create a new material
 router.delete(
@@ -26,8 +26,8 @@ router.delete(
 
 router.post(
   "/upload-course-assignment/:courseID",
-  uploadFile.single("file"),
-  addFilePath,
+  // uploadFile.single("file"),
+  // addFilePath,
   teacherController.uploadCourseAssignment
 ); // => localhost:5000/teacher/create-assignment/:courseID to create a new assignment
 router.patch(
