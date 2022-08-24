@@ -77,6 +77,7 @@ const login = async (req, res, next) => {
     moodleID: existingUser.moodleID,
     userRole: existingUser.role,
     token: token,
+    username : existingUser.name,
   });
 };
 
