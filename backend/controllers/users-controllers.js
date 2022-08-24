@@ -252,8 +252,9 @@ const updateProfile = async (req, res, next) => {
   }
 
   user.name = req.body.name;
- 
-  user.image = req.body.url;
+  if(req.body.url !== ""){
+    user.image = req.body.url;
+  }  
   user.phone = req.body.phone;
   user.address = req.body.address;
   user.bio = req.body.bio;
