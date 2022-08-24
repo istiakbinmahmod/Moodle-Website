@@ -123,8 +123,8 @@ const uploadSubmission = async (req, res, next) => {
     return next(error);
   }
 
-  const { downloadURL } = req.file;
-  console.log(downloadURL);
+  // const { downloadURL } = req.file;
+  // console.log(downloadURL);
 
   // const submission = new Submissions({
   //   file: downloadURL,
