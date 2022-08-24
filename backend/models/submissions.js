@@ -10,6 +10,7 @@ const submissionSchema = new Schema({
     is_graded: { type: Boolean, default: false },
     grade: { type: Number, default: 0 },
     comments: { type: String, default: "" },
+    filename: {type: String, default: ""}
 });
 
 module.exports = mongoose.model('Submission', submissionSchema);

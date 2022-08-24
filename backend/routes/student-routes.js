@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get("/get-all-courses", studentController.getAllCourses); // => localhost:5000/api/students/get-all-courses to get all the courses
 
-router.use(checkAuthStudent);
+ router.use(checkAuthStudent);
 
 router.get("/get-my-courses", studentController.getEnrolledCourses); // => localhost:5000/api/students/get-my-courses to get all the courses of a student
 
@@ -34,8 +34,8 @@ router.get(
 
 router.post(
   "/upload-submission/:assignmentID",
-  fileUpload.single("file"),
-  addFilePath,
+  // fileUpload.single("file"),
+  // addFilePath,
   studentController.uploadSubmission
 );
 
@@ -52,7 +52,7 @@ router.delete(
 );
 
 router.get(
-  "get-submission/:assignmentID",
+  "/get-submission/:assignmentID",
   studentController.getSubmissionByAssignmentID
 );
 

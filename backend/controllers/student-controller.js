@@ -126,10 +126,17 @@ const uploadSubmission = async (req, res, next) => {
   const { downloadURL } = req.file;
   console.log(downloadURL);
 
+  // const submission = new Submissions({
+  //   file: downloadURL,
+  //   assignment: assignmentId,
+  //   user: req.userData.userId,
+  // });
+
   const submission = new Submissions({
-    file: downloadURL,
+    file: req.body.url,
     assignment: assignmentId,
     user: req.userData.userId,
+    filename: req.body.filename,
   });
 
   try {

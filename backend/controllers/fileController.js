@@ -49,6 +49,7 @@ const addFilePath = async (req, res, next) => {
     const name = file.originalname.split(".")[0];
     const type = file.originalname.split(".")[1];
     const fileName = `uploads/${name}_${timestamp}.${type}`;
+    const file_name = `${name}.${type}`;
     const fileReference = ref(storage, fileName);
     // Upload the file
     await uploadBytes(fileReference, file.buffer);
