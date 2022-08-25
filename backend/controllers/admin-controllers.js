@@ -61,6 +61,7 @@ const adminLogin = (req, res, next) => {
   }
 
   res.json({
+    success: true,
     admin: identifiedAdmin,
     token: token,
   });
