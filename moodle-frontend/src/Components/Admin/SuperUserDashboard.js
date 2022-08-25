@@ -1,13 +1,14 @@
 import { Grid, Typography } from "@mui/material";
 import React from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import useStyles from "../Dashboard/StudentDashboard/StudentDashboardStyle";
 import { useState, useEffect } from "react";
 import SideDrawer from "./SideDrawer";
-import Approve from "./Approve";
 
 import AssignCourseTeachers from "./AssignCourseTeachers";
 import AssignCourseStudents from "./AssignCourseStudents";
+import AssignMultipleCourseStudents from "./AssignMultipleCourseStudents";
 import CreateCourse from "./CreateCourse";
 import DeleteCourse from "./DeleteCourse";
 import CreateSession from "./CreateSession";
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const classes = useStyles();
   const [component, setComponent] = useState(<div></div>);
   const [option, setOption] = useState("post");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (option === "assign-teacher") {
@@ -30,6 +32,12 @@ const Dashboard = () => {
       setComponent(
         <div>
           <AssignCourseStudents />
+        </div>
+      );
+    } else if (option === "assign-multiple-student") {
+      setComponent(
+        <div>
+          <AssignMultipleCourseStudents />
         </div>
       );
     } else if (option === "create-course") {
@@ -62,21 +70,13 @@ const Dashboard = () => {
           <CreateStudent />
         </div>
       );
-    }
-
-    // else if (option === 'announcement'){
-    else if (option === "approve") {
-      setComponent(
-        <div>
-          <Approve />
-        </div>
-      );
-    } else if (option === "overview") {
-      setComponent(
-        <div>
-          <h1>overview</h1>
-        </div>
-      );
+    } else if (option === "logout") {
+      navigate("/");
+      // setComponent(
+      //   <div>
+      //     <h1>overview</h1>
+      //   </div>
+      // );
     }
   }, [option]);
 

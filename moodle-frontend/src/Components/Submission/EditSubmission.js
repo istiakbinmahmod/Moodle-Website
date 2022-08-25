@@ -93,7 +93,7 @@ const SubmitAssignment = (props) => {
     try {
       let url;
       url =
-        "http://localhost:5000/api/students/upload-submission/" + assignmentId;
+        "http://localhost:5000/api/students/update-submission/" + assignmentId;
       // const formData = new FormData();
 
       // formData.append("file", assignment_file);
@@ -103,7 +103,7 @@ const SubmitAssignment = (props) => {
       // console.log(formData);
       await sendRequest(
         url,
-        "POST",
+        "PATCH",
         JSON.stringify({
           url: url,
           filename: file.name,
@@ -197,7 +197,7 @@ const SubmitAssignment = (props) => {
             disabled={disabled}
             onClick={handleSubmit}
           >
-            Turn In Your Assignment
+            Update Submission
           </Button>
         </Grid>
       </Grid>

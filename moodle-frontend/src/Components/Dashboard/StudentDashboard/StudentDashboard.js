@@ -37,6 +37,21 @@ function Teams() {
           Authorization: "Bearer " + getToken,
         });
         setCourses(responseData.courses);
+        setComponent(
+          <div>
+            <Typography>Your Courses</Typography>
+            <Grid container>
+              {/* return a card for every course in courses */}
+              {!isLoading &&
+                courses &&
+                courses.map((course) => (
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Card_ course={course} key={course._id} />
+                  </Grid>
+                ))}
+            </Grid>
+          </div>
+        );
       } catch (err) {}
     };
     fetchCourses();
@@ -71,25 +86,17 @@ function Teams() {
       console.log("logout clicked");
       auth.logout();
       navigate("/");
+    } else if (option === "notification") {
+      console.log("notifcation clicked");
+      navigate("/student/notifications");
     }
   }, [option, courses]);
 
   return (
     <div className={classes.root}>
       <Sidebar setOption={setOption} />
-      <main className={classes.content}>
-        <div>
-          <Typography>Your Courses</Typography>
-          <Grid container>
-            {/* return a card for every course in courses */}
-            {courses.map((course) => (
-              <Grid item xs={12} sm={6} md={4}>
-                <Card_ course={course} key={course._id} />
-              </Grid>
-            ))}
-          </Grid>
-        </div>
-      </main>
+      <main className={classes.content}></main>
+      {component}
     </div>
   );
 }

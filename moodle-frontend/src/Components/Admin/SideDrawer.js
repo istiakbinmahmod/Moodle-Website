@@ -33,6 +33,7 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CourseMaterialIcon from "@mui/icons-material/FolderSpecialRounded";
 import InstructorIcon from "@mui/icons-material/CoPresentRounded";
 import { Grid } from "@mui/material";
+import { ExitToApp } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -212,6 +213,39 @@ const SideDrawer = ({ setOption }) => {
           </ListItem>
 
           <ListItem
+            key="assign-multiple-student"
+            disablePadding
+            sx={{ display: "block" }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => {
+                setOption("assign-multiple-student");
+                console.log("post clicked");
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <InstructorIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Assign Students"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <Divider />
+          <ListItem
             key="create-course"
             disablePadding
             sx={{ display: "block" }}
@@ -306,7 +340,7 @@ const SideDrawer = ({ setOption }) => {
               />
             </ListItemButton>
           </ListItem>
-
+          <Divider />
           <ListItem
             key="create-student"
             disablePadding
@@ -370,18 +404,14 @@ const SideDrawer = ({ setOption }) => {
               />
             </ListItemButton>
           </ListItem>
-
-          {/* <ListItem
-            key="create-teacher"
-            disablePadding
-            sx={{ display: "block" }}
-          >
+          <ListItem key="logout" disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              onClick={() => setOption("logout")}
             >
               <ListItemIcon
                 sx={{
@@ -389,104 +419,20 @@ const SideDrawer = ({ setOption }) => {
                   mr: open ? 3 : "auto",
                   justifyContent: "center",
                 }}
-                onClick={() => {
-                  setOption("create-teacher");
-                  console.log("approve clicked");
-                }}
               >
-                <AccountTreeRoundedIcon />
+                <ExitToApp />
               </ListItemIcon>
               <ListItemText
-                primary="Create Teacher"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem> */}
-
-          {/* <ListItem
-            key="create-student"
-            disablePadding
-            sx={{ display: "block" }}
-          >
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-                onClick={() => {
-                  setOption("create-student");
-                  console.log("create-student clicked");
-                }}
-              >
-                <AccountTreeRoundedIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Create Student"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem> */}
-
-          <ListItem key="approve" disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-                onClick={() => {
-                  setOption("approve");
-                  console.log("approve clicked");
-                }}
-              >
-                <AccountTreeRoundedIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Approve Enrollment"
+                primary={
+                  "Logout"
+                  // + "(" + localStorage.getItem("userName") + ")"
+                }
                 sx={{ opacity: open ? 1 : 0 }}
               />
             </ListItemButton>
           </ListItem>
         </List>
         <Divider />
-        <List>
-          <ListItem key="overview" disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-              onClick={() => setOption("overview")}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <EqualizerRoundedIcon />
-              </ListItemIcon>
-              <ListItemText primary="Overview" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-        </List>
       </Drawer>
     </Box>
   );

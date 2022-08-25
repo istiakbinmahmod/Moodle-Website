@@ -17,7 +17,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
-// import Person from "@material-ui/icons/Person";
 import { Person } from "@mui/icons-material";
 import Divider from "@material-ui/core/Divider";
 
@@ -122,6 +121,8 @@ const Profile = (props) => {
       navigate("/student/private-files");
     } else if (option === "upload-private-files") {
       navigate("/student/upload-private-files");
+    } else if (option === "notification") {
+      navigate("/student/notifications");
     }
   }, [option, userCourses]);
 
@@ -137,7 +138,12 @@ const Profile = (props) => {
             <List dense>
               <ListItem>
                 {userInfo.image ? (
-                  <img src={userInfo.image} />
+                  // <img src={userInfo.image} />
+                  <ListItemAvatar>
+                    <Avatar>
+                      <Person />
+                    </Avatar>
+                  </ListItemAvatar>
                 ) : (
                   <ListItemAvatar>
                     <Avatar>

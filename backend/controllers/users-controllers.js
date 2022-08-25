@@ -147,7 +147,6 @@ const uploadPrivateFiles = async (req, res, next) => {
   });
 };
 
-
 const getAllPrivateFilesByUSerID = async (req, res, next) => {
   const userID = req.params.uid;
   const user = await User.findById(userID);
@@ -341,7 +340,7 @@ const userPostinForum = async (req, res, next) => {
       new HttpError("Could not find the forum for this course.", 404)
     );
   }
-  if(await user.role === "teacher"){
+  if ((await user.role) === "teacher") {
     const post = new ForumPost({
       user: user,
       forum: forum,
@@ -643,18 +642,17 @@ const getAllNotifications = async (req, res, next) => {
 
     //find the notofications of the user in the database and sort them by date
     let notifications = await user.notifications;
-    for(let i = 0; i < notifications.length; i++){
-      let notification = await Notification.findById(notifications[i].toString());
+    for (let i = 0; i < notifications.length; i++) {
+      let notification = await Notification.findById(
+        notifications[i].toString()
+      );
       notifications_array.push(notification);
     }
 
     //now just sort the notifications by date
     notifications_array.sort((a, b) => {
       return new Date(b.date) - new Date(a.date);
-    }
-    );
-
-
+    });
   } catch (err) {
     console.log(err);
     return next(new HttpError("Could not get the notifications.", 500));

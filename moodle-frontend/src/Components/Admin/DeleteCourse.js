@@ -79,8 +79,8 @@ function DeleteCourse() {
       alert("Invalid credentials");
     } else {
       axios({
-        method: "POST",
-        url: "http://localhost:5000/api/admin/delete-course/" + courseId,
+        method: "DELETE",
+        url: "http://localhost:5000/api/admin/delete/course/" + courseId,
         headers: {
           "Content-Type": "Application/json",
           Authorization: "Bearer " + getToken,

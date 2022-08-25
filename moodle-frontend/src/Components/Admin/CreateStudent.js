@@ -50,18 +50,12 @@ function CreateStudent() {
 
   const onSubmit = (data) => {
     console.log(data);
-    if (
-      !data.sessionID ||
-      !data.courseID ||
-      !data.courseTitle ||
-      !data.courseDescription ||
-      !data.courseCreditHour
-    ) {
+    if (!data.moodleID || !data.name || !data.email || !data.password) {
       alert("Invalid credentials");
     } else {
       axios({
         method: "POST",
-        url: "http://localhost:5000/api/admin/create-course/" + sessionId,
+        url: "http://localhost:5000/api/admin/create/student",
         headers: {
           "Content-Type": "Application/json",
           Authorization: "Bearer " + getToken,
@@ -69,9 +63,9 @@ function CreateStudent() {
         data: data,
       })
         .then((res) => {
-          alert("Course created successfully");
+          alert("Student created successfully");
           if (res.data.success) {
-            alert("Course created successfully");
+            alert("Student created successfully");
           }
         })
         .catch((err) => {
@@ -118,6 +112,7 @@ function CreateStudent() {
             <Grid item sm={3} />
           </Grid>
         </Grid>
+
         <Grid item container spacing={2}>
           <Grid item sm={2.5} />
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -144,29 +139,29 @@ function CreateStudent() {
                 />
                 <TextField
                   style={{ width: "100%", height: "78px" }}
-                  {...register("userName", {
-                    required: " userName is required",
+                  {...register("name", {
+                    required: " name is required",
                   })}
-                  error={Boolean(errors.userName)}
-                  helperText={errors.userName?.message}
+                  error={Boolean(errors.name)}
+                  helperText={errors.name?.message}
                   className={classes.textField}
                   id="outlined-basic"
-                  name="userName"
-                  label="userName*"
+                  name="name"
+                  label="User Name*"
                   variant="outlined"
                   // InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                   style={{ width: "100%", height: "78px" }}
-                  {...register("emailID", {
-                    required: " emailID is required",
+                  {...register("email", {
+                    required: " email is required",
                   })}
                   type="email"
-                  error={Boolean(errors.emailID)}
-                  helperText={errors.emailID?.message}
+                  error={Boolean(errors.email)}
+                  helperText={errors.email?.message}
                   className={classes.textField}
                   id="outlined-basic"
-                  name="emailID"
+                  name="email"
                   label="emailID*"
                   variant="outlined"
                   // InputLabelProps={{ shrink: true }}

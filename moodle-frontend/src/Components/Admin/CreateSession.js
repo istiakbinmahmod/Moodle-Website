@@ -50,18 +50,12 @@ function CreateSession() {
 
   const onSubmit = (data) => {
     console.log(data);
-    if (
-      !data.sessionID ||
-      !data.courseID ||
-      !data.courseTitle ||
-      !data.courseDescription ||
-      !data.courseCreditHour
-    ) {
+    if (!data.sessionID || !data.startDate || !data.endDate) {
       alert("Invalid credentials");
     } else {
       axios({
         method: "POST",
-        url: "http://localhost:5000/api/admin/create-course/" + sessionId,
+        url: "http://localhost:5000/api/admin/create-session/",
         headers: {
           "Content-Type": "Application/json",
           Authorization: "Bearer " + getToken,
@@ -69,9 +63,9 @@ function CreateSession() {
         data: data,
       })
         .then((res) => {
-          alert("Course created successfully");
+          alert("Session created successfully");
           if (res.data.success) {
-            alert("Course created successfully");
+            alert("Session created successfully");
           }
         })
         .catch((err) => {
@@ -172,17 +166,6 @@ function CreateSession() {
                   variant="outlined"
                   InputLabelProps={{ shrink: true }}
                 />
-
-                {/* <div>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      style={{ marginTop: "20px", marginBottom: "20px" }}
-                    >
-                      Login
-                    </Button>
-                  </div> */}
               </Grid>
             </Grid>
             <Grid item container>
@@ -199,7 +182,6 @@ function CreateSession() {
               </Grid>
               <Grid item sm={5} />
             </Grid>
-            {/* </Card> */}
           </form>
         </Grid>
       </div>

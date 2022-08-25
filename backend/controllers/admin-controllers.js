@@ -603,89 +603,90 @@ const adminGetSessionBySessionID = async (req, res, next) => {
   res.json({ session: session });
 };
 
-const adminEnrollSingleUser = async(req, res, next) => { //enrol to a course one by one
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        throw new HttpError("Invalid inputs passed, please check your data.", 422);
-    }
+const adminEnrollSingleUser = async (req, res, next) => {
+  //enrol to a course one by one
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new HttpError("Invalid inputs passed, please check your data.", 422);
+  }
 
-    const participant = req.body.participants;
-    const cid = req.params.courseID;
+  const participant = req.body.participants;
+  const cid = req.params.courseID;
 
-    // let participant = "";
-    // for (let i = 0; i < participants.length; i++) {
-    //   participant += participants[i];
-    // }
+  // let participant = "";
+  // for (let i = 0; i < participants.length; i++) {
+  //   participant += participants[i];
+  // }
 
-    let course;
+  let course;
+  try {
+    course = await Course.findById(cid);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not find course.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!course) {
+    const error = new HttpError("Could not find course for provided id.", 404);
+
+    return next(error);
+  }
+
+  let user;
+  if (participant.length > 0) {
     try {
-        course = await Course.findById(cid);
+      // user = await User.findById(participants);
+      user = await User.findOne({ moodleID: participant });
+      if (await course.participants.includes(user._id)) {
+        console.log("User already enrolled");
+        return res.status(200).json({ message: "User already enrolled" });
+      }
+
+      await course.participants.push(user);
     } catch (err) {
-        const error = new HttpError(
-            "Something went wrong, could not find course.",
-            500
-        );
-        return next(error);
+      const error = new HttpError(
+        "Something went wrong, could not find user.",
+        500
+      );
+      return next(error);
     }
 
-    if (!course) {
-        const error = new HttpError("Could not find course for provided id.", 404);
+    if (!user) {
+      const error = new HttpError("Could not find user for provided id.", 404);
+      return next(error);
+    }
+  }
 
-        return next(error);
+  try {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    await course.save({ session: session });
+
+    // for await (const id of participants)
+    {
+      // const userRelatedToCourse = await User.findById(id);
+      const userRelatedToCourse = await User.findOne({
+        moodleID: participant,
+      });
+      userRelatedToCourse.courses.push(course);
+      await userRelatedToCourse.save({ session: session });
+      console.log(userRelatedToCourse.moodleID);
     }
 
-    let user;
-    if (participant.length > 0) {
-        try {
-            // user = await User.findById(participants);
-            user = await User.findOne({ moodleID: participant });
-            if (await course.participants.includes(user._id)) {
-              console.log("User already enrolled");
-              return res.status(200).json({ message: "User already enrolled" });
-            }
-            
-            await course.participants.push(user);
-        } catch (err) {
-            const error = new HttpError(
-                "Something went wrong, could not find user.",
-                500
-            );
-            return next(error);
-        }
+    await session.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(
+      "Updating course failed, please try again.",
+      500
+    );
+    console.log(err);
+    return next(error);
+  }
 
-        if (!user) {
-            const error = new HttpError("Could not find user for provided id.", 404);
-            return next(error);
-        }
-    }
-
-    try {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        await course.save({ session: session });
-
-        // for await (const id of participants)
-        {
-            // const userRelatedToCourse = await User.findById(id);
-            const userRelatedToCourse = await User.findOne({
-                moodleID: participant,
-            });
-            userRelatedToCourse.courses.push(course);
-            await userRelatedToCourse.save({ session: session });
-            console.log(userRelatedToCourse.moodleID);
-        }
-
-        await session.commitTransaction();
-    } catch (err) {
-        const error = new HttpError(
-            "Updating course failed, please try again.",
-            500
-        );
-        console.log(err);
-        return next(error);
-    }
-
-    res.json({ course: course });
+  res.json({ course: course });
 };
 
 const adminCreateStudent = async (req, res, next) => {
@@ -990,15 +991,14 @@ const adminCreateCourseForASession = async (req, res, next) => {
 const adminGetTeachersList = async (req, res, next) => {
   const teachers = await User.find({ role: "teacher" });
   res.json({ teachers });
-}
+};
 
 const adminGetStudentsList = async (req, res, next) => {
   const students = await User.find({ role: "student" });
   res.json({ students });
-}
+};
 
 const adminGetAvailableTeachersForACourse = async (req, res, next) => {
-
   const cid = req.params.courseID;
   let course = await Course.findById(cid);
   console.log(course.courseTitle);
@@ -1015,8 +1015,6 @@ const adminGetAvailableTeachersForACourse = async (req, res, next) => {
   }
 
   res.json({ availableTeachers });
-
-
 };
 
 exports.getAdmin = getAdmin;
@@ -1048,5 +1046,6 @@ exports.createStudentsinBulk = createStudentsinBulk;
 exports.adminEnrollUserInBulk = adminEnrollUserInBulk;
 exports.adminGetTeachersList = adminGetTeachersList;
 exports.adminGetStudentsList = adminGetStudentsList;
-exports.adminGetAvailableTeachersForACourse = adminGetAvailableTeachersForACourse;
+exports.adminGetAvailableTeachersForACourse =
+  adminGetAvailableTeachersForACourse;
 exports.adminEnrollSingleUser = adminEnrollSingleUser;

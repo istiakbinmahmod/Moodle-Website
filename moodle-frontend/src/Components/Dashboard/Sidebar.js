@@ -35,6 +35,7 @@ import CourseMaterialIcon from "@mui/icons-material/FolderSpecialRounded";
 
 import { Grid } from "@mui/material";
 import {
+  CircleNotifications,
   Edit,
   ExitToApp,
   FileOpen,
@@ -229,7 +230,9 @@ const Sidebar = ({ setOption }) => {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={() => setOption("edit-profile")}
+              onClick={() => {
+                setOption("edit-profile");
+              }}
             >
               <ListItemIcon
                 sx={{
@@ -310,18 +313,14 @@ const Sidebar = ({ setOption }) => {
         </List>
         <Divider />
         <List>
-          <ListItem
-            key="course-materials"
-            disablePadding
-            sx={{ display: "block" }}
-          >
+          <ListItem key="notification" disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={() => setOption("files")}
+              onClick={() => setOption("notification")}
             >
               <ListItemIcon
                 sx={{
@@ -330,10 +329,10 @@ const Sidebar = ({ setOption }) => {
                   justifyContent: "center",
                 }}
               >
-                <CourseMaterialIcon />
+                <CircleNotifications />
               </ListItemIcon>
               <ListItemText
-                primary="Course Materials"
+                primary="Notifications"
                 sx={{ opacity: open ? 1 : 0 }}
               />
             </ListItemButton>

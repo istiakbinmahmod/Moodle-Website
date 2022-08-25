@@ -50,7 +50,6 @@ router.post("/create-session", adminController.adminCreateSession); // => localh
 router.delete("/delete/session/:sessionID", adminController.adminDeleteSession); // => localhost:5000/admin/delete-session to delete a session
 router.delete("/:courseID", adminController.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
 
-
 router.post("/create/students", adminController.createStudentsinBulk); // => localhost:5000/admin/create-students to create a new student')
 
 router.post("/enrollStudents/:courseID", adminController.adminEnrollUserInBulk); // => localhost:5000/admin/enroll-students to enroll students in a course

@@ -1,6 +1,5 @@
 import { Grid, Typography, Card, CardContent } from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
 import useStyles from "../Participants/Style";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -11,21 +10,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { AuthContext } from "../Context/AuthContext";
 import { useHttpClient } from "../Context/http-hook";
-import { makeStyles } from "@material-ui/core/styles";
-import Sidebar from "../Dashboard/Sidebar";
-
-const newStyles = makeStyles((theme) => ({
-  root: theme.mixins.gutters({
-    maxWidth: 900,
-    margin: "auto",
-    padding: theme.spacing(3),
-    marginTop: theme.spacing(3),
-  }),
-  title: {
-    marginTop: theme.spacing(3),
-    color: theme.palette.protectedTitle,
-  },
-}));
 
 const formatDate = (date) => {
   // format to i.e 6 jan, saturday at 3:00pm
@@ -64,7 +48,7 @@ const formatDate = (date) => {
 };
 
 interface Column {
-  id: "file";
+  id: "file" | "moodleID" | "uploadedAt";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -73,87 +57,67 @@ interface Column {
 
 const columns: Column[] = [
   { id: "file", label: "File", minWidth: 170 },
-  // { id: "fileType", label: "File Type", minWidth: 100 },
+  { id: "moodleID", label: "Moodle ID", minWidth: 100 },
+  {
+    id: "uploadedAt",
+    label: "Upload Time",
+    minWidth: 170,
+    // align: "right",
+    // format: (value: number) => value.toLocaleString("en-US"),
+  },
 ];
 
-function createData(file: string): Data {
+function createData(file: string, moodleID: string, uploadedAt: Date): Data {
   // const density = population / size;
-  return { file };
+  return { file, moodleID, uploadedAt };
 }
 
-let privateFileLists = [];
+let submissionLists = [];
 
-const PrivateFiles = (props) => {
+const AllSubmissions = (props) => {
   // destructuring props
   //   const { courseID, studentId } = props;
-
-  const classes = useStyles();
-  const newClasses = newStyles();
-  const auth = useContext(AuthContext);
-  const getToken = localStorage.getItem("token");
-  const navigate = useNavigate();
-  const userID = localStorage.getItem("userId");
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [userInfo, setUserInfo] = useState();
-  const [userCourses, setUserCourses] = useState([]);
-  const [userPrivateFiles, setUserPrivateFiles] = useState([]);
-  const [component, setComponent] = useState(<div></div>);
-  const [option, setOption] = useState("");
-
   const { assignmentId } = props;
+  const auth = useContext(AuthContext);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const getToken = localStorage.getItem("token");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const [loadedSubmissions, setLoadedSubmissions] = React.useState();
 
-  useEffect(() => {
-    // alert(localStorage.getItem("userId"));
-    let url3 =
-      "http://localhost:5000/api/users/get-all-private-files/" +
-      localStorage.getItem("userId");
-    // console.log(url3);
-    const fetchUserFiles = async () => {
-      try {
-        const responseData = await sendRequest(url3, "GET", null, {
-          Authorization: "Bearer " + getToken,
-        });
-        if (privateFileLists.length === 0) {
-          responseData.privateFiles.map((x) => {
-            privateFileLists.push(
-              createData(x.file ? <a href={x.file}>{x.fileName}</a> : "No File")
-            );
-          });
-          setUserPrivateFiles(privateFileLists);
-        }
-        console.log(responseData);
-      } catch (err) {}
-    };
-    fetchUserFiles();
-  }, [sendRequest]);
+  let url =
+    "http://localhost:5000/api/teachers/get-all-submissions/" + assignmentId;
 
   useEffect(() => {
-    if (option === "course") {
-      navigate("/student/my-courses", {
-        state: {
-          courses: userCourses,
-        },
-      });
-    } else if (option === "profile") {
-      navigate("/student/profile", {});
-    } else if (option === "edit-profile") {
-      navigate("/student/edit-profile");
-    } else if (option === "logout") {
-      console.log("logout clicked");
-      auth.logout();
-      navigate("/");
-    } else if (option === "private-files") {
-      navigate("/student/private-files");
-    } else if (option === "upload-private-files") {
-      navigate("/student/upload-private-files");
-    } else if (option === "notification") {
-      navigate("/student/notifications");
-    }
-  }, [option, userCourses]);
+    const fetchSubmissions = async () => {
+      try {
+        const responseData = await sendRequest(url, "GET", null, {
+          Authorization: "Bearer " + getToken,
+        });
+        if (submissionLists.length === 0) {
+          responseData.submissions.map((x) => {
+            submissionLists.push(
+              createData(
+                x.file ? (
+                  <a href={x.file} download>
+                    {x.filename}
+                  </a>
+                ) : (
+                  ""
+                ),
+                x.moodleID ? x.moodleID : "",
+                formatDate(x.uploaded_at) ? formatDate(x.uploaded_at) : ""
+              )
+            );
+          });
+        }
+        console.log(responseData.submissions);
+        setLoadedSubmissions(responseData.submissions);
+      } catch (err) {}
+    };
+    fetchSubmissions();
+  }, [sendRequest, url, getToken]);
 
   return (
     <div>
@@ -182,9 +146,9 @@ const PrivateFiles = (props) => {
                 ))}
               </TableRow>
             </TableHead>
-            {!isLoading && userPrivateFiles && (
+            {!isLoading && loadedSubmissions && (
               <TableBody>
-                {privateFileLists
+                {submissionLists
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (
@@ -216,4 +180,4 @@ const PrivateFiles = (props) => {
   );
 };
 
-export default PrivateFiles;
+export default AllSubmissions;

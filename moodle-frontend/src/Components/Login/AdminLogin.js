@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 
-function Login() {
+function AdminLogin() {
   const classes = useStyles();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
@@ -26,13 +26,13 @@ function Login() {
   } = useForm();
 
   const onSubmit = (data) => {
-    if (!data.moodleID || !data.password) {
+    if (!data.email || !data.password) {
       alert("Invalid credentials");
     } else {
       setLoading(true);
       axios({
         method: "POST",
-        url: "http://localhost:5000/api/users/login",
+        url: "http://localhost:5000/api/admin/login",
         headers: {
           "Content-Type": "Application/json",
         },
@@ -41,13 +41,8 @@ function Login() {
         .then((res) => {
           if (res.data.success) {
             console.log(res.data);
-            auth.login(
-              res.data.userId,
-              res.data.username,
-              res.data.userRole,
-              res.data.token
-            );
-            navigate("/homepage");
+            alert("Login Successful");
+            navigate("/admin/homepage");
           }
           setLoading(false);
         })
@@ -70,7 +65,7 @@ function Login() {
     >
       <div style={{ textAlign: "center" }}>
         <Typography className={classes.title} variant="h3">
-          Login to Moodle
+          Login to Moodle as Admin
         </Typography>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -83,15 +78,15 @@ function Login() {
             <Grid item>
               <TextField
                 style={{ width: "70%", height: "78px" }}
-                helperText={errors.moodleID?.message}
-                {...register("moodleID", {
-                  required: " Moodle ID is required",
+                helperText={errors.email?.message}
+                {...register("email", {
+                  required: " Email is required",
                 })}
-                error={Boolean(errors.moodleID)}
+                error={Boolean(errors.email)}
                 className={classes.textField}
                 id="outlined-basic"
-                name="moodleID"
-                label="Moodle ID*"
+                name="email"
+                label="Email*"
                 variant="outlined"
               />
               <TextField
@@ -108,8 +103,8 @@ function Login() {
               />
 
               <div>
-                <Link to="/admin" style={{ textDecoration: "none" }}>
-                  Admin Login ?
+                <Link to="/" style={{ textDecoration: "none" }}>
+                  Login as Teacher/Student ?
                 </Link>
               </div>
               <br />
@@ -127,4 +122,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default AdminLogin;

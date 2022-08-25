@@ -25,6 +25,7 @@ import {
   FormControl,
 } from "@mui/material";
 import LibraryAddTwoToneIcon from "@mui/icons-material/LibraryAddTwoTone";
+import { useForm } from "react-hook-form";
 
 let coursesList = [];
 let studentsList = [];
@@ -41,6 +42,38 @@ const Assign = () => {
   const [loadedStudentsList, setLoadedStudentsList] = useState();
   //_id, moodleID, name
 
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    if (!studentId || !courseId) {
+      alert("Invalid credentials");
+    } else {
+      alert(studentId + " " + courseId);
+      let url = "http://localhost:5000/api/admin/edit/" + courseId;
+      // alert(url);
+      try {
+        await sendRequest(
+          url,
+          "PATCH",
+          JSON.stringify({
+            participants: studentId,
+          }),
+          {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          }
+        );
+        alert("Student added to course");
+      } catch (error) {
+        alert("failed");
+      }
+    }
+  };
+
   const navigate = useNavigate();
   const getToken = localStorage.getItem("token");
 
@@ -55,14 +88,16 @@ const Assign = () => {
           Authorization: "Bearer " + getToken,
         });
 
-        // setCourseList(responseData.courses);
-        responseData.courses.map((x) =>
-          coursesList.push({
-            id: x._id,
-            courseID: x.courseID,
-            sessionName: x.sessionName,
-          })
-        );
+        if (coursesList.length === 0) {
+          // setCourseList(responseData.courses);
+          responseData.courses.map((x) =>
+            coursesList.push({
+              id: x._id,
+              courseID: x.courseID,
+              sessionName: x.sessionName,
+            })
+          );
+        }
         setLoadedCourseList(responseData.courses);
       } catch (err) {}
     };
@@ -76,13 +111,15 @@ const Assign = () => {
           Authorization: "Bearer " + getToken,
         });
         // setInstructorList(responseData.users);
-        responseData.students.map((user) =>
-          studentsList.push({
-            id: user._id,
-            moodleID: user.moodleID,
-            name: user.name,
-          })
-        );
+        if (studentsList.length === 0) {
+          responseData.students.map((user) =>
+            studentsList.push({
+              id: user._id,
+              moodleID: user.moodleID,
+              name: user.name,
+            })
+          );
+        }
         setLoadedStudentsList(responseData.students);
       } catch (err) {}
     };
@@ -119,112 +156,99 @@ const Assign = () => {
           </Paper>
         </Grid>
 
-        <Grid item container spacing={2}>
-          <Grid item sm={3.5} />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid item container spacing={2}>
+            <Grid item sm={3.5} />
+            {!isLoading && loadedCourseList && (
+              <Grid item>
+                <Autocomplete
+                  id="place-select"
+                  sx={{ width: 300 }}
+                  value={courseId}
+                  onChange={(event, newValue) => {
+                    // console.log(newValue.id);
+                    setCourseId(newValue.id);
+                  }}
+                  options={coursesList}
+                  autoHighlight
+                  getOptionLabel={(option) =>
+                    option.sessionName + " , " + option.courseID
+                  }
+                  renderOption={(props, option) => (
+                    <Box component="li" {...props}>
+                      {option.sessionName} , {option.courseID}
+                    </Box>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Choose a Course"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: "new-password", // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+            )}
 
-          {!isLoading && loadedCourseList && (
-            // courses.length !== 0 && (
-            // !isLoading && courseList &&
-            <Grid item>
-              <Autocomplete
-                id="place-select"
-                sx={{ width: 300 }}
-                value={courseId}
-                onChange={(event, newValue) => {
-                  // console.log(newValue.id);
-                  setCourseId(newValue.id);
-                }}
-                options={coursesList}
-                autoHighlight
-                getOptionLabel={(option) =>
-                  option.sessionName + " , " + option.courseID
-                }
-                renderOption={(props, option) => (
-                  <Box component="li" {...props}>
-                    {option.sessionName} , {option.courseID}
-                  </Box>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Choose a Course"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: "new-password", // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-          )}
+            {!isLoading && loadedStudentsList && (
+              <Grid item>
+                <Autocomplete
+                  id="place-select"
+                  sx={{ width: 300 }}
+                  value={studentId}
+                  onChange={(event, newValue) => {
+                    console.log("ass: ", newValue.id);
+                    setStudentId(newValue.moodleID);
+                  }}
+                  options={studentsList}
+                  autoHighlight
+                  getOptionLabel={(option) =>
+                    option.moodleID + " , " + option.name
+                  }
+                  renderOption={(props, option) => (
+                    <Box component="li" {...props}>
+                      {option.moodleID}, {option.name}
+                    </Box>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Choose a Student"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: "new-password", // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+            )}
 
-          {!isLoading && loadedStudentsList && (
-            // instructors.length !== 0 && (
-            // !isLoading && instructorList &&
-            <Grid item>
-              <Autocomplete
-                id="place-select"
-                sx={{ width: 300 }}
-                value={studentId}
-                onChange={(event, newValue) => {
-                  console.log("ass: ", newValue.id);
-                  setStudentId(newValue.id);
-                }}
-                options={studentsList}
-                autoHighlight
-                getOptionLabel={(option) =>
-                  option.moodleID + " , " + option.name
-                }
-                renderOption={(props, option) => (
-                  <Box component="li" {...props}>
-                    {option.moodleID}, {option.name}
-                  </Box>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Choose a Student"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: "new-password", // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-          )}
-
-          <Grid item sm={2} />
-        </Grid>
-        <Grid item container>
-          <Grid item sm={3} />
-          <Grid item>
-            {/* <TextField
-                            id="outlined-basic"
-                            label="Description"
-                            variant="outlined"
-                            multiline
-                            maxRows={10}
-                            sx={{minWidth: 600, bgcolor:'#f5f5f5'}}                                                                              
-                            // value={desc}
-                            onChange={(e) => setDesc(e.target.value)}
-                        /> */}
+            <Grid item sm={2} />
           </Grid>
-          <Grid item sm={3} />
-        </Grid>
-        <Grid item container>
-          <Grid item sm={5} />
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "20px", marginBottom: "20px" }}
-            >
-              Assign Teacher
-            </Button>
+          <Grid item container>
+            <Grid item sm={3} />
+            <Grid item></Grid>
+            <Grid item sm={3} />
           </Grid>
-          <Grid item sm={5} />
-        </Grid>
+          <Grid item container>
+            <Grid item sm={5} />
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ marginTop: "20px", marginBottom: "20px" }}
+                onClick={handleSubmit(onSubmit)}
+              >
+                Assign Student
+              </Button>
+            </Grid>
+            <Grid item sm={5} />
+          </Grid>
+        </form>
       </Grid>
     </div>
   );

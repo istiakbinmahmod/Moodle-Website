@@ -42,6 +42,9 @@ const CoursePanel = () => {
       navigate("/student/private-files");
     } else if (option === "upload-private-files") {
       navigate("/student/upload-private-files");
+    } else if (option === "notification") {
+      console.log("notifcation clicked");
+      navigate("/student/notifications");
     }
   }, [option, courses]);
 

@@ -56,7 +56,7 @@ function createData(
   return { moodleID, userName, emailID, bioUser, roleUser };
 }
 
-let rows = [];
+let participantList = [];
 
 const Participants = (props) => {
   // destructuring props
@@ -77,21 +77,21 @@ const Participants = (props) => {
         const responseData = await sendRequest(url, "GET", null, {
           Authorization: "Bearer " + getToken,
         });
-        {
-          rows.length === 0 &&
-            responseData.users.map((x) => {
-              rows.push(
-                createData(
-                  x.moodleID ? x.moodleID : "",
-                  x.name ? x.name : "",
-                  x.email ? x.email : "",
-                  x.bio ? x.bio : "",
-                  x.role ? x.role : ""
-                )
-              );
-            });
+        if (participantList.length === 0) {
+          responseData.users.map((x) => {
+            participantList.push(
+              createData(
+                x.moodleID ? x.moodleID : "",
+                x.name ? x.name : "",
+                x.email ? x.email : "",
+                x.bio ? x.bio : "",
+                x.role ? x.role : ""
+              )
+            );
+          });
         }
-        console.log(responseData.users);
+        console.log(participantList);
+        // console.log(responseData.users);
         setLoadedCourseParticipants(responseData.users);
       } catch (err) {}
     };
@@ -104,14 +104,15 @@ const Participants = (props) => {
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
-              {/* <TableRow>
+              <TableRow>
                 <TableCell align="center" colSpan={2}>
-                  Name
+                  {" "}
+                  Participants List
                 </TableCell>
                 <TableCell align="center" colSpan={3}>
-                  Details
+                  Information
                 </TableCell>
-              </TableRow> */}
+              </TableRow>
               <TableRow>
                 {columns.map((column) => (
                   <TableCell
@@ -126,7 +127,7 @@ const Participants = (props) => {
             </TableHead>
             {!isLoading && loadedCourseParticipants && (
               <TableBody>
-                {rows
+                {participantList
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (

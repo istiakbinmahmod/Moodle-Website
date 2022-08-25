@@ -9,6 +9,8 @@ import Profile from "./Profile/ProfilePage";
 import EditProfile from "./Profile/EditProfile";
 import PrivateFiles from "./Profile/PrivateFiles";
 import UploadPrivateFiles from "./Profile/UploadPrivateFiles";
+import Notifications from "./Notifications/Notification";
+import AdminLogin from "./Login/AdminLogin";
 
 function MainRouter() {
   return (
@@ -16,7 +18,9 @@ function MainRouter() {
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/admin" element={<AdminLogin />} />
           <Route path="/homepage" element={<Dashboard />} />
+          <Route path="/admin/homepage" element={<AdminDashboard />} />
           <Route path="/student/my-courses" element={<CoursePanel />} />
           <Route
             path="/student/my/course/:courseTitle/:courseID"
@@ -29,7 +33,7 @@ function MainRouter() {
             path="/student/upload-private-files"
             element={<UploadPrivateFiles />}
           />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/student/notifications" element={<Notifications />} />
         </Routes>
       </Router>
     </>

@@ -50,8 +50,15 @@ const CourseDetail = () => {
     } else if (option === "edit-profile") {
       navigate("/student/edit-profile");
     } else if (option === "logout") {
+      console.log("logout clicked");
       auth.logout();
       navigate("/");
+    } else if (option === "private-files") {
+      navigate("/student/private-files");
+    } else if (option === "upload-private-files") {
+      navigate("/student/upload-private-files");
+    } else if (option === "notification") {
+      navigate("/student/notifications");
     }
   }, [option]);
 

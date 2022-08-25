@@ -22,7 +22,7 @@ const SubmitAssignment = (props) => {
 
   const [file, setFile] = useState(null);
 
-  const [url, setUrl] = useState(null);
+  const [fileurl, setUrl] = useState(null);
   const [progress, setProgress] = useState(0);
   const [disabled, setDisabled] = useState(true);
 
@@ -73,7 +73,6 @@ const SubmitAssignment = (props) => {
     }
   }, [progress]);
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -85,7 +84,7 @@ const SubmitAssignment = (props) => {
         url,
         "POST",
         JSON.stringify({
-          url: url,
+          url: fileurl,
           filename: file.name,
         }),
         {
