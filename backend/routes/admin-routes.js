@@ -20,7 +20,7 @@ router.post(
 
 router.delete("/delete/course/:courseID", adminController.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
 
-router.patch("/edit/:courseID", adminController.adminEnrollUser); // => localhost:5000/admin/edit-course to edit a course
+router.patch("/edit/:courseID", adminController.adminEnrollSingleUser); // => localhost:5000/admin/edit-course to edit a course
 
 router.post("/create/user", adminController.adminCreateUser); // => localhost:5000/admin/create-user to create a new user')
 
