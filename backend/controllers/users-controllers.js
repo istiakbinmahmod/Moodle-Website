@@ -682,6 +682,9 @@ const getAllNotifications = async (req, res, next) => {
       notifications_array.push(notification);
     }
 
+    //now just reverse the notifcication array
+    notifications_array.reverse();
+
 
   } catch (err) {
     console.log(err);
