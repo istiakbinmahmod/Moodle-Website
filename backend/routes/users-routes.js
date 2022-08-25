@@ -13,7 +13,7 @@ router.post("/login", usersController.login);
 // router.use(checkUserAuth);
 router.get("/:uid/courses", usersController.getCoursesByUserId); // => localhost:5000/users/:uid/courses to show all the courses he/she's enrolled in
 router.post(
-  "/upload-private-file/",
+  "/upload-private-file/:uid",
   // uploadFile.single("file"),
   // addFilePath,
   usersController.uploadPrivateFiles

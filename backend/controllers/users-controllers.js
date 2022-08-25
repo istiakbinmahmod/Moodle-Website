@@ -109,7 +109,7 @@ const getCoursesByUserId = async (req, res, next) => {
 };
 
 const uploadPrivateFiles = async (req, res, next) => {
-  const userID = req.userData.userId;
+  const userID = req.params.uid;
   const user = await User.findById(userID);
 
   if (!user) {
