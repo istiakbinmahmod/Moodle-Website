@@ -123,11 +123,15 @@ const uploadSubmission = async (req, res, next) => {
     return next(error);
   }
 
+  let user = User.findById(req.userData.userId);
+  let moodleID = user.moodleID;
+
   const submission = new Submissions({
     file: req.body.url,
     assignment: assignmentId,
     user: req.userData.userId,
     filename: req.body.filename,
+    moodleID: moodleID,
   });
 
   try {
