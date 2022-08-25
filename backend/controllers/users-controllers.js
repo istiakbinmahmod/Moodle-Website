@@ -147,43 +147,6 @@ const uploadPrivateFiles = async (req, res, next) => {
   });
 };
 
-const getAllPrivateFiles = async (req, res, next) => {
-  const userID = req.userData.userId;
-  const user = await User.findById(userID);
-
-  if (!user) {
-    console.log(err);
-    return next(
-      new HttpError("Something went wrong could not get the specific user", 500)
-    );
-  }
-
-  let privateFiles;
-  try {
-    privateFiles = await PrivateFile.find({ user: userID });
-  } catch (err) {
-    console.log(err);
-    return next(
-      new HttpError(
-        "Something went wrong, could not get the private files.",
-        500
-      )
-    );
-  }
-  if (!privateFiles || privateFiles.length === 0) {
-    return next(
-      new HttpError(
-        "Could not get the private files, no private files found.",
-        404
-      )
-    );
-  }
-  res.json({
-    privateFiles: privateFiles.map((privateFile) =>
-      privateFile.toObject({ getters: true })
-    ),
-  });
-};
 
 const getAllPrivateFilesByUSerID = async (req, res, next) => {
   const userID = req.params.uid;
@@ -738,7 +701,6 @@ exports.getUserById = getUserById;
 exports.login = login;
 exports.getCoursesByUserId = getCoursesByUserId;
 exports.uploadPrivateFiles = uploadPrivateFiles;
-exports.getAllPrivateFiles = getAllPrivateFiles;
 exports.getPrivateFileByID = getPrivateFileByID;
 exports.deletePrivateFileByID = deletePrivateFileByID;
 exports.updateProfile = updateProfile;

@@ -18,7 +18,6 @@ router.post(
   // addFilePath,
   usersController.uploadPrivateFiles
 ); // => localhost:5000/users/upload-private-file/:uid to upload a private file
-router.get("/get-all-private-files/", usersController.getAllPrivateFiles);
 router.get(
   "/get-all-private-files/:uid",
   usersController.getAllPrivateFilesByUserID

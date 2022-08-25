@@ -609,13 +609,13 @@ const adminEnrollSingleUser = async(req, res, next) => { //enrol to a course one
         throw new HttpError("Invalid inputs passed, please check your data.", 422);
     }
 
-    const { participants } = req.body;
+    const participant = req.body.participants;
     const cid = req.params.courseID;
 
-    let participant = "";
-    for (let i = 0; i < participants.length; i++) {
-      participant += participants[i];
-    }
+    // let participant = "";
+    // for (let i = 0; i < participants.length; i++) {
+    //   participant += participants[i];
+    // }
 
     let course;
     try {
