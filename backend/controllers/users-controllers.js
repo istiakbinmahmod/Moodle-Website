@@ -671,7 +671,7 @@ const getAllNotifications = async (req, res, next) => {
   let notifications;
   try {
     //find the notofications of the user in the database and sort them by date
-    notifications = await Notification.find({ user: req.userData.userId }).sort({
+    notifications = await Notification.find({ user: req.params.uid }).sort({
       date: -1,
     });
   } catch (err) {
