@@ -341,15 +341,17 @@ const userPostinForum = async (req, res, next) => {
       new HttpError("Could not find the forum for this course.", 404)
     );
   }
+  if(await user.role === "teacher"){
+    const post = new ForumPost({
+      user: user,
+      forum: forum,
+      title: req.body.title,
+      postDescription: req.body.postDescription,
+      postDate: new Date(),
+      author: user.name,
+    });
+  }
 
-  const post = new ForumPost({
-    user: user,
-    forum: forum,
-    title: req.body.title,
-    postDescription: req.body.postDescription,
-    postDate: new Date(),
-    author: user.name,
-  });
   try {
     const session = await mongoose.startSession();
     session.startTransaction();
