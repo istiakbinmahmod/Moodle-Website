@@ -668,6 +668,7 @@ const getForumByCourseID = async (req, res, next) => {
 
 const getAllNotifications = async (req, res, next) => {
   let notifications_array = [];
+  let finalNotifications = [];
   let user = await User.findById(req.params.uid);
   try {
     //find the notofications of the user in the database and sort them by date
@@ -682,8 +683,11 @@ const getAllNotifications = async (req, res, next) => {
       notifications_array.push(notification);
     }
 
-    //now just reverse the notifcication array
-    notifications_array.reverse();
+    //now just sort the notifications by date
+    notifications_array.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    }
+    );
 
 
   } catch (err) {

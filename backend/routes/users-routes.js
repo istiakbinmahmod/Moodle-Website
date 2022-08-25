@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get("/:uid", usersController.getUserById);
 router.post("/login", usersController.login);
-router.use(checkUserAuth);
+// router.use(checkUserAuth);
 router.get("/:uid/courses", usersController.getCoursesByUserId); // => localhost:5000/users/:uid/courses to show all the courses he/she's enrolled in
 router.post(
   "/upload-private-file/",
