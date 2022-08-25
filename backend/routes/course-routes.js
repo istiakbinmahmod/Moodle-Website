@@ -38,4 +38,6 @@ router.get(
     coursesControllers.getSessionNameBySessionId
 ); // => localhost:5000/admin/get-sessions to get all the sessions
 
+router.get("/fetch-stuffs/:courseID", coursesControllers.fetchCourseStuffs); // => localhost:5000/admin/fetch-stuffs to get all the stuffs of a course
+
 module.exports = router; // => localhost:5000/courses to show all the created courses

@@ -7,6 +7,7 @@ const courseMaterialsSchema = new Schema({
     title: { type: String, required: true },
     file: { type: String, required: true },
     course: { type: mongoose.Types.ObjectId, ref: "Course" },
+    created_at: { type: Date, default: Date.now },
     // uploader: { type: mongoose.Types.ObjectId, ref: "User" }, //
 });
 

@@ -14,6 +14,7 @@ const assignmentSchema = new Schema({
     marks: { type: Number, default: 0, required: false },
     is_updated: { type: Boolean, default: false, required: false },
     updated_at: { type: Date, default: Date.now },
+    email_confirmation: { type: Boolean, default: true, required: false },
 });
 
 module.exports = mongoose.model('Assignment', assignmentSchema);
