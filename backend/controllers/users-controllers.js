@@ -740,4 +740,3 @@ exports.editReply = editReply;
 exports.getForumByCourseID = getForumByCourseID;
 exports.getAllNotifications = getAllNotifications;
 exports.deleteNotification = deleteNotification;
-exports.getAllPrivateFilesByUserID = getAllPrivateFilesByUSerID;
