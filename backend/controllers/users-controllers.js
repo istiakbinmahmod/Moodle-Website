@@ -667,12 +667,22 @@ const getForumByCourseID = async (req, res, next) => {
 };
 
 const getAllNotifications = async (req, res, next) => {
-  let notifications;
+  let notifications_array = [];
+  let user = await User.findById(req.params.uid);
   try {
     //find the notofications of the user in the database and sort them by date
-    notifications = await Notification.find({ user: req.params.uid }).sort({
-      date: -1,
-    });
+    // notifications = await Notification.find({ user: req.params.uid }).sort({
+    //   date: -1,
+    // });
+
+    //find the notofications of the user in the database and sort them by date
+    let notifications = await user.notifications;
+    for(let i = 0; i < notifications.length; i++){
+      let notification = await Notification.findById(notifications[i].toString());
+      notifications_array.push(notification);
+    }
+
+
   } catch (err) {
     console.log(err);
     return next(new HttpError("Could not get the notifications.", 500));
@@ -680,7 +690,7 @@ const getAllNotifications = async (req, res, next) => {
 
   res.status(200).json({
     message: "Notifications fetched successfully!",
-    notifications: notifications,
+    notifications: notifications_array,
   });
 };
 
