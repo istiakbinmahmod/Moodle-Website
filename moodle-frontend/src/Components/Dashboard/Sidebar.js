@@ -20,6 +20,8 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
+import { AuthContext } from "../Context/AuthContext";
+
 // notice
 import NoticeICon from "@mui/icons-material/CampaignRounded";
 // courses
@@ -32,7 +34,15 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CourseMaterialIcon from "@mui/icons-material/FolderSpecialRounded";
 
 import { Grid } from "@mui/material";
-import { Edit, ExitToApp, Message, PersonOutline } from "@mui/icons-material";
+import {
+  Edit,
+  ExitToApp,
+  FileOpen,
+  InsertDriveFile,
+  Message,
+  PersonOutline,
+  Publish,
+} from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -105,6 +115,8 @@ const Sidebar = ({ setOption }) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const auth = React.useContext(AuthContext);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -133,6 +145,9 @@ const Sidebar = ({ setOption }) => {
           <Typography variant="h6" noWrap component="div">
             Moodle
           </Typography>
+          <Typography>
+            You are logged in as {localStorage.getItem("userName")}
+          </Typography>
           <Link
             to="/"
             style={{
@@ -141,7 +156,10 @@ const Sidebar = ({ setOption }) => {
               textDecoration: "none",
             }}
           >
-            logout
+            <Typography>
+              <ExitToApp />
+              Logout
+            </Typography>
           </Link>
         </Toolbar>
       </AppBar>
@@ -198,10 +216,7 @@ const Sidebar = ({ setOption }) => {
                 <PersonOutline />
               </ListItemIcon>
               <ListItemText
-                primary={
-                  "Profile"
-                  // + "(" + localStorage.getItem("userName") + ")"
-                }
+                primary={"Profile"}
                 sx={{ opacity: open ? 1 : 0 }}
               />
             </ListItemButton>
@@ -235,36 +250,18 @@ const Sidebar = ({ setOption }) => {
             </ListItemButton>
           </ListItem>
 
-          {/* <ListItem key="profile" disablePadding sx={{ display: "block" }}>
+          <ListItem
+            key="private-files"
+            disablePadding
+            sx={{ display: "block" }}
+          >
             <ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-                onClick={() => setOption("profile")}
-              >
-                <AssignmentRoundedIcon />
-              </ListItemIcon>
-              <ListItemText primary="Profile" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem> */}
-
-          <ListItem key="forum" disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-              onClick={() => setOption("forum")}
+              onClick={() => setOption("private-files")}
             >
               <ListItemIcon
                 sx={{
@@ -273,33 +270,43 @@ const Sidebar = ({ setOption }) => {
                   justifyContent: "center",
                 }}
               >
-                <Message />
+                <InsertDriveFile />
               </ListItemIcon>
-              <ListItemText primary="Forum" sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText
+                primary="Private Files"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
             </ListItemButton>
           </ListItem>
-          {/* {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
+
+          <ListItem
+            key="upload-private-files"
+            disablePadding
+            sx={{ display: "block" }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => setOption("upload-private-files")}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))} */}
+                <Publish />
+              </ListItemIcon>
+              <ListItemText
+                primary="Upload Private Files"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
         </List>
         <Divider />
         <List>

@@ -40,9 +40,10 @@ function Login() {
       })
         .then((res) => {
           if (res.data.success) {
+            console.log(res.data);
             auth.login(
               res.data.userId,
-              // res.data.userName,
+              res.data.username,
               res.data.userRole,
               res.data.token
             );
@@ -83,12 +84,14 @@ function Login() {
               <TextField
                 style={{ width: "70%", height: "78px" }}
                 helperText={errors.moodleID?.message}
-                {...register("moodleID", { required: " moodleID is required" })}
+                {...register("moodleID", {
+                  required: " Moodle ID is required",
+                })}
                 error={Boolean(errors.moodleID)}
                 className={classes.textField}
                 id="outlined-basic"
                 name="moodleID"
-                label="moodleID*"
+                label="Moodle ID*"
                 variant="outlined"
               />
               <TextField
@@ -105,9 +108,12 @@ function Login() {
               />
 
               <div>
-                <Checkbox color="primary" />
-                Remember Me
+                <Link to="/" style={{ textDecoration: "none" }}>
+                  Admin Login ?
+                </Link>
               </div>
+              <br />
+
               <div>
                 <Button type="submit" variant="outlined">
                   Login

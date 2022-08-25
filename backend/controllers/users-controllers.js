@@ -670,11 +670,9 @@ const getAllNotifications = async (req, res, next) => {
   let notifications;
   try {
     //find the notofications of the user in the database and sort them by date
-    notifications = await Notification.find({ user: req.userData.userId }).sort(
-      {
-        date: -1,
-      }
-    );
+    notifications = await Notification.find({ user: req.params.uid }).sort({
+      date: -1,
+    });
   } catch (err) {
     console.log(err);
     return next(new HttpError("Could not get the notifications.", 500));
@@ -740,3 +738,4 @@ exports.editReply = editReply;
 exports.getForumByCourseID = getForumByCourseID;
 exports.getAllNotifications = getAllNotifications;
 exports.deleteNotification = deleteNotification;
+exports.getAllPrivateFilesByUserID = getAllPrivateFilesByUSerID;

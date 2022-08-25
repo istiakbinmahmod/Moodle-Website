@@ -26,7 +26,6 @@ const CourseCard = ({ course, setCourseID, setCourseTitle }) => {
         setCourseID(course._id);
         setCourseTitle(courseTitle);
       }}
-      // href={courseUrl}
     >
       <Card
         className={classes.card}

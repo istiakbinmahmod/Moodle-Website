@@ -10,18 +10,18 @@ import {
 import { React, useState, useEffect, useContext } from "react";
 import { storage } from "../Firebase_/Conf";
 import AttachmentIcon from "@mui/icons-material/AttachFile";
+import { ContentPasteSearchOutlined } from "@mui/icons-material";
 import { AuthContext } from "../Context/AuthContext";
 import { useHttpClient } from "../Context/http-hook";
 
 const SubmitAssignment = (props) => {
-  const stdId = 5;
   const { assignmentId, studentId } = props;
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const getToken = localStorage.getItem("token");
 
   const [file, setFile] = useState(null);
-
+  const [prevSubmissionFile, setPrevSubmissionFile] = useState();
   const [url, setUrl] = useState(null);
   const [progress, setProgress] = useState(0);
   const [disabled, setDisabled] = useState(true);
@@ -33,9 +33,23 @@ const SubmitAssignment = (props) => {
   };
 
   useEffect(() => {
-    // console.log("file: ",file);
+    const fetchPrevSubmission = async () => {
+      const url =
+        "http://localhost:5000/api/students/get-submission/" + assignmentId;
+      try {
+        const responseData = await sendRequest(url, "GET", null, {
+          Authorization: "Bearer " + getToken,
+        });
+        setPrevSubmissionFile(responseData.submission);
+        // console.log(responseData.submission);
+      } catch (err) {}
+    };
+    fetchPrevSubmission();
+  }, [sendRequest, getToken]);
+
+  useEffect(() => {
     if (file) {
-      const fileName = file.name + "_" + stdId + "_" + assignmentId;
+      const fileName = file.name /*+ "_" + stdId */ + "_" + assignmentId;
       const uploadTask = storage
         .ref(`whiteboard/submissions/${fileName}`)
         .put(file);
@@ -72,8 +86,7 @@ const SubmitAssignment = (props) => {
       setDisabled(false);
     }
   }, [progress]);
-
-
+  // url, file
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -81,6 +94,13 @@ const SubmitAssignment = (props) => {
       let url;
       url =
         "http://localhost:5000/api/students/upload-submission/" + assignmentId;
+      // const formData = new FormData();
+
+      // formData.append("file", assignment_file);
+      // formData.append("url", url);
+      // formData.append("")
+
+      // console.log(formData);
       await sendRequest(
         url,
         "POST",
@@ -93,6 +113,8 @@ const SubmitAssignment = (props) => {
           Authorization: "Bearer " + auth.token,
         }
       );
+
+      // navigate("/");
     } catch (error) {}
   };
 
@@ -107,7 +129,7 @@ const SubmitAssignment = (props) => {
           }}
         >
           <center>
-            <Typography variant="h5">Submission Panel</Typography>
+            <Typography variant="h5">Your Submissions</Typography>
           </center>
         </Paper>
       </Grid>
@@ -115,6 +137,11 @@ const SubmitAssignment = (props) => {
       <Grid item container spacing={2}>
         {/* put a file upload butto */}
         <Grid item xs={1} />
+        {prevSubmissionFile && (
+          <Grid item xs={3}>
+            <Typography>{prevSubmissionFile.filename}</Typography>
+          </Grid>
+        )}
         <Grid item xs={5}>
           <Stack>
             <Button

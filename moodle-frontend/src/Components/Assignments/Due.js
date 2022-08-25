@@ -36,25 +36,6 @@ const DueAssignment = (props) => {
   const [component, setComponent] = useState(<div></div>);
   const getToken = localStorage.getItem("token");
 
-  // const uploadSubmission = async (event) => {
-  //   event.preventDefault();
-  //   try {
-  //     let url;
-  //     url =
-  //       "http://localhost:5000/api/teachers/upload-course-assignment/" +
-  //       courseID;
-  //     const formData = new FormData();
-  //     formData.append("file", submissionFile);
-  //     await sendRequest(url, "POST", formData, {
-  //       Authorization: "Bearer " + localStorage.getItem("token"),
-  //     });
-
-  //     // navigate("/");
-  //   } catch (error) {}
-  // };
-
-  // console.log(courseID);
-
   let url =
     "http://localhost:5000/api/students/get-completed-and-due-assignments/" +
     courseID;
@@ -125,10 +106,10 @@ const DueAssignment = (props) => {
   }, [sendRequest, url, getToken]);
 
   useEffect(() => {
-    setComponent(
-      <SubmissionPanel assignmentId={selectedAssId} studentId={studentId} />
-    );
-    console.log("assignment selected: ", selectedAssId);
+    if (selectedAssId)
+      setComponent(
+        <SubmissionPanel assignmentId={selectedAssId} studentId={studentId} />
+      );
   }, [selectedAssId]);
 
   const formatDate = (date) => {

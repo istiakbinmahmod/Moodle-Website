@@ -60,7 +60,7 @@ const newStyles = makeStyles((theme) => ({
   },
 }));
 
-const Profile = (props) => {
+const PrivateFiles = (props) => {
   const classes = useStyles();
   const newClasses = newStyles();
   const auth = useContext(AuthContext);
@@ -70,10 +70,12 @@ const Profile = (props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [userInfo, setUserInfo] = useState();
   const [userCourses, setUserCourses] = useState([]);
+  const [userPrivateFiles, setUserPrivateFiles] = useState([]);
   const [component, setComponent] = useState(<div></div>);
   const [option, setOption] = useState("");
 
   useEffect(() => {
+    // alert(localStorage.getItem("userId"));
     const url =
       "http://localhost:5000/api/users/" + localStorage.getItem("userId");
     const fetchUserInfo = async () => {
@@ -82,6 +84,7 @@ const Profile = (props) => {
           Authorization: "Bearer " + getToken,
         });
         setUserInfo(responseData.user);
+        console.log(responseData.user);
       } catch (err) {}
     };
     fetchUserInfo();
@@ -98,9 +101,39 @@ const Profile = (props) => {
           Authorization: "Bearer " + getToken,
         });
         setUserCourses(responseData.courses);
+        console.log(responseData.courses);
       } catch (err) {}
     };
     fetchUserCourses();
+  }, [sendRequest]);
+
+  useEffect(() => {
+    let url3 =
+      "http://localhost:5000/api/users/get-all-private-files/" +
+      localStorage.getItem("userId");
+    console.log(url3);
+    const fetchUserFiles = async () => {
+      try {
+        const responseData = await sendRequest(url3, "GET", null, {
+          Authorization: "Bearer " + getToken,
+        });
+        console.log(responseData);
+        // setUserCourses(responseData.courses);
+        // console.log(responseData.courses);
+      } catch (err) {}
+    };
+    fetchUserFiles();
+    // const fetchUserFiles = async () => {
+    //   try {
+    //     const responseData = await sendRequest(url3, "GET", null, {
+    //       Authorization: "Bearer " + localStorage.getItem("token"),
+    //     });
+    //     console.log(responseData);
+    //     setUserPrivateFiles(responseData.privateFiles);
+    //     console.log(responseData.privateFiles);
+    //   } catch (err) {}
+    // };
+    // fetchUserFiles();
   }, [sendRequest]);
 
   useEffect(() => {
@@ -118,10 +151,6 @@ const Profile = (props) => {
       console.log("logout clicked");
       auth.logout();
       navigate("/");
-    } else if (option === "private-files") {
-      navigate("/student/private-files");
-    } else if (option === "upload-private-files") {
-      navigate("/student/upload-private-files");
     }
   }, [option, userCourses]);
 
@@ -137,8 +166,13 @@ const Profile = (props) => {
             <List dense>
               <ListItem>
                 {userInfo.image ? (
-                  <img src={userInfo.image} />
+                  <ListItemAvatar>
+                    <Avatar>
+                      <Person />
+                    </Avatar>
+                  </ListItemAvatar>
                 ) : (
+                  //   <img src={userInfo.image} />
                   <ListItemAvatar>
                     <Avatar>
                       <Person />
@@ -194,13 +228,13 @@ const Profile = (props) => {
                 </ListItemText>
               </ListItem>
               {!isLoading &&
-                userCourses &&
-                userCourses.map((course) => (
+                userPrivateFiles &&
+                userPrivateFiles.map((file) => (
                   <ListItem>
                     <ListItemText>
                       <Typography>
-                        {course.sessionName} {course.courseID} :{" "}
-                        {course.courseTitle}
+                        {file.fileName}
+                        {/* : {file.file} */}
                       </Typography>
                     </ListItemText>
                   </ListItem>
@@ -213,4 +247,4 @@ const Profile = (props) => {
   );
 };
 
-export default Profile;
+export default PrivateFiles;

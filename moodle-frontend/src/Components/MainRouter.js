@@ -1,17 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./Login/Login";
-// import Register from './Registration/Registration';
 import Dashboard from "./Dashboard/StudentDashboard/StudentDashboard";
-// import Grade from './Dashboard/Grade/Grade';
-// import Assignment from './Dashboard/Assignment/Assignment';
-// import StudentList from './Dashboard/StudentList/StudentList';
-// import Chat from './Dashboard/Chat/Chat';
-// import AssignmentDetail from './Dashboard/Assignment/AssignmentDetail';
 import CouseDetail from "./CourseDetail/Course";
 import AdminDashboard from "./Admin/SuperUserDashboard";
-// import InstructorDashboard from './Admin/Instructor/InstructorBoard';
-import SuperUserDashboard from "./SuperUser/SuperUserDashboard";
+import CoursePanel from "./CourseDetail/CoursePanel";
+import Profile from "./Profile/ProfilePage";
+import EditProfile from "./Profile/EditProfile";
+import PrivateFiles from "./Profile/PrivateFiles";
+import UploadPrivateFiles from "./Profile/UploadPrivateFiles";
 
 function MainRouter() {
   return (
@@ -20,9 +17,17 @@ function MainRouter() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/homepage" element={<Dashboard />} />
+          <Route path="/student/my-courses" element={<CoursePanel />} />
           <Route
-            path="/my/course/:courseTitle/:courseID"
+            path="/student/my/course/:courseTitle/:courseID"
             element={<CouseDetail />}
+          />
+          <Route path="/student/profile" element={<Profile />} />
+          <Route path="/student/edit-profile" element={<EditProfile />} />
+          <Route path="/student/private-files" element={<PrivateFiles />} />
+          <Route
+            path="/student/upload-private-files"
+            element={<UploadPrivateFiles />}
           />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>

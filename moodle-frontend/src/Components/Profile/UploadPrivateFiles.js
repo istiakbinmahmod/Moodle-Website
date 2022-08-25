@@ -28,7 +28,7 @@ import LibraryAddTwoToneIcon from "@mui/icons-material/LibraryAddTwoTone";
 import { AuthContext } from "../../Components/Context/AuthContext";
 import { useHttpClient } from "../../Components/Context/http-hook";
 
-const EditProfile = (props) => {
+const UploadPrivateFiles = (props) => {
   const auth = useContext(AuthContext);
   const userID = localStorage.getItem("userId");
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -36,13 +36,9 @@ const EditProfile = (props) => {
   const [userInfo, setUserInfo] = useState();
 
   const [userName, setUserName] = useState();
-  const [userImage, setUserImage] = useState(null);
+  const [userFile, setUserFile] = useState(null);
   const [url, setUrl] = useState(null);
   const [progress, setProgress] = useState(0);
-  const [userPhone, setUserPhone] = useState();
-  const [userAddress, setUserAddress] = useState();
-  const [userRole, setUserRole] = useState();
-  const [userBio, setUserBio] = useState();
   const [disabled, setDisabled] = useState(true);
 
   useEffect(() => {
@@ -54,7 +50,6 @@ const EditProfile = (props) => {
           Authorization: "Bearer " + getToken,
         });
         setUserInfo(responseData.user);
-        console.log(responseData.user);
       } catch (err) {}
     };
     fetchUserInfo();
@@ -62,19 +57,17 @@ const EditProfile = (props) => {
 
   const handleChange = (e) => {
     if (e.target.files[0]) {
-      setUserImage(e.target.files[0]);
+      setUserFile(e.target.files[0]);
     }
   };
 
   useEffect(() => {
-    console.log("userImage: ", userImage);
-    if (userImage) {
-      const fileName = userImage.name;
+    if (userFile) {
+      const fileName = userFile.name;
       const uploadTask = storage
-        .ref(`whiteboard/profile-pic/${fileName}`)
-        .put(userImage);
+        .ref(`whiteboard/private-files/${fileName}`)
+        .put(userFile);
 
-      // const uploadTask = storage.ref(`whiteboardfiles/${file.name}`).put(file);
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -89,17 +82,16 @@ const EditProfile = (props) => {
         },
         () => {
           storage
-            .ref(`whiteboard/profile-pic`)
+            .ref(`whiteboard/private-files`)
             .child(fileName)
             .getDownloadURL()
             .then((url) => {
-              console.log(url);
               setUrl(url);
             });
         }
       );
     }
-  }, [userImage]);
+  }, [userFile]);
 
   useEffect(() => {
     if (progress === 100) {
@@ -107,30 +99,27 @@ const EditProfile = (props) => {
     }
   }, [progress]);
 
-  const editProfile = async (event) => {
+  const uploadFile = async (event) => {
     event.preventDefault();
     try {
-      let url_path;
-      url_path = "http://localhost:5000/api/users/update-profile/";
+      let url;
+      url = "http://localhost:5000/api/users/upload-private-file/";
       await sendRequest(
-        url_path,
-        "PATCH",
+        url,
+        "POST",
         JSON.stringify({
           url: url,
-          name: userName,
-          phone: userPhone,
-          address: userAddress,
-          bio: userBio,
+          filename: userFile.name,
         }),
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         }
       );
-      alert("Profile Updated");
+      alert("File Uploaded Successfully");
       // navigate("/");
     } catch (error) {
-      alert("Profile not updated");
+      alert("File Upload Failed");
     }
   };
 
@@ -140,8 +129,6 @@ const EditProfile = (props) => {
         <>
           <Grid container direction="column" spacing={2}>
             <Grid item>
-              {/* make it to center */}
-              {/* assh color : #f5f5f5 */}
               <Paper
                 className="paper"
                 sx={{
@@ -161,37 +148,15 @@ const EditProfile = (props) => {
                     font: "caption",
                   }}
                 >
-                  Update Profile
+                  Upload Private Files
                 </Typography>
               </Paper>
             </Grid>
 
             <Grid item container spacing={2}>
               <Grid item sm={1} />
-              <Grid item>
-                <TextField
-                  id="outlined-basic"
-                  label="Username"
-                  variant="outlined"
-                  defaultValue={userInfo.name}
-                  onChange={(e) => setUserName(e.target.value)}
-                  style={{ bgcolor: "#f5f5f5" }}
-                />
-              </Grid>
 
               <Grid item container spacing={2}>
-                <Grid item sm={1} />
-                <Grid item>
-                  <TextField
-                    id="outlined-basic"
-                    label="Address"
-                    variant="outlined"
-                    defaultValue={userInfo.address}
-                    onChange={(e) => setUserAddress(e.target.value)}
-                    style={{ bgcolor: "#f5f5f5" }}
-                  />
-                </Grid>
-
                 <Grid item>
                   <Stack>
                     <Button
@@ -208,7 +173,7 @@ const EditProfile = (props) => {
                       }}
                       endIcon={<AttachmentIcon />}
                     >
-                      Upload Image
+                      Upload File
                       <input
                         hidden
                         multiple
@@ -224,8 +189,7 @@ const EditProfile = (props) => {
                           <progress value={progress} max="100" /> {progress}%
                         </Typography>
                         <Typography variant="h5">
-                          File:{" "}
-                          {userImage ? userImage.name : "No file selected"}
+                          File: {userFile ? userFile.name : "No file selected"}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -235,41 +199,6 @@ const EditProfile = (props) => {
                 <Grid item sm={1} />
               </Grid>
               <Grid item container>
-                <Grid item sm={3} />
-                <Grid item>
-                  <TextField
-                    id="outlined-basic"
-                    label="Phone Number"
-                    variant="outlined"
-                    multiline
-                    maxRows={10}
-                    sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
-                    // value={desc}
-                    placeholder={userInfo.phone}
-                    onChange={(e) => setUserPhone(e.target.value)}
-                  />
-                </Grid>
-                <Grid item sm={3} />
-              </Grid>
-
-              <Grid item container>
-                <Grid item sm={3} />
-                <Grid item>
-                  <TextField
-                    id="outlined-basic"
-                    label="Bio"
-                    variant="outlined"
-                    multiline
-                    maxRows={10}
-                    sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
-                    // value={desc}
-                    defaultValue={userInfo.moodleID}
-                    onChange={(e) => setUserBio(e.target.value)}
-                  />
-                </Grid>
-                <Grid item sm={3} />
-              </Grid>
-              <Grid item container>
                 <Grid item sm={5} />
                 <Grid item>
                   <Button
@@ -277,7 +206,7 @@ const EditProfile = (props) => {
                     color="primary"
                     style={{ marginTop: "20px", marginBottom: "20px" }}
                     disabled={disabled}
-                    onClick={editProfile}
+                    onClick={uploadFile}
                   >
                     Update Profile
                   </Button>
@@ -292,4 +221,4 @@ const EditProfile = (props) => {
   );
 };
 
-export default EditProfile;
+export default UploadPrivateFiles;
