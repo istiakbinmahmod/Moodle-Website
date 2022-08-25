@@ -49,18 +49,7 @@ router.post("/create-session", adminController.adminCreateSession); // => localh
 
 router.delete("/delete/session/:sessionID", adminController.adminDeleteSession); // => localhost:5000/admin/delete-session to delete a session
 router.delete("/:courseID", adminController.adminDeleteCourse); // => localhost:5000/admin/delete-course to delete a course
-router.patch(
-  "/:courseID",
-  [
-    check("courseID").not().isEmpty(),
-    check("courseTitle").not().isEmpty(),
-    check("courseCreditHour").not().isEmpty(),
-    check("courseDescription").not().isEmpty(),
-    check("sessionID").not().isEmpty(),
-  ],
-  adminController.adminEnrollUser
-  // => localhost:5000/admin/edit-course/:courseID to edit a course
-);
+
 
 router.post("/create/students", adminController.createStudentsinBulk); // => localhost:5000/admin/create-students to create a new student')
 
