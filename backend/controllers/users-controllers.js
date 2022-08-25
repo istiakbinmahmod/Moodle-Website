@@ -340,8 +340,9 @@ const userPostinForum = async (req, res, next) => {
       new HttpError("Could not find the forum for this course.", 404)
     );
   }
+  let post;
   if ((await user.role) === "teacher") {
-    const post = new ForumPost({
+     post = new ForumPost({
       user: user,
       forum: forum,
       title: req.body.title,
