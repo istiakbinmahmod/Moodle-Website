@@ -77,7 +77,7 @@ const login = async (req, res, next) => {
     moodleID: existingUser.moodleID,
     userRole: existingUser.role,
     token: token,
-    username : existingUser.name,
+    username: existingUser.name,
   });
 };
 
@@ -119,10 +119,8 @@ const uploadPrivateFiles = async (req, res, next) => {
     );
   }
 
-
   const createdPrivateFile = new PrivateFile({
     user: user,
-
     file: req.body.url,
     fileName: req.body.filename,
   });
@@ -151,6 +149,44 @@ const uploadPrivateFiles = async (req, res, next) => {
 
 const getAllPrivateFiles = async (req, res, next) => {
   const userID = req.userData.userId;
+  const user = await User.findById(userID);
+
+  if (!user) {
+    console.log(err);
+    return next(
+      new HttpError("Something went wrong could not get the specific user", 500)
+    );
+  }
+
+  let privateFiles;
+  try {
+    privateFiles = await PrivateFile.find({ user: userID });
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError(
+        "Something went wrong, could not get the private files.",
+        500
+      )
+    );
+  }
+  if (!privateFiles || privateFiles.length === 0) {
+    return next(
+      new HttpError(
+        "Could not get the private files, no private files found.",
+        404
+      )
+    );
+  }
+  res.json({
+    privateFiles: privateFiles.map((privateFile) =>
+      privateFile.toObject({ getters: true })
+    ),
+  });
+};
+
+const getAllPrivateFilesByUSerID = async (req, res, next) => {
+  const userID = req.params.uid;
   const user = await User.findById(userID);
 
   if (!user) {
@@ -252,9 +288,9 @@ const updateProfile = async (req, res, next) => {
   }
 
   user.name = req.body.name;
-  if(req.body.url !== ""){
+  if (req.body.url !== "") {
     user.image = req.body.url;
-  }  
+  }
   user.phone = req.body.phone;
   user.address = req.body.address;
   user.bio = req.body.bio;
@@ -634,9 +670,11 @@ const getAllNotifications = async (req, res, next) => {
   let notifications;
   try {
     //find the notofications of the user in the database and sort them by date
-    notifications = await Notification.find({ user: req.userData.userId }).sort({
-      date: -1,
-    });
+    notifications = await Notification.find({ user: req.userData.userId }).sort(
+      {
+        date: -1,
+      }
+    );
   } catch (err) {
     console.log(err);
     return next(new HttpError("Could not get the notifications.", 500));
@@ -646,17 +684,15 @@ const getAllNotifications = async (req, res, next) => {
     message: "Notifications fetched successfully!",
     notifications: notifications,
   });
-}
+};
 
 const deleteNotification = async (req, res, next) => {
-
   //get the notification id from the params first
   const notificationID = req.params.notificationID;
   let notification;
   try {
     notification = await Notification.findById(notificationID).populate("user");
-  }
-  catch (err){
+  } catch (err) {
     console.log(err);
     return next(new HttpError("Could not get the notification.", 500));
   }
@@ -673,9 +709,7 @@ const deleteNotification = async (req, res, next) => {
       await user.save({ session: sessionId });
     }
     await sessionId.commitTransaction();
-
-  }
-  catch (err){
+  } catch (err) {
     console.log(err);
     return next(new HttpError("Could not delete the notification.", 500));
   }
@@ -683,7 +717,6 @@ const deleteNotification = async (req, res, next) => {
   res.status(200).json({
     message: "Notification deleted successfully!",
   });
-
 };
 
 exports.getUserById = getUserById;
@@ -707,3 +740,4 @@ exports.editReply = editReply;
 exports.getForumByCourseID = getForumByCourseID;
 exports.getAllNotifications = getAllNotifications;
 exports.deleteNotification = deleteNotification;
+exports.getAllPrivateFilesByUserID = getAllPrivateFilesByUSerID;
