@@ -320,7 +320,7 @@ const changePassword = async (req, res, next) => {
 
 const userPostinForum = async (req, res, next) => {
   const courseID = req.params.courseID;
-  const userID = req.userData.userId;
+  const userID = req.params.uid;
   const user = await User.findById(userID);
 
   let course;
@@ -415,7 +415,7 @@ const getForumPost = async (req, res, next) => {
 
 const replyToForumPost = async (req, res, next) => {
   const postID = req.params.postID;
-  const userID = req.userData.userId;
+  const userID = req.params.uid;
   const user = await User.findById(userID);
 
   let post;

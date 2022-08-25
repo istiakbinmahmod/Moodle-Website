@@ -37,11 +37,11 @@ router.patch(
   usersController.updateProfile
 ); // => localhost:5000/users/update-profile to update a user's profile
 router.patch("/update-password", usersController.changePassword); // => localhost:5000/users/update-password to update a user's password
-router.post("/post/:courseID", usersController.userPostinForum); // => localhost:5000/users/post/:courseID to post a message in a course )
+router.post("/post/:courseID/:uid", usersController.userPostinForum); // => localhost:5000/users/post/:courseID to post a message in a course )
 router.get("/get-all-posts/:courseID", usersController.getForumPosts); // => localhost:5000/users/get-all-posts/:courseID to get all the posts in a course
 router.get("/get-post/:postID", usersController.getForumPost); // => localhost:5000/users/get-post/:postID to get a post in a course
 router.delete("/delete-post/:postID", usersController.deleteForumPost); // => localhost:5000/users/delete-post/:postID to delete a post in a course
-router.post("/reply/:postID", usersController.replyToForumPost); // => localhost:5000/users/reply/:postID to reply to a post in a course
+router.post("/reply/:postID/:uid", usersController.replyToForumPost); // => localhost:5000/users/reply/:postID to reply to a post in a course
 router.get("/get-all-replies/:postID", usersController.getRepliesOfForumPost); // => localhost:5000/users/get-all-replies/:postID to get all the replies to a post in a course
 router.delete("/delete-reply/:replyID", usersController.deleteReplyOfForumPost); // => localhost:5000/users/delete-reply/:replyID to delete a reply to a post in a course
 router.patch("/edit-post/:postID", usersController.editPost); // => localhost:5000/users/edit-post/:postID to edit a post in a course
