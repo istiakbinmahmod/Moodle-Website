@@ -123,7 +123,7 @@ const uploadSubmission = async (req, res, next) => {
     return next(error);
   }
 
-  let user = User.findById(req.userData.userId);
+  let user =await User.findById(req.userData.userId);
   let moodleID = user.moodleID;
 
   const submission = new Submissions({
