@@ -100,23 +100,50 @@ const EditProfile = (props) => {
 
   useEffect(() => {
     if (option === "course") {
-      navigate("/student/my-courses", {
-        state: {
-          courses: userCourses,
-        },
-      });
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/my-courses"
+          : "/teacher/my-courses",
+        {
+          state: {
+            courses: userCourses,
+          },
+        }
+      );
     } else if (option === "profile") {
-      navigate("/student/profile", {});
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/profile"
+          : "/teacher/profile",
+        {}
+      );
     } else if (option === "edit-profile") {
-      navigate("/student/edit-profile");
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/edit-profile"
+          : "/teacher/edit-profile"
+      );
+    } else if (option === "private-files") {
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/private-files"
+          : "/teacher/private-files"
+      );
     } else if (option === "logout") {
-      console.log("logout clicked");
       auth.logout();
       navigate("/");
-    } else if (option === "private-files") {
-      navigate("/student/private-files");
     } else if (option === "upload-private-files") {
-      navigate("/student/upload-private-files");
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/upload-private-files"
+          : "/teacher/upload-private-files"
+      );
+    } else if (option === "notification") {
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/notifications"
+          : "/teacher/notifications"
+      );
     }
   }, [option, userCourses]);
 
@@ -171,7 +198,9 @@ const EditProfile = (props) => {
     event.preventDefault();
     try {
       let url_path;
-      url_path = "http://localhost:5000/api/users/update-profile/";
+      url_path =
+        "http://localhost:5000/api/users/update-profile/" +
+        localStorage.getItem("userId");
       await sendRequest(
         url_path,
         "PATCH",
@@ -188,6 +217,9 @@ const EditProfile = (props) => {
         }
       );
       alert("Profile Updated");
+      localStorage.getItem("userRole") === "student"
+        ? navigate("/student/profile")
+        : navigate("/teacher/profile");
       // navigate("/");
     } catch (error) {
       alert("Profile not updated");

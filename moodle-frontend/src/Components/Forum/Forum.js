@@ -249,13 +249,8 @@ const Forum = (props) => {
                         id={post._id}
                         post={post}
                         uploadPost={uploadPost}
-                        // updateComment={updateComment}
-                        // commentData={comment}
-                        // userData={userData}
-                        // isLogged={isLogged}
                       />
                     </CardActionArea>
-                    {/* <Divider /> */}
                   </>
                 ))}
               </div>

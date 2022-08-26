@@ -42,9 +42,6 @@ function Teams() {
           <div>
             <Typography>Your Courses</Typography>
             <Grid container>
-              {/* return a card for every course in courses */}
-              {/* {!isLoading && */}
-              {/* // courses && */}
               {courses.map((course) => (
                 <Grid item xs={12} sm={6} md={4}>
                   <Card_ course={course} key={course._id} />
@@ -61,36 +58,50 @@ function Teams() {
 
   useEffect(() => {
     if (option === "course") {
-      navigate("/student/my-courses", {
-        state: {
-          courses: courses,
-        },
-        // replace: true,
-      });
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/my-courses"
+          : "/teacher/my-courses",
+        {
+          state: {
+            courses: courses,
+          },
+        }
+      );
     } else if (option === "profile") {
-      navigate("/student/profile", {});
-      // console.log("profile clicked");
-      // setComponent(
-      //   <div>
-      //     <Typography> Profile </Typography>
-      //     <ProfilePage key="profile" />
-      //   </div>
-      // );
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/profile"
+          : "/teacher/profile",
+        {}
+      );
     } else if (option === "edit-profile") {
-      navigate("/student/edit-profile");
-      // setComponent(
-      //   <div>
-      //     <Typography> Edit Profile </Typography>
-      //     <EditProfile key="profile" />
-      //   </div>
-      // );
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/edit-profile"
+          : "/teacher/edit-profile"
+      );
+    } else if (option === "private-files") {
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/private-files"
+          : "/teacher/private-files"
+      );
     } else if (option === "logout") {
-      console.log("logout clicked");
       auth.logout();
       navigate("/");
+    } else if (option === "upload-private-files") {
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/upload-private-files"
+          : "/teacher/upload-private-files"
+      );
     } else if (option === "notification") {
-      console.log("notifcation clicked");
-      navigate("/student/notifications");
+      navigate(
+        localStorage.getItem("student")
+          ? "/student/notifications"
+          : "/teacher/notifications"
+      );
     }
   }, [option, courses]);
 

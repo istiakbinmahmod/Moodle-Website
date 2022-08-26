@@ -47,7 +47,9 @@ function Login() {
               res.data.userRole,
               res.data.token
             );
-            navigate("/homepage");
+            localStorage.getItem("userRole") === "student"
+              ? navigate("/homepage")
+              : navigate("/teacher/homepage");
           }
           setLoading(false);
         })
