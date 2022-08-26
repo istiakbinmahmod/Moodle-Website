@@ -385,7 +385,7 @@ const getForumPosts = async (req, res, next) => {
 
   let posts;
   try {
-    posts = await ForumPost.find({ forum: forum._id.toString() });
+    posts = await ForumPost.find({ forum: forum._id.toString() }).populate("user");
   } catch (err) {
     console.log(err);
     return next(new HttpError("Could not get the posts for this forum.", 500));
@@ -402,7 +402,7 @@ const getForumPost = async (req, res, next) => {
 
   let post;
   try {
-    post = await ForumPost.findById(postID);
+    post = await ForumPost.findById(postID).populate("user");
   } catch (err) {
     console.log(err);
     return next(new HttpError("Could not get the post for this forum.", 500));
