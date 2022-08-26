@@ -156,62 +156,65 @@ const PrivateFiles = (props) => {
   }, [option, userCourses]);
 
   return (
-    <div>
-      <Paper sx={{ width: "100%" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" colSpan={2}>
-                  {" "}
-                  Submissions List
-                </TableCell>
-                <TableCell align="center" colSpan={3}>
-                  Information
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ top: 57, minWidth: column.minWidth }}
-                  >
-                    {column.label}
+    <div className={classes.root}>
+      <Sidebar setOption={setOption} />
+      <main className={classes.content}>
+        <Paper sx={{ width: "100%" }}>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center" colSpan={2}>
+                    {" "}
+                    Your Private Files
                   </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            {!isLoading && userPrivateFiles && (
-              <TableBody>
-                {privateFileLists
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.code}
-                      >
-                        {columns.map((column) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === "number"
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            )}
-          </Table>
-        </TableContainer>
-      </Paper>
+                  {/* <TableCell align="center" colSpan={3}>
+                    ------------------------------------------------------------
+                  </TableCell> */}
+                </TableRow>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ top: 57, minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              {!isLoading && userPrivateFiles && (
+                <TableBody>
+                  {privateFileLists
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={row.code}
+                        >
+                          {columns.map((column) => {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.format && typeof value === "number"
+                                  ? column.format(value)
+                                  : value}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+        </Paper>
+      </main>
     </div>
   );
 };

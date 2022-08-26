@@ -114,7 +114,7 @@ const Drawer = styled(MuiDrawer, {
 
 const Sidebar = ({ setOption }) => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const auth = React.useContext(AuthContext);
 

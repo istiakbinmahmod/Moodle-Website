@@ -92,6 +92,8 @@ const SubmitAssignment = (props) => {
           Authorization: "Bearer " + auth.token,
         }
       );
+      alert("Submission uploaded successfully");
+      window.location.reload();
     } catch (error) {}
   };
 

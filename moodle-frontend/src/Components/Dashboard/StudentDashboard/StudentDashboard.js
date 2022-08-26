@@ -37,18 +37,20 @@ function Teams() {
           Authorization: "Bearer " + getToken,
         });
         setCourses(responseData.courses);
+        setOption("course");
         setComponent(
           <div>
             <Typography>Your Courses</Typography>
             <Grid container>
               {/* return a card for every course in courses */}
-              {!isLoading &&
-                courses &&
-                courses.map((course) => (
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Card_ course={course} key={course._id} />
-                  </Grid>
-                ))}
+              {/* {!isLoading && */}
+              {/* // courses && */}
+              {courses.map((course) => (
+                <Grid item xs={12} sm={6} md={4}>
+                  <Card_ course={course} key={course._id} />
+                </Grid>
+              ))}
+              {/* } */}
             </Grid>
           </div>
         );
