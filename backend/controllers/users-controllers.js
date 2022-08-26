@@ -240,7 +240,7 @@ const deletePrivateFileByID = async (req, res, next) => {
 };
 
 const updateProfile = async (req, res, next) => {
-  const userID = req.userData.userId;
+  const userID = req.params.uid;
   const user = await User.findById(userID);
   if (!user) {
     console.log(err);

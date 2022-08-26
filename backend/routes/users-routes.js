@@ -31,7 +31,7 @@ router.delete(
   usersController.deletePrivateFileByID
 ); // => localhost:5000/users/delete-private-file/:privateFileID to delete a private file
 router.patch(
-  "/update-profile",
+  "/update-profile/:uid",
   // uploadFile.single("file"),
   // addFilePath,
   usersController.updateProfile
