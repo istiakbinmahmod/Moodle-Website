@@ -65,7 +65,7 @@ const CoursePanel = () => {
       );
     } else if (option === "notification") {
       navigate(
-        localStorage.getItem("userRole") === "student"
+        localStorage.getItem("student")
           ? "/student/notifications"
           : "/teacher/notifications"
       );
@@ -73,13 +73,22 @@ const CoursePanel = () => {
   }, [option, courses]);
 
   useEffect(() => {
+    // alert("lol");
     if (courseTitle) {
-      navigate(`/student/my/course/${courseTitle}/${courseID}`, {
-        state: {
-          courseID: courseID,
-          courseTitle: courseTitle,
-        },
-      });
+      // alert(localStorage.getItem("userRole"));
+      localStorage.getItem("userRole") === "student"
+        ? navigate(`/student/my/course/${courseTitle}/${courseID}`, {
+            state: {
+              courseID: courseID,
+              courseTitle: courseTitle,
+            },
+          })
+        : navigate(`/teacher/my/course/${courseTitle}/${courseID}`, {
+            state: {
+              courseID: courseID,
+              courseTitle: courseTitle,
+            },
+          });
     }
   }, [courseTitle]);
 

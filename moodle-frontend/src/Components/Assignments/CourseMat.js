@@ -29,11 +29,9 @@ const CourseMat = (props) => {
   const getToken = localStorage.getItem("token");
 
   let url2 =
-    // localStorage.getItem("userRole") === "student"
-    //   ?
-    "http://localhost:5000/api/students/get-course-materials/" + courseID;
-  //   : "http://localhost:5000/api/teachers/get-all-course-assignment/" +
-  //     courseID;
+    localStorage.getItem("userRole") === "student"
+      ? "http://localhost:5000/api/students/get-course-materials/" + courseID
+      : "http://localhost:5000/api/teachers/get-materials/" + courseID;
 
   useEffect(() => {
     const fetchCourseAssignments = async () => {
