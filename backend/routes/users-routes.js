@@ -43,6 +43,7 @@ router.get("/get-post/:postID", usersController.getForumPost); // => localhost:5
 router.delete("/delete-post/:postID", usersController.deleteForumPost); // => localhost:5000/users/delete-post/:postID to delete a post in a course
 router.post("/reply/:postID/:uid", usersController.replyToForumPost); // => localhost:5000/users/reply/:postID to reply to a post in a course
 router.get("/get-all-replies/:postID", usersController.getRepliesOfForumPost); // => localhost:5000/users/get-all-replies/:postID to get all the replies to a post in a course
+router.get("/get-a-reply/:replyID", usersController.getReplyByReplyID); // => localhost:5000/users/get-a-reply/:replyID to get a reply to a post in a course
 router.delete("/delete-reply/:replyID", usersController.deleteReplyOfForumPost); // => localhost:5000/users/delete-reply/:replyID to delete a reply to a post in a course
 router.patch("/edit-post/:postID", usersController.editPost); // => localhost:5000/users/edit-post/:postID to edit a post in a course
 router.patch("/edit-reply/:replyID", usersController.editReply); // => localhost:5000/users/edit-reply/:replyID to edit a reply to a post in a course

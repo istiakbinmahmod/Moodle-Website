@@ -698,6 +698,23 @@ const deleteNotification = async (req, res, next) => {
   });
 };
 
+const getReplyByReplyID = async (req, res, next) => {
+  const replyID = req.params.replyID;
+
+  let reply;
+  try {
+    reply = await PostReply.findById(replyID);
+  } catch (err) {
+    console.log(err);
+    return next(new HttpError("Could not get the reply for this post.", 500));
+  }
+
+  res.status(200).json({
+    message: "Reply fetched successfully!",
+    reply: reply,
+  });
+}
+
 exports.getUserById = getUserById;
 exports.login = login;
 exports.getCoursesByUserId = getCoursesByUserId;
@@ -719,3 +736,4 @@ exports.getForumByCourseID = getForumByCourseID;
 exports.getAllNotifications = getAllNotifications;
 exports.deleteNotification = deleteNotification;
 exports.getAllPrivateFilesByUserID = getAllPrivateFilesByUSerID;
+exports.getReplyByReplyID = getReplyByReplyID;
