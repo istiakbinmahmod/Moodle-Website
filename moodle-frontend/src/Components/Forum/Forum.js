@@ -86,7 +86,12 @@ const Forum = (props) => {
     }
     try {
       let url;
-      url = "http://localhost:5000/api/users/post/" + courseID;
+      url =
+        "http://localhost:5000/api/users/post/" +
+        courseID +
+        "/" +
+        localStorage.getItem("userId");
+      alert(url);
       await sendRequest(
         url,
         "POST",
@@ -101,6 +106,7 @@ const Forum = (props) => {
         }
       );
       alert("post sent");
+      window.location.reload();
       // navigate("/");
     } catch (error) {
       alert("post not sent");

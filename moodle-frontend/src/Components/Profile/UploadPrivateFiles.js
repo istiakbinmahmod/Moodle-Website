@@ -188,7 +188,8 @@ const UploadPrivateFiles = (props) => {
           Authorization: "Bearer " + localStorage.getItem("token"),
         }
       );
-      alert("File Uploaded Successfully");
+      // alert("File Uploaded Successfully");
+      window.location.reload();
       // navigate("/");
     } catch (error) {
       alert("File Upload Failed");

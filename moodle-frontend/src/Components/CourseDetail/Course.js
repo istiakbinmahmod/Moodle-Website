@@ -32,6 +32,7 @@ import TeacherAllAssignments from "../Assignments/TeacherAllAssignments";
 import logo from "../Dashboard/StudentDashboard/assets/book-icon.png";
 import { AssignmentLate, Group, Message } from "@mui/icons-material";
 import Forum from "../Forum/Forum";
+import AllForumPosts from "../Forum/AllForumPosts";
 
 const CourseDetail = () => {
   const classes = useStyles();
@@ -114,7 +115,7 @@ const CourseDetail = () => {
                     onClick={() => {
                       // print key value of the listItem
 
-                      setComponent(<Forum courseID={courseID} />);
+                      setComponent(<AllForumPosts courseID={courseID} />);
                     }}
                   >
                     <ListItemText primary="Forum" />

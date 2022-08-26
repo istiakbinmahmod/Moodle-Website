@@ -10,10 +10,11 @@ import { AuthContext } from "../../Components/Context/AuthContext";
 import { useHttpClient } from "../../Components/Context/http-hook";
 import { format } from "date-fns";
 import { TextField } from "@mui/material";
-import { Assessment } from "@mui/icons-material";
+import { Assessment, EmojiEmotions } from "@mui/icons-material";
 import AssignmentCard from "./AssignmentCard";
 import CompletedAssignmentCard from "./CompletedAssignmentCard";
 import SubmissionPanel from "../Submission/EditSubmission";
+import { List, ListItem, ListItemButton } from "@mui/material";
 
 const bull = (
   <Box
@@ -45,54 +46,76 @@ const Completed = (props) => {
           Authorization: "Bearer " + getToken,
         });
         setLoadedCourseAssignments(responseData.completedAssignments);
-        setComponent(
-          <Grid container spacing={1}>
-            {responseData.completedAssignments.map((assignment) => (
-              <Grid item xs={12}>
-                <CardActionArea
-                  onClick={(e) => {
-                    setSelectedAssId(assignment._id);
+        {
+          responseData.completedAssignments.length === 0
+            ? setComponent(
+                <Box
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
                   }}
                 >
-                  <Card
-                    style={{
-                      minWidth: 275,
-                      height: "80%",
-                      backgroundColor: "#f5f5f5",
-                    }}
-                  >
-                    {/* <Card sx={{ minWidth: 275 }}> */}
-                    <CardContent>
-                      <Typography
-                        variant="h5"
-                        sx={{ fontSize: 21 }}
-                        color="text.secondary"
-                        gutterBottom
+                  <List>
+                    <ListItem>
+                      <Typography>No Completed Assignments ...</Typography>
+                      <ListItemButton>
+                        <EmojiEmotions />
+                      </ListItemButton>
+                    </ListItem>
+                  </List>
+                </Box>
+              )
+            : setComponent(
+                <Grid container spacing={1}>
+                  {responseData.completedAssignments.map((assignment) => (
+                    <Grid item xs={12}>
+                      <CardActionArea
+                        onClick={(e) => {
+                          setSelectedAssId(assignment._id);
+                        }}
                       >
-                        {assignment.title}
-                      </Typography>
+                        <Card
+                          style={{
+                            minWidth: 275,
+                            height: "80%",
+                            backgroundColor: "#f5f5f5",
+                          }}
+                        >
+                          {/* <Card sx={{ minWidth: 275 }}> */}
+                          <CardContent>
+                            <Typography
+                              variant="h5"
+                              sx={{ fontSize: 21 }}
+                              color="text.secondary"
+                              gutterBottom
+                            >
+                              {assignment.title}
+                            </Typography>
 
-                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        {assignment.title}
-                      </Typography>
-                      {/* make it bold */}
-                      <Typography
-                        variant="h5"
-                        sx={{ mb: 1.5, font: "caption" }}
-                        color="text.secondary"
-                      >
-                        {formatDate(assignment.dueDate)}
-                      </Typography>
-                    </CardContent>
-                    {/* <CardActions>
+                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                              {assignment.title}
+                            </Typography>
+                            {/* make it bold */}
+                            <Typography
+                              variant="h5"
+                              sx={{ mb: 1.5, font: "caption" }}
+                              color="text.secondary"
+                            >
+                              {formatDate(assignment.dueDate)}
+                            </Typography>
+                          </CardContent>
+                          {/* <CardActions>
                     <Button size="small">Learn More</Button>
                   </CardActions> */}
-                  </Card>
-                </CardActionArea>
-              </Grid>
-            ))}
-          </Grid>
-        );
+                        </Card>
+                      </CardActionArea>
+                    </Grid>
+                  ))}
+                </Grid>
+              );
+        }
       } catch (err) {}
     };
     fetchCourseAssignments();
