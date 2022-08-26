@@ -20,6 +20,7 @@ import { useHttpClient } from "../Context/http-hook";
 import SpecificForumPost from "./SpecificForumPost";
 import SubmissionPanel from "../Submission/Submission";
 import { Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const formatDate = (date) => {
   // format to i.e 6 jan, saturday at 3:00pm
@@ -84,6 +85,7 @@ function createData(title: string, author: string, postDate: Date): Data {
 
 let forumPostsList = [];
 
+
 const AllForumPosts = (props) => {
   // destructuring props
   const classes = useStyles();
@@ -92,7 +94,7 @@ const AllForumPosts = (props) => {
   const { courseID } = props;
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedForumPosts, setLoadedForumPosts] = useState();
-  const [specificPostId, setSpecificPostId] = useState("");
+  const [specificPostId, setSpecificPostId] = useState();
   const [postId, setPostId] = useState();
   const [component, setComponent] = useState(<div></div>);
   const [redir, setRedir] = useState(false);
@@ -100,11 +102,10 @@ const AllForumPosts = (props) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  //   function shiftToPost(x) {
-  //     alert(x);
-  //     setSpecificPost(x);
-  //     // console.log(component);
-  //   }
+  const handleClick = (event) => {
+    alert("this works");
+  };
+  
 
   useEffect(() => {
     const url = "http://localhost:5000/api/users/get-all-posts/" + courseID;
@@ -118,26 +119,35 @@ const AllForumPosts = (props) => {
             forumPostsList.push(
               createData(
                 x.title ? (
-                  <span
-                    onClick={(e) => {
+                  <span>{x.title}</span>
+                  // <button onClick={(e) => {
+                  //   setSpecificPostId(x._id);
+                  //   alert(x._id);
+                  //   // setComponent(<SpecificForumPost postId={x.id} />);
+                  // }} >{x.title}</button>
+                  // <span
+                    // onClick={this.handleClick}
+                    // {(e) => {
                       //   setComponent(
                       //     <SpecificForumPost specificPostId={x._id} />
                       //   );
                       //   alert(x._id);
                       //   Navigate("/");
-                      setRedir(true);
-                      alert(x._id);
-                      alert("reaching");
-                      setSpecificPostId(x._id);
-                      alert("reaching2");
+                      //   alert(redir);
+                      // setRedir(true);
+                      //   alert(redir);
+                      //   alert(x._id);
+                      //   alert("reaching");
+                      // setSpecificPostId(x._id);
+                      //   alert("reaching2");
                       //   alert(component);
                       //   shiftToPost(x._id);
-                    }}
+                    // }}
                     // onclick="alert('hey there')"
-                    style={{ color: "blue", cursor: "pointer" }}
-                  >
-                    {x.title}
-                  </span>
+                    // style={{ color: "blue", cursor: "pointer" }}
+                  // >
+                    // {x.title}
+                  // </span>e
                 ) : (
                   //   <a href="#" style={{ textDecoration: "none" }}>
                   //     {x.title}
@@ -186,7 +196,9 @@ const AllForumPosts = (props) => {
                         page * rowsPerPage + rowsPerPage
                       )
                       .map((row) => {
+                        console.log(row.author);
                         return (
+
                           <TableRow
                             hover
                             role="checkbox"
@@ -196,8 +208,13 @@ const AllForumPosts = (props) => {
                             //   setSpecificPostId(row.code);
                             // }}
                           >
-                            {/* <CardActionArea> */}
-                            {/* <Card
+                            {/* <CardActionArea
+                            onClick={(e) => {
+                              alert(row.code);
+                              // setSpecificPostId(row.code);
+                            }}
+                            >
+                            <Card
                                   style={{
                                     minWidth: 275,
                                     height: "80%",
@@ -207,6 +224,7 @@ const AllForumPosts = (props) => {
                                   <CardContent> */}
                             {columns.map((column) => {
                               const value = row[column.id];
+                              // alert(value);
                               return (
                                 <TableCell key={column.id} align={column.align}>
                                   {column.format && typeof value === "number"
@@ -216,8 +234,8 @@ const AllForumPosts = (props) => {
                               );
                             })}
                             {/* </CardContent>
-                                </Card>*/}
-                            {/* </CardActionArea> */}
+                                </Card>
+                            </CardActionArea> */}
                           </TableRow>
                         );
                       })}
@@ -243,10 +261,12 @@ const AllForumPosts = (props) => {
   //   }, [specificPost]);
 
   useEffect(() => {
-    if (redir)
+    // if (redir) {
       setComponent(<SpecificForumPost specificPost={specificPostId} />);
+      // alert("reaching");
+    // }
     // <SubmissionPanel assignmentId={selectedAssId} studentId={studentId} />
-  }, [redir]);
+  }, [ specificPostId]);
 
   //   useEffect(() => {
   //     const fetchCourseUsers = async () => {

@@ -6,6 +6,8 @@ import {
   CardActionArea,
   Button,
 } from "@mui/material";
+import { makeStyles } from "@material-ui/core/styles";
+
 import React, { useState, useEffect, useContext } from "react";
 import useStyles from "../Participants/Style";
 import Paper from "@mui/material/Paper";
@@ -17,6 +19,19 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { AuthContext } from "../Context/AuthContext";
 import { useHttpClient } from "../Context/http-hook";
+import clsx from "clsx";
+
+import {
+  // Card,
+  CardHeader,
+  // CardContent,
+  CardActions,
+  Collapse,
+  IconButton,
+  // Typography,
+} from "@material-ui/core";
+import { Input } from "@material-ui/core";
+import SpecificForumPostReply from "./SpecificFormPostReply";
 
 const formatDate = (date) => {
   // format to i.e 6 jan, saturday at 3:00pm
@@ -54,62 +69,226 @@ const formatDate = (date) => {
   return date;
 };
 
-interface Column {
-  id: "title" | "author" | "postDate";
-  label: string;
-  minWidth?: number;
-  align?: "right";
-  format?: (value: number) => string;
-}
-
-const columns: Column[] = [
-  { id: "title", label: "Discussion", minWidth: 170 },
-  { id: "author", label: "Started By", minWidth: 100 },
-  {
-    id: "postDate",
-    label: "First Post",
-    minWidth: 170,
-    // align: "right",
-    // format: (value: number) => value.toLocaleString("en-US"),
+const newStyles = makeStyles((theme) => ({
+  root: {
+    maxWidth: "100%",
+    backgroundColor: "#181818",
+    color: "white",
   },
-];
-
-function createData(title: string, author: string, postDate: Date): Data {
-  // const density = population / size;
-  return { title, author, postDate };
-}
-
-let forumPostsList = [];
+  expand: {
+    transform: "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+}));
 
 const SpecificForumPost = (props) => {
+  const [expanded, setExpanded] = React.useState(true);
+
   // destructuring props
   const classes = useStyles();
   const auth = useContext(AuthContext);
   const getToken = localStorage.getItem("token");
-  const { specificPostId } = props;
+  const { specificPost } = props;
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [loadedForumPosts, setLoadedForumPosts] = useState();
-  const [specificPost, setSpecificPost] = useState();
+  const [loadedPost, setLoadedPost] = useState();
+  const [loadedPostReplies, setLoadedPostReplies] = useState();
   const [postId, setPostId] = useState();
   const [component, setComponent] = useState();
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState("");
+
+  useEffect(() => {
+    const url =
+      "http://localhost:5000/api/users/get-all-replies/" + specificPost;
+    const fetchPosts = async () => {
+      try {
+        const responseData = await sendRequest(url, "GET", null, {
+          Authorization: "Bearer " + getToken,
+        });
+        setLoadedPost(responseData.post);
+        setLoadedPostReplies(responseData.replies);
+        console.log(responseData.post);
+      } catch (err) {}
+    };
+    fetchPosts();
+  }, [sendRequest, getToken]);
+
+  const typeComment = (e) => {
+    setCommentInput(e.target.value);
+  };
+
+  const addComment = async (e) => {
+    // console.log(loadedPost.replies);
+    const url =
+      "http://localhost:5000/api/users/reply/" +
+      specificPost +
+      "/" +
+      localStorage.getItem("userId");
+    alert(url);
+    try {
+      await sendRequest(
+        url,
+        "POST",
+        JSON.stringify({ replyDescription: commentInput }),
+        {
+          Authorization: "Bearer " + getToken,
+          "Content-Type": "application/json",
+        }
+      );
+      setCommentInput("");
+      alert("reply sent");
+      window.location.reload();
+    } catch (err) {}
+  };
 
   return (
-    <div>lol</div>
-    // <Grid Container direction="column">
-    //   <Grid item>
-    //     <Paper
-    //       sx={{
-    //         backgroundColor: "#D6D7D7",
-    //         paddingTop: "30px",
-    //         paddingBottom: "30px",
-    //       }}
-    //     >
-    //       <center>
-    //         <Typography variant="h5">Forum Post</Typography>
-    //       </center>
-    //     </Paper>
-    //   </Grid>
-    // </Grid>
+    <div>
+      {!isLoading && loadedPost && (
+        <>
+          {/* <Card className={classes.root}>
+            <CardHeader
+              className="text-center"
+              title={"Post Title : " + loadedPost.title}
+            />
+          </Card> */}
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <CardActionArea
+              // onClick={(e) => {
+              //   setSpecificPostId(post._id);
+              // }}
+              >
+                <Card
+                  style={{
+                    minWidth: 275,
+                    height: "80%",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  {/* <Card sx={{ minWidth: 275 }}> */}
+                  <CardContent>
+                    <Typography
+                      variant="h5"
+                      sx={{ fontSize: 17 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      Post Title : {loadedPost.title}
+                    </Typography>
+
+                    <Typography
+                      sx={{ mb: 1.5, fontSize: 13 }}
+                      color="text.secondary"
+                    >
+                      Created By : {loadedPost.author} <br />
+                      Date : {formatDate(loadedPost.postDate)}
+                    </Typography>
+                    {/* make it bold */}
+
+                    <Typography>{loadedPost.postDescription}</Typography>
+                    {/* <Typography
+                      variant="h5"
+                      sx={{ mb: 1.5, font: "caption", fontSize: 10 }}
+                      color="text.secondary"
+                    >
+                      
+                    </Typography> */}
+                  </CardContent>
+                  {/* <CardActions>
+                    <Button size="small">Learn More</Button>
+                  </CardActions> */}
+                </Card>
+              </CardActionArea>
+            </Grid>
+          </Grid>
+        </>
+      )}
+      {
+        !isLoading &&
+          loadedPostReplies &&
+          // (
+          //   <div>
+          // {
+          loadedPostReplies.map((rep) => (
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <CardActionArea>
+                  <Card
+                    style={{
+                      minWidth: 275,
+                      height: "80%",
+                      backgroundColor: "#f5f5f5",
+                    }}
+                  >
+                    {/* <Card sx={{ minWidth: 275 }}> */}
+                    <CardContent>
+                      <Typography
+                        variant="h5"
+                        sx={{ fontSize: 21 }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Reply : {rep.replyDescription}
+                      </Typography>
+
+                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        Replied By : {rep.replier}
+                      </Typography>
+                      {/* make it bold */}
+                      <Typography
+                        variant="h5"
+                        sx={{ mb: 1.5, font: "caption" }}
+                        color="text.secondary"
+                      >
+                        Date : {formatDate(rep.replyDate)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </CardActionArea>
+              </Grid>
+            </Grid>
+          ))
+        // )
+      }
+      <CardContent>
+        <div>
+          <Input
+            value={commentInput}
+            // disabled="false"
+            multiline
+            rowsMin="1"
+            maxRows="3"
+            placeholder="Type your comment ..."
+            // placeholder={
+            //   // isLogged ? "Login to comment" :
+            //   "Type your comment..."
+            // }
+            style={{ width: "100%", color: "black" }}
+            onChange={typeComment}
+          />
+          <Button
+            size="small"
+            // disabled={!isLogged}
+            color="primary"
+            variant="contained"
+            style={{
+              backgroundColor: "#ff0050",
+              marginTop: "1%",
+              color: "black",
+            }}
+            onClick={addComment}
+          >
+            Submit
+          </Button>
+        </div>
+      </CardContent>
+      {/* // </div>/ */}
+      {/* // ) */}
+      {/* // } */}
+    </div>
   );
 };
 

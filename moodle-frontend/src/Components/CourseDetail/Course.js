@@ -5,8 +5,8 @@ import Filter from "../Dashboard/Filter/Filter";
 import useStyles from "./GradeStyle";
 import Paper from "@mui/material/Paper";
 import ListSubheader from "@mui/material/ListSubheader";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
+// import List from "@mui/material/List";
+// import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Divider } from "@mui/material";
@@ -16,6 +16,10 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 //  folder icon
 import FolderIcon from "@mui/icons-material/Folder";
+import { Assessment, ThumbUp } from "@mui/icons-material";
+import CardActions from "@mui/material/CardActions";
+
+import { List, ListItem, ListItemButton, CardActionArea } from "@mui/material";
 // grade icon
 import GradeIcon from "@mui/icons-material/Grade";
 import DueAssignment from "../Assignments/Due";
@@ -33,6 +37,7 @@ import logo from "../Dashboard/StudentDashboard/assets/book-icon.png";
 import { AssignmentLate, Group, Message } from "@mui/icons-material";
 import Forum from "../Forum/Forum";
 import AllForumPosts from "../Forum/AllForumPosts";
+import CourseForumPage from "../Forum/CourseForumPage";
 
 const CourseDetail = () => {
   const classes = useStyles();
@@ -115,7 +120,7 @@ const CourseDetail = () => {
                     onClick={() => {
                       // print key value of the listItem
 
-                      setComponent(<AllForumPosts courseID={courseID} />);
+                      setComponent(<CourseForumPage courseID={courseID} />);
                     }}
                   >
                     <ListItemText primary="Forum" />
