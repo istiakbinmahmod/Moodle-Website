@@ -162,6 +162,7 @@ const uploadSubmission = async (req, res, next) => {
     date: new Date(),
     submission: submission,
     assignment: assignment,
+    type: "submission",
   });
 
   try {
@@ -250,6 +251,7 @@ const updateSubmission = async (req, res, next) => {
     date: new Date(),
     submission: submission,
     assignment: assignment,
+    type: "submission",
   });
 
   try {
@@ -343,6 +345,7 @@ const deleteSubmission = async (req, res, next) => {
     date: new Date(),
     submission: submission,
     assignment: relatedAssignment,
+    type: "submission",
   });
 
   try {

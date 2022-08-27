@@ -12,6 +12,7 @@ const notificationSchema = new Schema({
     course_material: { type: Schema.Types.ObjectId, ref: 'CourseMaterial' },
     assignment: { type: Schema.Types.ObjectId, ref: 'Assignment' },
     submission: { type: Schema.Types.ObjectId, ref: 'Submission' },
+    type: { type: String, required: true },
 });
 
 

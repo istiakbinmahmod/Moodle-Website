@@ -163,6 +163,7 @@ const uploadCourseAssignment = async (req, res, next) => {
     date: new Date(),
     course: relatedCourse,
     assignment: createdAssignment,
+    type: "assignment",
   });
 
   let courseParticipants;
@@ -262,6 +263,7 @@ const updateCourseAssignment = async (req, res, next) => {
     date: new Date(),
     course: relatedCourse,
     assignment: assignment,
+    type: "assignment",
   });
 
   let courseParticipants;
@@ -466,6 +468,7 @@ const uploadCourseMaterials = async (req, res, next) => {
     course: relatedCourse,
     date: new Date(),
     course_material: createdCourseMaterials,
+    type: "course_material",
   });
 
   let courseParticipants = await User.find({ course: courseId });
@@ -583,6 +586,7 @@ const markSubmissionForAssignment = async (req, res, next) => {
     user: evaluator,
     date: new Date(),
     submission: submission,
+    type: "submission",
   });
 
   let submitter = await User.findById(submission.user);
