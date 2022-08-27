@@ -292,7 +292,10 @@ const getAllCourseAssignments = async (req, res, next) => {
 
   let courseAssignments;
   try {
-    courseAssignments = await Assignment.find({ course: courseId });
+    //sort them by date
+    courseAssignments = await Assignment.find({ course: courseId }).sort({
+      created_at: -1,
+      });
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find course assignments.",
@@ -317,7 +320,9 @@ const getCourseAssignmentByAssignmentD = async (req, res, next) => {
 
   let assignment;
   try {
-    assignment = await Assignment.findById(assignmentId);
+     assignment = await Assignment.findById(assignmentId);
+    
+  
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find assignment.",
