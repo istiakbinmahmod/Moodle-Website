@@ -456,7 +456,7 @@ const uploadCourseMaterials = async (req, res, next) => {
   let uploader = await User.findById(req.userData.userId);
 
   const createdNotification = new Notification({
-    title: `New assignment has been uploaded for ${relatedCourse.courseTitle} by ${uploader.name}`,
+    title: `New course Material has been uploaded for ${relatedCourse.courseTitle} by ${uploader.name}`,
     user: uploader,
     course: relatedCourse,
     date: new Date(),
