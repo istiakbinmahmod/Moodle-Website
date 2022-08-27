@@ -38,16 +38,16 @@ import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import { withAlert } from "react-alert";
 
 let coursesList = [];
-let teachersList = [];
+let usersList = [];
 
-const Assign = () => {
+const DeleteParticipants = () => {
   const auth = useContext(AuthContext);
   const [courseId, setCourseId] = useState();
-  const [teacherId, setTeacherId] = useState("");
+  const [userId, setUserId] = useState("");
 
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedCourseList, setLoadedCourseList] = useState();
-  const [loadedTeachersList, setLoadedTeachersList] = useState();
+  const [loadedUserList, setLoadedUserList] = useState();
 
   const [component, setComponent] = useState(<div></div>);
   const [component2, setComponent2] = useState(<div></div>);
@@ -62,27 +62,27 @@ const Assign = () => {
   const onSubmit = async (data) => {
     // alert(studentId);
     // alert(courseId);
-    if (!teacherId || !courseId) {
+    if (!userId || !courseId) {
       alert("Invalid credentials");
     } else {
       // teacherId = teacherId.join("");
-      let url = "http://localhost:5000/api/admin/edit/" + courseId;
+      let url = "http://localhost:5000/api/admin/removeUser/course/" + courseId;
       try {
         await sendRequest(
           url,
           "PATCH",
           JSON.stringify({
-            participants: teacherId,
+            participants: userId,
           }),
           {
             Authorization: "Bearer " + localStorage.getItem("token"),
             "Content-Type": "application/json",
           }
         );
-        alert("Teacher assigned successfully");
+        alert("Participant removed successfully");
         window.location.reload();
       } catch (error) {}
-      // alert("Teacher added to course");
+      alert("Participant could not be removed");
     }
   };
 
@@ -101,7 +101,6 @@ const Assign = () => {
         });
 
         if (coursesList.length === 0) {
-          // setCourseList(responseData.courses);
           responseData.courses.map((x) =>
             coursesList.push({
               id: x._id,
@@ -118,7 +117,7 @@ const Assign = () => {
               sx={{ width: 300 }}
               value={courseId}
               onChange={(event, newValue) => {
-                // console.log(newValue.id);
+                console.log(newValue.id);
                 setCourseId(newValue.id);
               }}
               options={coursesList}
@@ -151,42 +150,38 @@ const Assign = () => {
 
   useEffect(() => {
     if (courseId) {
-      // alert("courseID found");
+      alert("courseID found");
+      alert(courseId);
       // let url2 = "http://localhost:5000/api/admin/get-teacher-list/";
-      let url2 =
-        "http://localhost:5000/api/admin/get-available-teachers-for-a-course/" +
-        courseId;
-      const fetchTeachers = async () => {
+      let url2 = "http://localhost:5000/api/courses/" + courseId + "/users";
+      const fetchUsers = async () => {
         try {
           const responseData = await sendRequest(url2, "GET", null, {
             Authorization: "Bearer " + getToken,
           });
           console.log(responseData);
-          // alert(responseData.teachers.length);
-          // setInstructorList(responseData.users);
-          // if (teachersList.length === 0) {
-          teachersList = [];
-          responseData.availableTeachers.map((user) =>
-            teachersList.push({
+          usersList = [];
+          responseData.users.map((user) =>
+            usersList.push({
               id: user._id,
               moodleID: user.moodleID,
               name: user.name,
             })
           );
           // }
-          setLoadedTeachersList(responseData.availableTeachers);
+          setLoadedUserList(responseData.users);
           // alert("setting 2");
           setComponent2(
             <Grid item>
               <Autocomplete
                 id="place-select"
                 sx={{ width: 300 }}
-                value={teacherId}
+                value={userId}
                 onChange={(event, newValue) => {
                   console.log("ass: ", newValue.id);
-                  setTeacherId(newValue.moodleID);
+                  setUserId(newValue.moodleID);
                 }}
-                options={teachersList}
+                options={usersList}
                 autoHighlight
                 getOptionLabel={(option) =>
                   option.moodleID + " , " + option.name
@@ -212,7 +207,7 @@ const Assign = () => {
         } catch (err) {}
       };
 
-      fetchTeachers();
+      fetchUsers();
     }
   }, [sendRequest, getToken, courseId]);
 
@@ -252,12 +247,12 @@ const Assign = () => {
             {component}
             {component2}
             {/* {!isLoading && loadedCourseList && (
-              
-            )} */}
+                
+              )} */}
 
             {/* {!isLoading && loadedTeachersList && (
-              
-            )} */}
+                
+              )} */}
 
             <Grid item sm={2} />
           </Grid>
@@ -286,4 +281,4 @@ const Assign = () => {
   );
 };
 
-export default Assign;
+export default DeleteParticipants;

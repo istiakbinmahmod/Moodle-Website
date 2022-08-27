@@ -104,7 +104,7 @@ const Drawer = styled(MuiDrawer, {
 
 const SideDrawer = ({ setOption }) => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -239,6 +239,66 @@ const SideDrawer = ({ setOption }) => {
               </ListItemIcon>
               <ListItemText
                 primary="Assign Students"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem key="remove-user" disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => {
+                setOption("remove-user");
+                console.log("post clicked");
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <InstructorIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Delete Participants"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem
+            key="show-participants"
+            disablePadding
+            sx={{ display: "block" }}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => {
+                setOption("show-participants");
+                console.log("post clicked");
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <InstructorIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Show Participants"
                 sx={{ opacity: open ? 1 : 0 }}
               />
             </ListItemButton>

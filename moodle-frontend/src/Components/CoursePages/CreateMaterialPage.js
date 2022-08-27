@@ -445,7 +445,10 @@ const CreateMaterialPage = () => {
                 {/* <Typography>Course Actions</Typography> */}
                 <Divider />
                 {/* {component} */}
-                <CreateCourseMat courseID={courseID} />
+                <CreateCourseMat
+                  courseID={courseID}
+                  courseTitle={courseTitle}
+                />
                 {/* <CourseFiles /> */}
                 {/* <Grade studentId={2} /> */}
                 {/* <DueAssignment courseId={courseId}/> */}

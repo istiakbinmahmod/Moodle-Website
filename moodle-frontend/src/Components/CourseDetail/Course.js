@@ -16,7 +16,14 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 //  folder icon
 import FolderIcon from "@mui/icons-material/Folder";
-import { Assessment, ThumbUp } from "@mui/icons-material";
+import {
+  Assessment,
+  Edit,
+  FileUpload,
+  FolderSpecial,
+  Publish,
+  ThumbUp,
+} from "@mui/icons-material";
 import CardActions from "@mui/material/CardActions";
 
 import { List, ListItem, ListItemButton, CardActionArea } from "@mui/material";
@@ -175,6 +182,35 @@ const CourseDetail = () => {
                       {/* <FolderIcon /> */}
                     </ListItemIcon>
                   </ListItemButton>
+
+                  {localStorage.getItem("userRole") === "teacher" && (
+                    <>
+                      <ListItemButton
+                        key={4}
+                        button
+                        onClick={() => {
+                          navigate(
+                            "/teacher/my/course/" +
+                              courseTitle +
+                              "/" +
+                              courseID +
+                              "/assignments",
+                            {
+                              state: {
+                                courseID: courseID,
+                                courseTitle: courseTitle,
+                              },
+                            }
+                          );
+                        }}
+                      >
+                        <ListItemText primary="Create a Forum Post" />
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                      </ListItemButton>
+                    </>
+                  )}
 
                   {localStorage.getItem("userRole") === "student" && (
                     <>
@@ -365,7 +401,7 @@ const CourseDetail = () => {
                   >
                     <ListItemText primary="Materials" />
                     <ListItemIcon>
-                      <FolderIcon />
+                      <FolderSpecial />
                     </ListItemIcon>
                   </ListItemButton>
 
@@ -395,7 +431,7 @@ const CourseDetail = () => {
                       >
                         <ListItemText primary="Upload Assignment" />
                         <ListItemIcon>
-                          <FolderIcon />
+                          <Publish />
                         </ListItemIcon>
                       </ListItemButton>
                       <ListItemButton
@@ -422,7 +458,7 @@ const CourseDetail = () => {
                       >
                         <ListItemText primary="Upload Material" />
                         <ListItemIcon>
-                          <FolderIcon />
+                          <FileUpload />
                         </ListItemIcon>
                       </ListItemButton>
                     </>

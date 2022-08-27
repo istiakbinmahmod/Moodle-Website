@@ -48,6 +48,7 @@ import Sidebar from "../Dashboard/Sidebar";
 
 const newStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
+    display: "flex",
     maxWidth: 900,
     margin: "auto",
     padding: theme.spacing(3),
@@ -157,9 +158,9 @@ const Profile = (props) => {
       <main className={classes.content}>
         {!isLoading && userInfo && (
           <Paper className={newClasses.root} elevation={4}>
-            <Typography variant="h6" className={newClasses.title}>
+            {/* <Typography variant="h6" className={newClasses.title}>
               Profile
-            </Typography>
+            </Typography> */}
             <List dense>
               <ListItem>
                 {userInfo.image ? (

@@ -445,7 +445,10 @@ const CoursePageForum = () => {
                 {/* <Typography>Course Actions</Typography> */}
                 <Divider />
                 {/* {component} */}
-                <CourseForumPage courseID={courseID} />
+                <CourseForumPage
+                  courseID={courseID}
+                  courseTitle={courseTitle}
+                />
                 {/* <CourseFiles /> */}
                 {/* <Grade studentId={2} /> */}
                 {/* <DueAssignment courseId={courseId}/> */}
