@@ -2,7 +2,7 @@ import { Grid, Typography, Card, CardContent } from "@mui/material";
 import { React, useState, useEffect, useContext } from "react";
 import Sidebar from "../Dashboard/Sidebar";
 import Filter from "../Dashboard/Filter/Filter";
-import useStyles from "./GradeStyle";
+import useStyles from "../CourseDetail/GradeStyle";
 import Paper from "@mui/material/Paper";
 import ListSubheader from "@mui/material/ListSubheader";
 // import List from "@mui/material/List";
@@ -39,7 +39,7 @@ import Forum from "../Forum/Forum";
 import AllForumPosts from "../Forum/AllForumPosts";
 import CourseForumPage from "../Forum/CourseForumPage";
 
-const CourseDetail = () => {
+const CompletedAssignmentsPage = () => {
   const classes = useStyles();
   const { state } = useLocation();
   const courseTitle = state.courseTitle;
@@ -445,24 +445,7 @@ const CourseDetail = () => {
                 {/* <Typography>Course Actions</Typography> */}
                 <Divider />
                 {/* {component} */}
-                <Participants courseID={courseID} studentId={stdId} />
-                {/* <CourseForumPage courseID={courseID} />
-                <DueAssignment
-                  // <AllAssignments
-                  courseTitle={courseTitle}
-                  courseID={courseID}
-                  studentId={stdId}
-                />
                 <CompletedAssignment courseID={courseID} studentId={stdId} />
-                <TeacherAllAssignments
-                  // <AllAssignments
-                  courseTitle={courseTitle}
-                  courseID={courseID}
-                  studentId={stdId}
-                />
-                <CourseFiles courseID={courseID} />
-                <CreateAss courseID={courseID} />
-                <CreateCourseMat courseID={courseID} /> */}
                 {/* <CourseFiles /> */}
                 {/* <Grade studentId={2} /> */}
                 {/* <DueAssignment courseId={courseId}/> */}
@@ -485,4 +468,4 @@ const CourseDetail = () => {
   );
 };
 
-export default CourseDetail;
+export default CompletedAssignmentsPage;
