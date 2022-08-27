@@ -57,7 +57,7 @@ router.post("/enrollStudents/:courseID", adminController.adminEnrollUserInBulk);
 router.get("/get-teacher-list", adminController.adminGetTeachersList); // => localhost:5000/admin/teacher-list to get all the teachers
 router.get("/get-student-list", adminController.adminGetStudentsList); // => localhost:5000/admin/student-list to get all the students
 router.get(
-  "/get-avaialable-teachers-for-a-course/:courseID",
+  "/get-available-teachers-for-a-course/:courseID",
   adminController.adminGetAvailableTeachersForACourse
 ); // => localhost:5000/admin/get-avaialable-teachers-for-a-course to get all the teachers who are not enrolled in the course
 // router.get('/get-avaialable-students-for-a-course/:courseID', adminController.adminGetAvailableStudentsForACourse); // => localhost:5000/admin/get-avaialable-students-for-a-course to get all the students who are not enrolled in the course
