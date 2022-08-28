@@ -38,12 +38,14 @@ import { AssignmentLate, Group, Message } from "@mui/icons-material";
 import Forum from "../Forum/Forum";
 import AllForumPosts from "../Forum/AllForumPosts";
 import CourseForumPage from "../Forum/CourseForumPage";
+import EditAss from "../Assignments/EditAssignment";
 
-const AllAssignmentsPage = () => {
+const EditAssignmentPage = () => {
   const classes = useStyles();
   const { state } = useLocation();
   const courseTitle = state.courseTitle;
   const courseID = state.courseID;
+  const assignmentID = state.assignmentID;
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const stdId = auth.userId;
@@ -422,11 +424,11 @@ const AllAssignmentsPage = () => {
                 {/* <Typography>Course Actions</Typography> */}
                 <Divider />
                 {/* {component} */}
-                <TeacherAllAssignments
+                <EditAss
                   // <AllAssignments
                   courseTitle={courseTitle}
                   courseID={courseID}
-                  studentId={stdId}
+                  assignmentID={assignmentID}
                 />
               </Paper>
             </Grid>
@@ -437,4 +439,4 @@ const AllAssignmentsPage = () => {
   );
 };
 
-export default AllAssignmentsPage;
+export default EditAssignmentPage;

@@ -118,7 +118,7 @@ const CreateAss = (props) => {
           url: fileUrl,
           title: assignmentName,
           description: assignmentDescription,
-          activity_instruction: activityInstruction,
+          // activity_instruction: activityInstruction,
           dueDate: dueDate,
           cutOffDate: cutOffDate,
         }),
@@ -289,7 +289,7 @@ const CreateAss = (props) => {
                 />
               </Grid>
             </ListItem>
-            <ListItem>
+            {/* <ListItem>
               <Grid item>
                 <TextField
                   id="outlined-basic"
@@ -302,7 +302,7 @@ const CreateAss = (props) => {
                   onChange={(e) => setActivityInstruction(e.target.value)}
                 />
               </Grid>
-            </ListItem>
+            </ListItem> */}
             <ListItem>
               <Grid item>
                 {/* <Checkbox

@@ -1,4 +1,13 @@
-import { Grid, Typography, Card, CardContent } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Card,
+  CardContent,
+  List,
+  ListItem,
+  ListItemButton,
+  Button,
+} from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
 import useStyles from "../Participants/Style";
 import Paper from "@mui/material/Paper";
@@ -10,6 +19,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { AuthContext } from "../Context/AuthContext";
 import { useHttpClient } from "../Context/http-hook";
+import { useNavigate } from "react-router-dom";
 
 const formatDate = (date) => {
   // format to i.e 6 jan, saturday at 3:00pm
@@ -77,7 +87,11 @@ let submissionLists = [];
 const AllSubmissions = (props) => {
   // destructuring props
   //   const { courseID, studentId } = props;
-  const { assignmentId } = props;
+  const navigate = useNavigate();
+  const courseID = props.courseID;
+  const courseTitle = props.courseTitle;
+  const assignmentId = props.assignmentId;
+  // const { courseID, courseTitle, assignmentId } = props;
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const getToken = localStorage.getItem("token");
@@ -88,6 +102,25 @@ const AllSubmissions = (props) => {
 
   let url =
     "http://localhost:5000/api/teachers/get-all-submissions/" + assignmentId;
+
+  const goToEditPage = () => {
+    alert("ghum asahe na");
+    // navigate(
+    //   "/teacher/my/course/" +
+    //     courseTitle +
+    //     "/" +
+    //     courseID +
+    //     "/edit/assignments/" +
+    //     assignmentId,
+    //   {
+    //     state: {
+    //       courseID: courseID,
+    //       courseTitle: courseTitle,
+    //       assignmentId: assignmentId,
+    //     },
+    //   }
+    // );
+  };
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -121,6 +154,30 @@ const AllSubmissions = (props) => {
 
   return (
     <div>
+      <List>
+        <ListItemButton
+          key={1}
+          onClick={() => {
+            navigate(
+              "/teacher/my/course/" +
+                courseTitle +
+                "/" +
+                courseID +
+                "/edit/assignments/" +
+                assignmentId,
+              {
+                state: {
+                  courseID: courseID,
+                  courseTitle: courseTitle,
+                  assignmentID: assignmentId,
+                },
+              }
+            );
+          }}
+        >
+          Edit Assignment
+        </ListItemButton>
+      </List>
       <Paper sx={{ width: "100%" }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">

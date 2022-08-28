@@ -72,27 +72,6 @@ const AllAssignments = (props) => {
         </div>
       );
     }
-    // else if (option === "logout") {
-    //   auth.logout();
-    //   navigate("/");
-    // }
-
-    // if (option === "course") {
-    // else {
-    //   setComponent(
-    //     <div>
-    //       <Typography>Your Courses</Typography>
-    //       <Grid container>
-    //         {/* return a card for every course in courses */}
-    //         {courses.map((course) => (
-    //           <Grid item xs={12} sm={6} md={4}>
-    //             <Card_ course={course} />
-    //           </Grid>
-    //         ))}
-    //       </Grid>
-    //     </div>
-    //   );
-    // }
   }, [option, loadedCourseAssignments]);
 
   return (
