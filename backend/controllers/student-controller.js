@@ -123,7 +123,7 @@ const uploadSubmission = async (req, res, next) => {
     return next(error);
   }
 
-  let user =await User.findById(req.userData.userId);
+  let user = await User.findById(req.userData.userId);
   let moodleID = user.moodleID;
 
   const submission = new Submissions({
@@ -180,7 +180,7 @@ const uploadSubmission = async (req, res, next) => {
     return next(error);
   }
   let relatedCourse = await Course.findById(assignment.course);
-  if( await assignment.email_confirmation){
+  if (await assignment.email_confirmation) {
     transporter.sendMail({
       to: uploader.email,
       from: "mksdrrana@gmail.com",
@@ -269,7 +269,7 @@ const updateSubmission = async (req, res, next) => {
     return next(error);
   }
   let relatedCourse = await Course.findById(assignment.course);
-  if( await assignment.email_confirmation){
+  if (await assignment.email_confirmation) {
     transporter.sendMail({
       to: uploader.email,
       from: "mksdrrana@gmail.com",
@@ -295,7 +295,7 @@ const deleteSubmission = async (req, res, next) => {
 
   let submission;
   try {
-   
+
 
     submission = await Submissions.findOne({
       assignment: assignmentId,
@@ -546,7 +546,7 @@ const testgetCompletedAndDueAssignmentsForACourse = async (req, res, next) => {
       }
     }
 
-    console.log(finalCompletedAssignments);
+    // console.log(finalCompletedAssignments);
 
     for (var i = 0; i < course.courseAssignments.length; i++) {
       dueAssignments.push(course.courseAssignments[i].toString());
@@ -556,14 +556,24 @@ const testgetCompletedAndDueAssignmentsForACourse = async (req, res, next) => {
       (assignment) => !finalCompletedAssignments.includes(assignment)
     );
 
-    console.log(dueAssignments);
+    // console.log(dueAssignments);
 
     for (var i = 0; i < finalCompletedAssignments.length; i++) {
       completed.push(await Assignment.findById(finalCompletedAssignments[i]));
     }
+    completed.sort(function (a, b) {
+      return new Date(b.dueDate - a.dueDate);
+    })
+
+
     for (var i = 0; i < dueAssignments.length; i++) {
       due.push(await Assignment.findById(dueAssignments[i]));
     }
+
+    due.sort(function (a, b) {
+      return new Date(b.dueDate - a.dueDate);
+    })
+
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find completed assignments.",
