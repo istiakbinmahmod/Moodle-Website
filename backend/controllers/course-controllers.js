@@ -117,6 +117,45 @@ const getStudentsByCourseId = async (req, res, next) => {
   });
 };
 
+const getTeachersByCourseId = async (req, res, next) => {
+  const courseId = req.params.courseID;
+  const course = await Course.findById(courseId);
+  if (!course) {
+    console.log(err);
+    return next(new HttpError("Could not find a course for this id.", 404));
+  }
+
+  let teachersOfCourse;
+  try {
+    teachersOfCourse = await Course.findById(courseId).populate("participants");
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError("Something went wrong, could not get teachers.", 500)
+    );
+  }
+  if (!teachersOfCourse || teachersOfCourse.length === 0) {
+    return next(new HttpError("Could not get teachers, no teachers found.", 404));
+  }
+  let teachers = [];
+  for (let i = 0; i < teachersOfCourse.participants.length; i++) {
+    if (teachersOfCourse.participants[i].role === "teacher") {
+      teachers.push(teachersOfCourse.participants[i]);
+    }
+  }
+
+  //sort the teachers by moodleID
+  teachers.sort((a, b) => {
+    return a.moodleID - b.moodleID;
+  });
+
+  res.json({
+    teachers: teachers.map((teacher) => teacher.toObject({ getters: true })),
+  });
+};
+
+
+
 const getCourseBySessionID = async (req, res, next) => {
   const sessionID = req.params.sessionID;
   const session = await Session.findById(sessionID);
@@ -248,3 +287,4 @@ exports.uploadCourseMaterials = uploadCourseMaterials;
 exports.fetchCourseStuffs = fetchCourseStuffs;
 
 exports.getStudentsByCourseId = getStudentsByCourseId;
+exports.getTeachersByCourseId = getTeachersByCourseId;
