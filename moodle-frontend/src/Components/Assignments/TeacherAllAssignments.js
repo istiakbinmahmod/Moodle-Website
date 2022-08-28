@@ -14,6 +14,7 @@ import { Assessment } from "@mui/icons-material";
 import AssignmentCard from "./AssignmentCard";
 import CompletedAssignmentCard from "./CompletedAssignmentCard";
 import AllSubmissions from "../Submission/AllSubmissions";
+import { Link, useNavigate } from "react-router-dom";
 
 const bull = (
   <Box
@@ -29,31 +30,13 @@ const TeacherAllAssignments = (props) => {
   const { courseTitle, courseID, studentId } = props;
   // alert(courseTitle);
   const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedCourseAssignments, setLoadedCourseAssignments] = useState();
   const [submissionFile, setSubmissionFile] = useState();
   const [selectedAssId, setSelectedAssId] = useState();
   const [component, setComponent] = useState(<div></div>);
   const getToken = localStorage.getItem("token");
-
-  // const uploadSubmission = async (event) => {
-  //   event.preventDefault();
-  //   try {
-  //     let url;
-  //     url =
-  //       "http://localhost:5000/api/teachers/upload-course-assignment/" +
-  //       courseID;
-  //     const formData = new FormData();
-  //     formData.append("file", submissionFile);
-  //     await sendRequest(url, "POST", formData, {
-  //       Authorization: "Bearer " + localStorage.getItem("token"),
-  //     });
-
-  //     // navigate("/");
-  //   } catch (error) {}
-  // };
-
-  // console.log(courseID);
 
   let url2 =
     "http://localhost:5000/api/teachers/get-all-course-assignment/" + courseID;
@@ -120,8 +103,23 @@ const TeacherAllAssignments = (props) => {
   }, [sendRequest, url2, getToken]);
 
   useEffect(() => {
-    if (selectedAssId)
-      setComponent(<AllSubmissions assignmentId={selectedAssId} />);
+    // if (selectedAssId) {
+    //   navigate(
+    //     "/teacher/my/course/" +
+    //       courseTitle +
+    //       "/" +
+    //       courseID +
+    //       "/edit/assignments/" +
+    //       selectedAssId
+    //   );
+    // }
+    setComponent(
+      <AllSubmissions
+        courseID={courseID}
+        courseTitle={courseTitle}
+        assignmentId={selectedAssId}
+      />
+    );
   }, [selectedAssId]);
 
   const formatDate = (date) => {

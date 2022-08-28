@@ -22,6 +22,7 @@ import CreateMaterialPage from "../Components/CoursePages/CreateMaterialPage";
 import DueAssignmentsPage from "../Components/CoursePages/DueAssignmentsPage";
 import ParticipantsPage from "../Components/CoursePages/ParticipantsPage";
 import CourseForumPostPage from "./CoursePages/CourseForumPostPage";
+import EditAssignmentPage from "./CoursePages/EditAssignmentPage";
 
 function MainRouter() {
   return (
@@ -135,6 +136,15 @@ function MainRouter() {
             element={
               <RequireAuth>
                 <CreateAssignmentPage />
+              </RequireAuth>
+            }
+          />
+          {/* edit assingments teacher  */}
+          <Route
+            path="/teacher/my/course/:courseTitle/:courseID/edit/assignments/:assignmentID"
+            element={
+              <RequireAuth>
+                <EditAssignmentPage />
               </RequireAuth>
             }
           />
