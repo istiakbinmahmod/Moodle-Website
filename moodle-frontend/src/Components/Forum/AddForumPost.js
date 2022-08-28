@@ -54,10 +54,11 @@ const newStyles = makeStyles((theme) => ({
   },
 }));
 
-const EditProfile = (props) => {
+const AddForumPost = (props) => {
   const classes = useStyles();
   const newClasses = newStyles();
   const auth = useContext(AuthContext);
+  const { courseID, courseTitle } = props;
   const getToken = localStorage.getItem("token");
   const navigate = useNavigate();
   const userID = localStorage.getItem("userId");
@@ -67,15 +68,8 @@ const EditProfile = (props) => {
   const [component, setComponent] = useState(<div></div>);
   const [option, setOption] = useState("");
 
-  const [userName, setUserName] = useState();
-  const [userImage, setUserImage] = useState(null);
-  const [url, setUrl] = useState(null);
-  const [progress, setProgress] = useState(0);
-  const [userPhone, setUserPhone] = useState();
-  const [userAddress, setUserAddress] = useState();
-  const [userRole, setUserRole] = useState();
-  const [userBio, setUserBio] = useState();
-  const [disabled, setDisabled] = useState(true);
+  const [newPostTitle, setNewPostTitle] = useState();
+  const [newPostDesc, setNewPostDesc] = useState();
 
   useEffect(() => {
     const url =
@@ -157,80 +151,37 @@ const EditProfile = (props) => {
     }
   }, [option, userCourses]);
 
-  const handleChange = (e) => {
-    if (e.target.files[0]) {
-      setUserImage(e.target.files[0]);
-    }
-  };
-
-  useEffect(() => {
-    console.log("userImage: ", userImage);
-    if (userImage) {
-      const fileName = userImage.name;
-      const uploadTask = storage
-        .ref(`whiteboard/profile-pic/${fileName}`)
-        .put(userImage);
-
-      // const uploadTask = storage.ref(`whiteboardfiles/${file.name}`).put(file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progres = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          setProgress(progres);
-        },
-
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          storage
-            .ref(`whiteboard/profile-pic`)
-            .child(fileName)
-            .getDownloadURL()
-            .then((url) => {
-              console.log(url);
-              setUrl(url);
-            });
-        }
-      );
-    }
-  }, [userImage]);
-
-  useEffect(() => {
-    if (progress === 100) {
-      setDisabled(false);
-    }
-  }, [progress]);
-
-  const editProfile = async (event) => {
+  const addPost = async (event) => {
     event.preventDefault();
     try {
       let url_path;
       url_path =
-        "http://localhost:5000/api/users/update-profile/" +
+        "http://localhost:5000/api/users/post/" +
+        courseID +
+        "/" +
         localStorage.getItem("userId");
       await sendRequest(
         url_path,
-        "PATCH",
+        "POST",
         JSON.stringify({
-          url: url,
-          name: userName,
-          phone: userPhone,
-          address: userAddress,
-          bio: userBio,
+          title: newPostTitle,
+          postDescription: newPostDesc,
         }),
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         }
       );
-      alert("Profile Updated");
-      localStorage.getItem("userRole") === "student"
-        ? navigate("/student/profile")
-        : navigate("/teacher/profile");
-      // navigate("/");
+      alert("New Post Added!");
+      navigate(
+        "/teacher/my/course/" + courseTitle + "/" + courseID + "/forum",
+        {
+          state: {
+            courseID: courseID,
+            courseTitle: courseTitle,
+          },
+        }
+      );
     } catch (error) {
       alert("Profile not updated");
     }
@@ -246,17 +197,6 @@ const EditProfile = (props) => {
             <List dense>
               <ListItem>
                 <Grid item>
-                  {/* make it to center */}
-                  {/* assh color : #f5f5f5 */}
-                  {/* <Paper
-                  className="paper"
-                  sx={{
-                    width: "100%",
-                    maxWidth: "100%",
-                    bgcolor: "#f5f5f5",
-                    alignContent: "center",
-                  }}
-                > */}
                   <Typography
                     sx={{
                       paddingLeft: "20px",
@@ -268,7 +208,7 @@ const EditProfile = (props) => {
                       variant: "h1",
                     }}
                   >
-                    Update Profile
+                    Create new Forum Post
                   </Typography>
                   {/* </Paper> */}
                 </Grid>
@@ -277,12 +217,10 @@ const EditProfile = (props) => {
                 <Grid item>
                   <TextField
                     id="outlined-basic"
-                    label="Username"
+                    label="Post Title"
                     variant="outlined"
-                    defaultValue={userInfo.name}
-                    //   value={assTitle}
                     sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
-                    onChange={(e) => setUserName(e.target.value)}
+                    onChange={(e) => setNewPostTitle(e.target.value)}
                     style={{ bgcolor: "#f5f5f5" }}
                     size="big"
                   />
@@ -292,87 +230,14 @@ const EditProfile = (props) => {
                 <Grid item>
                   <TextField
                     id="outlined-basic"
-                    label="Address"
+                    label="Post Description"
                     variant="outlined"
-                    defaultValue={userInfo.address}
-                    //   value={assTitle}
                     sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
-                    onChange={(e) => setUserAddress(e.target.value)}
+                    onChange={(e) => setNewPostDesc(e.target.value)}
                     style={{ bgcolor: "#f5f5f5" }}
                     size="big"
                   />
                 </Grid>
-              </ListItem>
-              <ListItem>
-                <Grid item>
-                  <Stack>
-                    <Button
-                      variant="outlined"
-                      component="label"
-                      color="primary"
-                      style={{
-                        margin: "auto",
-                        marginTop: "20px",
-                        marginBottom: "20px",
-                        width: "200px",
-                        height: "50px",
-                        borderRadius: "100px",
-                      }}
-                      endIcon={<AttachmentIcon />}
-                    >
-                      Upload Image
-                      <input
-                        hidden
-                        multiple
-                        type="file"
-                        onChangeCapture={handleChange}
-                      />
-                    </Button>
-
-                    <Grid item container>
-                      <Grid item sm={3}></Grid>
-                      <Grid item>
-                        <Typography variant="h5">
-                          <progress value={progress} max="100" /> {progress}%
-                        </Typography>
-                        <Typography variant="h5">
-                          File:{" "}
-                          {userImage ? userImage.name : "No file selected"}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Stack>
-                </Grid>
-              </ListItem>
-              <ListItem>
-                <Grid item>
-                  <TextField
-                    id="outlined-basic"
-                    label="Phone Number"
-                    variant="outlined"
-                    multiline
-                    maxRows={10}
-                    sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
-                    // value={desc}
-                    placeholder={userInfo.phone}
-                    onChange={(e) => setUserPhone(e.target.value)}
-                  />
-                </Grid>
-              </ListItem>
-              <ListItem>
-                {/* <Grid item> */}
-                <TextField
-                  id="outlined-basic"
-                  label="Bio"
-                  variant="outlined"
-                  multiline
-                  maxRows={10}
-                  sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
-                  // value={desc}
-                  defaultValue={userInfo.bio}
-                  onChange={(e) => setUserBio(e.target.value)}
-                />
-                {/* </Grid> */}
               </ListItem>
               <ListItem>
                 {/* <Grid item> */}
@@ -381,38 +246,38 @@ const EditProfile = (props) => {
                   color="primary"
                   style={{ marginTop: "20px", marginBottom: "20px" }}
                   // disabled={disabled}
-                  onClick={editProfile}
+                  onClick={addPost}
                 >
-                  Update Profile
+                  Add Post
                 </Button>
                 {/* </Grid> */}
               </ListItem>
             </List>
 
             {/* <Grid item container spacing={2}>
-                <Grid item container spacing={2}>
-                  <Grid item sm={1} />
-
-                  <Grid item sm={1} />
+                  <Grid item container spacing={2}>
+                    <Grid item sm={1} />
+  
+                    <Grid item sm={1} />
+                  </Grid>
+                  <Grid item container>
+                    <Grid item sm={3} />
+  
+                    <Grid item sm={3} />
+                  </Grid>
+  
+                  <Grid item container>
+                    <Grid item sm={3} />
+  
+                    <Grid item sm={3} />
+                  </Grid>
+                  <Grid item container>
+                    <Grid item sm={5} />
+  
+                    <Grid item sm={5} />
+                  </Grid>
                 </Grid>
-                <Grid item container>
-                  <Grid item sm={3} />
-
-                  <Grid item sm={3} />
-                </Grid>
-
-                <Grid item container>
-                  <Grid item sm={3} />
-
-                  <Grid item sm={3} />
-                </Grid>
-                <Grid item container>
-                  <Grid item sm={5} />
-
-                  <Grid item sm={5} />
-                </Grid>
-              </Grid>
-            </Grid> */}
+              </Grid> */}
           </>
           // </Box>
         )}
@@ -421,4 +286,4 @@ const EditProfile = (props) => {
   );
 };
 
-export default EditProfile;
+export default AddForumPost;

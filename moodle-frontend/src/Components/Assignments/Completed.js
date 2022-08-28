@@ -91,19 +91,19 @@ const Completed = (props) => {
                               color="text.secondary"
                               gutterBottom
                             >
-                              {assignment.title}
+                              Assignment Title : {assignment.title}
                             </Typography>
 
-                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            {/* <Typography sx={{ mb: 1.5 }} color="text.secondary">
                               {assignment.title}
-                            </Typography>
+                            </Typography> */}
                             {/* make it bold */}
                             <Typography
                               variant="h5"
                               sx={{ mb: 1.5, font: "caption" }}
                               color="text.secondary"
                             >
-                              {formatDate(assignment.dueDate)}
+                              Deadline : {formatDate(assignment.dueDate)}
                             </Typography>
                           </CardContent>
                           {/* <CardActions>
@@ -162,8 +162,29 @@ const Completed = (props) => {
     var h = d.getHours();
     var m = d.getMinutes();
     var s = d.getSeconds();
-    var date = n + ", " + mon + +day + ", " + year + " at " + h + ":" + m;
-    return date;
+    var ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12;
+    h = h ? h : 12; // the hour '0' should be '12'
+    m = m < 10 ? "0" + m : m;
+    s = s < 10 ? "0" + s : s;
+    var strTime =
+      n +
+      ", " +
+      mon +
+      " " +
+      day +
+      ", " +
+      year +
+      " at " +
+      h +
+      ":" +
+      m +
+      ":" +
+      s +
+      " " +
+      ampm;
+    // var date = n + ", " + mon + +day + ", " + year + " at " + h + ":" + m;
+    return strTime;
   };
 
   return <div>{component ? component : <div> Nothing to show ... </div>}</div>;

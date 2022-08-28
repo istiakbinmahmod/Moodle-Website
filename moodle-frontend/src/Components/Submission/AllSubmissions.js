@@ -103,25 +103,6 @@ const AllSubmissions = (props) => {
   let url =
     "http://localhost:5000/api/teachers/get-all-submissions/" + assignmentId;
 
-  const goToEditPage = () => {
-    alert("ghum asahe na");
-    // navigate(
-    //   "/teacher/my/course/" +
-    //     courseTitle +
-    //     "/" +
-    //     courseID +
-    //     "/edit/assignments/" +
-    //     assignmentId,
-    //   {
-    //     state: {
-    //       courseID: courseID,
-    //       courseTitle: courseTitle,
-    //       assignmentId: assignmentId,
-    //     },
-    //   }
-    // );
-  };
-
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {

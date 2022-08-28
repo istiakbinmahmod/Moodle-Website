@@ -111,7 +111,6 @@ const EditAss = (props) => {
             .child(fileName)
             .getDownloadURL()
             .then((url) => {
-              alert("url is ", url);
               setUrl(url);
             });
         }
@@ -121,7 +120,6 @@ const EditAss = (props) => {
 
   const updateAssignment = async (event) => {
     event.preventDefault();
-    alert(fileUrl);
     try {
       let url;
       url =
@@ -129,7 +127,7 @@ const EditAss = (props) => {
         assignmentID;
       await sendRequest(
         url,
-        "POST",
+        "PATCH",
         JSON.stringify({
           url: fileUrl,
           title: assignmentName,
@@ -155,6 +153,7 @@ const EditAss = (props) => {
       //
       // navigate("/");
     } catch (error) {
+      alert("assignment not updated");
       //
     }
   };
@@ -272,7 +271,7 @@ const EditAss = (props) => {
                           <progress value={progress} max="100" /> {progress}%
                         </Typography>
                         <Typography variant="h5">
-                          {file ? "File: " + file.name : loadedAssignment.file}
+                          {file ? "File: " + file.name : " "}
                         </Typography>
                       </Grid>
                     </Grid>

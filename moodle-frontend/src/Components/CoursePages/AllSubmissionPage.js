@@ -171,6 +171,35 @@ const AllAssignmentsPage = () => {
                     </ListItemIcon>
                   </ListItemButton>
 
+                  {localStorage.getItem("userRole") === "teacher" && (
+                    <>
+                      <ListItemButton
+                        key={4}
+                        button
+                        onClick={() => {
+                          navigate(
+                            "/teacher/my/course/" +
+                              courseTitle +
+                              "/" +
+                              courseID +
+                              "/forum/create-post",
+                            {
+                              state: {
+                                courseID: courseID,
+                                courseTitle: courseTitle,
+                              },
+                            }
+                          );
+                        }}
+                      >
+                        <ListItemText primary="Create a Forum Post" />
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                      </ListItemButton>
+                    </>
+                  )}
+
                   {localStorage.getItem("userRole") === "student" && (
                     <>
                       <ListItemButton

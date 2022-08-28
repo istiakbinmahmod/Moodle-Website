@@ -108,7 +108,6 @@ const CreateCourseMat = (props) => {
     try {
       let url;
       url = "http://localhost:5000/api/teachers/upload-material/" + courseID;
-      console.log("fucking url Is : ", fileUrl);
       await sendRequest(
         url,
         "POST",
@@ -165,7 +164,7 @@ const CreateCourseMat = (props) => {
                     variant: "h3",
                   }}
                 >
-                  Create Assignment
+                  Upload Material
                 </Typography>
                 {/* </Paper> */}
               </Grid>
@@ -302,7 +301,7 @@ const CreateCourseMat = (props) => {
                   style={{ marginTop: "20px", marginBottom: "20px" }}
                   onClick={uploadAssignment}
                 >
-                  Create Assignment
+                  Upload Material
                 </Button>
               </Grid>
             </ListItem>

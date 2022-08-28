@@ -198,9 +198,6 @@ const CourseForumPage = (props) => {
                     Date : {formatDate(post.postDate)}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
               </Card>
             </CardActionArea>
           </Grid>

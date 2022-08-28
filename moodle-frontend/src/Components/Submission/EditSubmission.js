@@ -189,7 +189,8 @@ const SubmitAssignment = (props) => {
                           variant="h6"
                           sx={{
                             width: 1050,
-                            color: "success.main",
+                            color: "blue",
+                            // color: "success.main",
                           }}
                         >
                           {prevSubmissionFile
