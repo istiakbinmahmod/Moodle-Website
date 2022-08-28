@@ -2,7 +2,7 @@ import { Grid, Typography, Card, CardContent, Paper } from "@mui/material";
 import React, { useContext } from "react";
 import Sidebar from "../Dashboard/Sidebar";
 import { storage } from "../Firebase_/Conf";
-
+import { Link, useNavigate } from "react-router-dom";
 import useStyles from "../Dashboard/StudentDashboard/StudentDashboardStyle";
 import { useState, useEffect } from "react";
 import {
@@ -31,8 +31,9 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 // import Person from "@material-ui/icons/Person";
-import { Person } from "@mui/icons-material";
+import { CheckBox, Person } from "@mui/icons-material";
 import Divider from "@material-ui/core/Divider";
+import Checkbox from "@mui/material";
 
 import LibraryAddTwoToneIcon from "@mui/icons-material/LibraryAddTwoTone";
 
@@ -41,15 +42,16 @@ import { useHttpClient } from "../../Components/Context/http-hook";
 
 const CreateAss = (props) => {
   //   const [courseId, setCourseId] = useState("");
-  const { courseID } = props;
+  const { courseID, courseTitle } = props;
 
+  const navigate = useNavigate();
   const [option, setOption] = useState("");
   const classes = useStyles();
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [file, setFile] = useState(null);
-  const [url, setUrl] = useState(null);
+  const [fileUrl, setUrl] = useState(null);
   const [progress, setProgress] = useState(0);
   const [disabled, setDisabled] = useState(true);
 
@@ -92,7 +94,7 @@ const CreateAss = (props) => {
             .child(fileName)
             .getDownloadURL()
             .then((url) => {
-              console.log(url);
+              alert("url is ", url);
               setUrl(url);
             });
         }
@@ -102,26 +104,18 @@ const CreateAss = (props) => {
 
   const uploadAssignment = async (event) => {
     event.preventDefault();
+    alert(fileUrl);
     try {
       let url;
       url =
         "http://localhost:5000/api/teachers/upload-course-assignment/" +
         courseID;
-      const formData = new FormData();
-      // formData.append("file", assignment_file);
-      // formData.append("file", assignmentFile);
-      // formData.append("title", assignmentName);
-      // formData.append("description", assignmentDescription);
-      // formData.append("activity_instruction", activityInstruction);
-      // formData.append("dueDate", dueDate);
-      // formData.append("cutOffDate", cutOffDate);
-
-      console.log(formData.values);
+      console.log("fucking url Is : ", fileUrl);
       await sendRequest(
         url,
         "POST",
         JSON.stringify({
-          file: assignmentFile,
+          url: fileUrl,
           title: assignmentName,
           description: assignmentDescription,
           activity_instruction: activityInstruction,
@@ -131,6 +125,16 @@ const CreateAss = (props) => {
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
+        }
+      );
+      alert("assignment uploaded");
+      navigate(
+        "/teacher/my/course/" + courseTitle + "/" + courseID + "/assignments",
+        {
+          state: {
+            courseID: courseID,
+            courseTitle: courseTitle,
+          },
         }
       );
       //
@@ -297,6 +301,25 @@ const CreateAss = (props) => {
                   // value={desc}
                   onChange={(e) => setActivityInstruction(e.target.value)}
                 />
+              </Grid>
+            </ListItem>
+            <ListItem>
+              <Grid item>
+                {/* <Checkbox
+                  // checked={checked}
+                  // onChange={handleChange}
+                  inputProps={{ "aria-label": "controlled" }}
+                /> */}
+                {/* <TextField
+                  id="outlined-basic"
+                  label="Activity Instruction"
+                  variant="outlined"
+                  multiline
+                  maxRows={10}
+                  sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
+                  // value={desc}
+                  onChange={(e) => setActivityInstruction(e.target.value)}
+                /> */}
               </Grid>
             </ListItem>
             <ListItem>

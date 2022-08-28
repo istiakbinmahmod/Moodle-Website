@@ -7,6 +7,7 @@ import {
   Button,
 } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link, navigate, useNavigate } from "react-router-dom";
 
 import React, { useState, useEffect, useContext } from "react";
 import useStyles from "../Participants/Style";
@@ -32,6 +33,7 @@ import {
 } from "@material-ui/core";
 import { Input } from "@material-ui/core";
 import SpecificForumPostReply from "./SpecificFormPostReply";
+import { Navigate } from "react-router-dom";
 
 const formatDate = (date) => {
   // format to i.e 6 jan, saturday at 3:00pm
@@ -90,8 +92,9 @@ const SpecificForumPost = (props) => {
   // destructuring props
   const classes = useStyles();
   const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const getToken = localStorage.getItem("token");
-  const { specificPost } = props;
+  const { courseID, courseTitle, specificPost } = props;
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedPost, setLoadedPost] = useState();
   const [loadedPostReplies, setLoadedPostReplies] = useState();
@@ -127,7 +130,6 @@ const SpecificForumPost = (props) => {
       specificPost +
       "/" +
       localStorage.getItem("userId");
-    alert(url);
     try {
       await sendRequest(
         url,
@@ -140,7 +142,18 @@ const SpecificForumPost = (props) => {
       );
       setCommentInput("");
       alert("reply sent");
-      window.location.reload();
+      navigate(
+        localStorage.getItem("userRole") === "student"
+          ? "/student/my/course/" + courseTitle + "/" + courseID + "/forum"
+          : "/teacher/my/course/" + courseTitle + "/" + courseID + "/forum",
+        {
+          state: {
+            courseID: courseID,
+            courseTitle: courseTitle,
+          },
+        }
+      );
+      // window.location.reload();
     } catch (err) {}
   };
 

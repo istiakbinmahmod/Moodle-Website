@@ -445,7 +445,7 @@ const CreateAssignmentPage = () => {
                 {/* <Typography>Course Actions</Typography> */}
                 <Divider />
                 {/* {component} */}
-                <CreateAss courseID={courseID} />
+                <CreateAss courseID={courseID} courseTitle={courseTitle} />
                 {/* <CourseFiles /> */}
                 {/* <Grade studentId={2} /> */}
                 {/* <DueAssignment courseId={courseId}/> */}

@@ -30,7 +30,7 @@ import { AuthContext } from "../Context/AuthContext";
 import { useHttpClient } from "../Context/http-hook";
 import SpecificForumPost from "./SpecificForumPost";
 import SubmissionPanel from "../Submission/Submission";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const formatDate = (date) => {
@@ -65,7 +65,8 @@ const formatDate = (date) => {
   var h = d.getHours();
   var m = d.getMinutes();
   var s = d.getSeconds();
-  var date = n + ", " + mon + +day + ", " + year + " at " + h + ":" + m;
+  var date = n + ", " + mon + " " + day + ", " + year + " at " + h + ":" + m;
+  // var date = date.toLocalDateString("en-US");
   return date;
 };
 
@@ -100,10 +101,11 @@ const CourseForumPage = (props) => {
   // destructuring props
   const classes = useStyles();
   const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const getToken = localStorage.getItem("token");
-  const { courseID } = props;
+  const { courseID, courseTitle } = props;
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [loadedForumPosts, setLoadedForumPosts] = useState();
+  const [loadedForumPosts, setLoadedForumPosts] = useState([]);
   const [specificPostId, setSpecificPostId] = useState();
   const [postId, setPostId] = useState();
   const [component, setComponent] = useState(<div></div>);
@@ -121,126 +123,90 @@ const CourseForumPage = (props) => {
           Authorization: "Bearer " + getToken,
         });
         setLoadedForumPosts(responseData.posts);
-        {
-          responseData.posts.length === 0
-            ? setComponent(
-                <Box
-                  style={{
-                    position: "absolute",
-                    left: "50%",
-                    top: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                >
-                  <List>
-                    <ListItem alignItems="center">
-                      <Typography>No Posts Yet !</Typography>
-                      {/* <ListItemButton>
-                        <ThumbUp />
-                      </ListItemButton> */}
-                    </ListItem>
-                  </List>
-                </Box>
-              )
-            : setComponent(
-                <Grid container spacing={1}>
-                  {responseData.posts.map((post) => (
-                    <Grid item xs={12}>
-                      <CardActionArea
-                        onClick={(e) => {
-                          setSpecificPostId(post._id);
-                        }}
-                      >
-                        <Card
-                          style={{
-                            minWidth: 275,
-                            height: "80%",
-                            backgroundColor: "#f5f5f5",
-                          }}
-                        >
-                          {/* <Card sx={{ minWidth: 275 }}> */}
-                          <CardContent>
-                            <Typography
-                              variant="h5"
-                              sx={{ fontSize: 21 }}
-                              color="text.secondary"
-                              gutterBottom
-                            >
-                              Post Title : {post.title}
-                            </Typography>
-
-                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                              Created By : {post.author}
-                            </Typography>
-                            {/* make it bold */}
-                            <Typography
-                              variant="h5"
-                              sx={{ mb: 1.5, font: "caption" }}
-                              color="text.secondary"
-                            >
-                              Date : {formatDate(post.postDate)}
-                            </Typography>
-                          </CardContent>
-                          <CardActions>
-                            <Button size="small">Learn More</Button>
-                          </CardActions>
-                        </Card>
-                      </CardActionArea>
-                    </Grid>
-                  ))}
-                </Grid>
-              );
-        }
       } catch (err) {}
     };
     fetchPosts();
   }, [sendRequest, getToken]);
 
-  //   useEffect(() => {
-  //     if (specificPost)
-  //       setComponent(
-  //         <SubmissionPanel assignmentId={specificPost} courseId={courseID} />
-  //         // assignmentId={selectedAssId} studentId={studentId}
-  //         //  />
-  //       );
-  //   }, [specificPost]);
+  // useEffect(() => {
+  //   if (specificPostId) {
+  //     setComponent(<SpecificForumPost specificPost={specificPostId} />);
+  //     // alert("reaching");
+  //   }
+  //   // <SubmissionPanel assignmentId={selectedAssId} studentId={studentId} />
+  // }, [specificPostId]);
 
-  useEffect(() => {
-    if (specificPostId) {
-      setComponent(<SpecificForumPost specificPost={specificPostId} />);
-      // alert("reaching");
-    }
-    // <SubmissionPanel assignmentId={selectedAssId} studentId={studentId} />
-  }, [specificPostId]);
+  return (
+    <div>
+      {loadedForumPosts &&
+        loadedForumPosts.map((post) => (
+          <Grid item xs={12}>
+            <CardActionArea
+              onClick={(e) => {
+                // setSpecificPostId(post._id);
+                navigate(
+                  localStorage.getItem("userRole") === "student"
+                    ? "/student/my/course/" +
+                        courseTitle +
+                        "/" +
+                        courseID +
+                        "/forum/post/" +
+                        post._id
+                    : "/teacher/my/course/" +
+                        courseTitle +
+                        "/" +
+                        courseID +
+                        "/forum/post/" +
+                        post._id,
+                  {
+                    state: {
+                      courseID: courseID,
+                      courseTitle: courseTitle,
+                      postID: post._id,
+                    },
+                  }
+                );
+              }}
+            >
+              <Card
+                style={{
+                  minWidth: 275,
+                  height: "80%",
+                  backgroundColor: "#f5f5f5",
+                }}
+              >
+                {/* <Card sx={{ minWidth: 275 }}> */}
+                <CardContent>
+                  <Typography
+                    variant="h5"
+                    sx={{ fontSize: 21 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    Post Title : {post.title}
+                  </Typography>
 
-  //   useEffect(() => {
-  //     const fetchCourseUsers = async () => {
-  //       try {
-  //         const responseData = await sendRequest(url, "GET", null, {
-  //           Authorization: "Bearer " + getToken,
-  //         });
-  //         if (participantList.length === 0) {
-  //           responseData.users.map((x) => {
-  //             participantList.push(
-  //               createData(
-  //                 x.moodleID ? x.moodleID : "",
-  //                 x.name ? x.name : "",
-  //                 x.email ? x.email : "",
-  //                 x.bio ? x.bio : "",
-  //                 x.role ? x.role : ""
-  //               )
-  //             );
-  //           });
-  //         }
-  //         console.log(participantList);
-  //         // console.log(responseData.users);
-  //         setLoadedCourseParticipants(responseData.users);
-  //       } catch (err) {}
-  //     };
-  //     fetchCourseUsers();
-  //   }, [sendRequest, url, getToken]);
-
-  return <div>{component}</div>;
+                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    Created By : {post.author}
+                  </Typography>
+                  {/* make it bold */}
+                  <Typography
+                    variant="h5"
+                    sx={{ mb: 1.5, font: "caption" }}
+                    color="text.secondary"
+                  >
+                    Date : {formatDate(post.postDate)}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Learn More</Button>
+                </CardActions>
+              </Card>
+            </CardActionArea>
+          </Grid>
+        ))}
+    </div>
+  );
 };
 
 export default CourseForumPage;

@@ -14,6 +14,8 @@ import DeleteCourse from "./DeleteCourse";
 import CreateSession from "./CreateSession";
 import CreateStudent from "./CreateStudent";
 import CreateTeacher from "./CreateTeacher";
+import CourseParticipants from "./CourseParticipantsList";
+import DeleteParticipants from "./DeleteParticipants";
 
 const Dashboard = () => {
   const classes = useStyles();
@@ -38,6 +40,12 @@ const Dashboard = () => {
       setComponent(
         <div>
           <AssignMultipleCourseStudents />
+        </div>
+      );
+    } else if (option === "show-participants") {
+      setComponent(
+        <div>
+          <CourseParticipants />
         </div>
       );
     } else if (option === "create-course") {
@@ -68,6 +76,12 @@ const Dashboard = () => {
       setComponent(
         <div>
           <CreateStudent />
+        </div>
+      );
+    } else if (option === "remove-user") {
+      setComponent(
+        <div>
+          <DeleteParticipants />
         </div>
       );
     } else if (option === "logout") {

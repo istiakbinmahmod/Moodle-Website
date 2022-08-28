@@ -38,12 +38,14 @@ import { AssignmentLate, Group, Message } from "@mui/icons-material";
 import Forum from "../Forum/Forum";
 import AllForumPosts from "../Forum/AllForumPosts";
 import CourseForumPage from "../Forum/CourseForumPage";
+import SpecificForumPost from "../Forum/SpecificForumPost";
 
-const CourseMaterialsPage = () => {
+const CourseForumPostPage = () => {
   const classes = useStyles();
   const { state } = useLocation();
   const courseTitle = state.courseTitle;
   const courseID = state.courseID;
+  const postID = state.postID;
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const stdId = auth.userId;
@@ -445,7 +447,11 @@ const CourseMaterialsPage = () => {
                 {/* <Typography>Course Actions</Typography> */}
                 <Divider />
                 {/* {component} */}
-                <CourseFiles courseID={courseID} courseTitle={courseTitle} />
+                <SpecificForumPost
+                  courseID={courseID}
+                  courseTitle={courseTitle}
+                  specificPost={postID}
+                />
                 {/* <CourseFiles /> */}
                 {/* <Grade studentId={2} /> */}
                 {/* <DueAssignment courseId={courseId}/> */}
@@ -468,4 +474,4 @@ const CourseMaterialsPage = () => {
   );
 };
 
-export default CourseMaterialsPage;
+export default CourseForumPostPage;
