@@ -234,6 +234,7 @@ const updateCourseAssignment = async (req, res, next) => {
   }
 
   assignment.title = req.body.title;
+  assignment.file = req.body.url;
   assignment.description = req.body.description;
   assignment.dueDate = req.body.dueDate;
   assignment.cutOffDate = req.body.cutOffDate;

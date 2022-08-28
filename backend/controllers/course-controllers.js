@@ -78,6 +78,45 @@ const getUsersByCourseId = async (req, res, next) => {
   });
 };
 
+const getStudentsByCourseId = async (req, res, next) => {
+  const courseId = req.params.courseID;
+  const course = await Course.findById(courseId);
+  if (!course) {
+    console.log(err);
+    return next(new HttpError("Could not find a course for this id.", 404));
+  }
+
+  let studentsOfCourse;
+  try {
+    studentsOfCourse = await Course.findById(courseId).populate("participants");
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError("Something went wrong, could not get students.", 500)
+    );
+  }
+  if (!studentsOfCourse || studentsOfCourse.length === 0) {
+    return next(
+      new HttpError("Could not get students, no students found.", 404)
+    );
+  }
+  let students = [];
+  for (let i = 0; i < studentsOfCourse.participants.length; i++) {
+    if (studentsOfCourse.participants[i].role === "student") {
+      students.push(studentsOfCourse.participants[i]);
+    }
+  }
+
+  //sort the students by moodleID
+  students.sort((a, b) => {
+    return a.moodleID - b.moodleID;
+  });
+
+  res.json({
+    students: students.map((student) => student.toObject({ getters: true })),
+  });
+};
+
 const getCourseBySessionID = async (req, res, next) => {
   const sessionID = req.params.sessionID;
   const session = await Session.findById(sessionID);
@@ -193,10 +232,10 @@ const fetchCourseStuffs = async (req, res, next) => {
     })
     .reverse();
 
-    courseStuffs.push(materials);
-    courseStuffs.push(assignments);
+  courseStuffs.push(materials);
+  courseStuffs.push(assignments);
 
-    res.json({ courseStuffs });
+  res.json({ courseStuffs });
 };
 
 exports.getCourseById = getCourseById;
@@ -207,3 +246,5 @@ exports.getSessionNameBySessionId = getSessionNameBySessionId;
 
 exports.uploadCourseMaterials = uploadCourseMaterials;
 exports.fetchCourseStuffs = fetchCourseStuffs;
+
+exports.getStudentsByCourseId = getStudentsByCourseId;
