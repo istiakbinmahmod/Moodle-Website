@@ -101,11 +101,30 @@ const getCoursesByUserId = async (req, res, next) => {
   if (!coursesOfUser || coursesOfUser.length === 0) {
     return next(new HttpError("Could not get courses, no courses found.", 404));
   }
-  res.json({
-    courses: coursesOfUser.courses.map((course) =>
-      course.toObject({ getters: true })
-    ),
-  });
+
+  let courses = [];
+  for (let i = 0; i < coursesOfUser.courses.length; i++) {
+    courses.push(coursesOfUser.courses[i]);
+  }
+
+  //sort the courses by courseTitle
+  courses.sort((a, b) => {
+    if (a.courseTitle < b.courseTitle) return -1;
+    if (a.courseTitle > b.courseTitle) return 1;
+    return 0;
+  }),
+    (err) => {
+      console.log(err);
+      return next(new HttpError("Something went wrong, could not get courses.", 500));
+    };
+
+  res.json({ courses: courses });
+
+  // res.json({
+  //   courses: coursesOfUser.courses.map((course) =>
+  //     course.toObject({ getters: true })
+  //   ),
+  // });
 };
 
 const uploadPrivateFiles = async (req, res, next) => {
