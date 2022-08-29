@@ -38,8 +38,9 @@ import { AssignmentLate, Group, Message } from "@mui/icons-material";
 import Forum from "../Forum/Forum";
 import AllForumPosts from "../Forum/AllForumPosts";
 import CourseForumPage from "../Forum/CourseForumPage";
+import AddForumPost from "../Forum/AddForumPost";
 
-const CourseMaterialsPage = () => {
+const CreateForumPostPage = () => {
   const classes = useStyles();
   const { state } = useLocation();
   const courseTitle = state.courseTitle;
@@ -474,7 +475,7 @@ const CourseMaterialsPage = () => {
                 {/* <Typography>Course Actions</Typography> */}
                 <Divider />
                 {/* {component} */}
-                <CourseFiles courseID={courseID} courseTitle={courseTitle} />
+                <AddForumPost courseID={courseID} courseTitle={courseTitle} />
                 {/* <CourseFiles /> */}
                 {/* <Grade studentId={2} /> */}
                 {/* <DueAssignment courseId={courseId}/> */}
@@ -497,4 +498,4 @@ const CourseMaterialsPage = () => {
   );
 };
 
-export default CourseMaterialsPage;
+export default CreateForumPostPage;

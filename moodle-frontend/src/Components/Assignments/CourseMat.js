@@ -5,7 +5,13 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardActionArea, Grid } from "@mui/material";
+import {
+  CardActionArea,
+  Divider,
+  Grid,
+  List,
+  ListItemButton,
+} from "@mui/material";
 import { AuthContext } from "../../Components/Context/AuthContext";
 import { useHttpClient } from "../../Components/Context/http-hook";
 import { format } from "date-fns";
@@ -25,8 +31,9 @@ const CourseMat = (props) => {
   // alert(courseTitle);
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [loadedCourseAssignments, setLoadedCourseAssignments] = useState();
+  const [loadedCourseMaterials, setLoadedCourseMaterials] = useState();
   const getToken = localStorage.getItem("token");
+  const [materialID, setMaterialID] = useState();
 
   let url2 =
     localStorage.getItem("userRole") === "student"
@@ -34,28 +41,64 @@ const CourseMat = (props) => {
       : "http://localhost:5000/api/teachers/get-materials/" + courseID;
 
   useEffect(() => {
-    const fetchCourseAssignments = async () => {
+    const fetchCourseMaterials = async () => {
       try {
         const responseData = await sendRequest(url2, "GET", null, {
           Authorization: "Bearer " + getToken,
         });
-        setLoadedCourseAssignments(responseData.courseMaterials);
+        setLoadedCourseMaterials(responseData.courseMaterials);
         console.log(responseData.courseMaterials);
       } catch (err) {}
     };
-    fetchCourseAssignments();
+    fetchCourseMaterials();
     // });
   }, [sendRequest, url2, getToken]);
 
+  useEffect(() => {
+    if (materialID) {
+      const deleteMat = async () => {
+        try {
+          let url;
+          url =
+            "http://localhost:5000/api/teachers/delete-material/" + courseID;
+          await sendRequest(
+            url,
+            "DELETE",
+            JSON.stringify({
+              courseMaterialsId: materialID,
+            }),
+            {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + auth.token,
+            }
+          );
+          alert("Material Deleted successfully");
+          window.location.reload();
+        } catch (error) {
+          alert("error deleting the file");
+        }
+      };
+      deleteMat();
+    }
+  }, [materialID]);
+
   return (
-    <>
-      {loadedCourseAssignments &&
-        loadedCourseAssignments.map((assignment) => {
+    <List>
+      <Divider />
+      <Typography mt={2} ml={2} mb={2} variant="h6" style={{ color: "blue" }}>
+        Course Material Files
+      </Typography>
+      <Divider />
+      {loadedCourseMaterials &&
+        loadedCourseMaterials.map((material) => {
           return (
-            <Grid container spacing={1} key={assignment._id}>
+            <Grid container spacing={1}>
               <Grid item xs={12}>
-                {/* set card background to linear ash color */}
-                <CardActionArea>
+                <CardActionArea
+                // onClick={(e) => {
+                //   setSelectedAssId(assignment._id);
+                // }}
+                >
                   <Card
                     style={{
                       minWidth: 275,
@@ -66,26 +109,48 @@ const CourseMat = (props) => {
                     {/* <Card sx={{ minWidth: 275 }}> */}
                     <CardContent>
                       <Typography
-                        sx={{ fontSize: 14 }}
-                        color="text.secondary"
+                        variant="h7"
+                        sx={{ fontSize: 21 }}
+                        // color="text.secondary"
                         gutterBottom
                       >
-                        {courseTitle}
+                        {/* Material : */}
+                        <a
+                          href={material.file}
+                          style={{ textDecoration: "none" }}
+                        >
+                          {material.title}
+                        </a>
                       </Typography>
-                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        <a href={assignment.file}>{assignment.title}</a>
-                      </Typography>
+                      <br></br>
+                      {localStorage.getItem("userRole") === "teacher" && (
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          onClick={() => setMaterialID(material._id)}
+                        >
+                          Delete File
+                        </Button>
+                      )}
+                      {/* <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        <a href={material.file}>{material.title}</a>
+                      </Typography> */}
+                      {/* make it bold */}
+                      {/* <Typography
+                        variant="h5"
+                        sx={{ mb: 1.5, font: "caption" }}
+                        color="text.secondary"
+                      >
+                        {formatDate(assignment.dueDate)}
+                      </Typography> */}
                     </CardContent>
-                    {/* <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions> */}
                   </Card>
                 </CardActionArea>
               </Grid>
             </Grid>
           );
         })}
-    </>
+    </List>
   );
 };
 

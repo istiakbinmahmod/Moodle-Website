@@ -26,9 +26,12 @@ function Teams() {
   const [option, setOption] = useState("");
 
   let url =
-    localStorage.getItem("userRole") === "student"
-      ? "http://localhost:5000/api/students/get-my-courses"
-      : "http://localhost:5000/api/teachers/get-my-courses";
+    "http://localhost:5000/api/users/" +
+    localStorage.getItem("userId") +
+    "/courses";
+  // localStorage.getItem("userRole") === "student"
+  //   ? "http://localhost:5000/api/students/get-my-courses"
+  //   : "http://localhost:5000/api/teachers/get-my-courses";
 
   useEffect(() => {
     const fetchCourses = async () => {

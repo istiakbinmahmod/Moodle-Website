@@ -23,6 +23,7 @@ import DueAssignmentsPage from "../Components/CoursePages/DueAssignmentsPage";
 import ParticipantsPage from "../Components/CoursePages/ParticipantsPage";
 import CourseForumPostPage from "./CoursePages/CourseForumPostPage";
 import EditAssignmentPage from "./CoursePages/EditAssignmentPage";
+import CreateForumPostPage from "./CoursePages/CreateForumPostPage";
 
 function MainRouter() {
   return (
@@ -121,6 +122,15 @@ function MainRouter() {
               </RequireAuth>
             }
           />
+          {/* create forum post  */}
+          <Route
+            path="/teacher/my/course/:courseTitle/:courseID/forum/create-post"
+            element={
+              <RequireAuth>
+                <CreateForumPostPage />
+              </RequireAuth>
+            }
+          />
           {/* all assignments teacher  */}
           <Route
             path="/teacher/my/course/:courseTitle/:courseID/assignments"
@@ -139,6 +149,15 @@ function MainRouter() {
               </RequireAuth>
             }
           />
+          {/* see assignment file and see submissions  */}
+          {/* <Route
+            path="/teacher/my/course/:courseTitle/:courseID/assignments/:assignmentID"
+            element={
+              <RequireAuth>
+                <EditAssignmentPage />
+              </RequireAuth>
+            }
+          /> */}
           {/* edit assingments teacher  */}
           <Route
             path="/teacher/my/course/:courseTitle/:courseID/edit/assignments/:assignmentID"
@@ -194,7 +213,6 @@ function MainRouter() {
               </RequireAuth>
             }
           />
-          {/* create forum post  */}
           {/* participants list */}
           <Route
             path="/student/my/course/:courseTitle/:courseID/participants"

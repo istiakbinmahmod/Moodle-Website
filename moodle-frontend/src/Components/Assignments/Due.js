@@ -102,24 +102,28 @@ const DueAssignment = (props) => {
                               color="text.secondary"
                               gutterBottom
                             >
-                              {assignment.title}
+                              Assignment Title : {assignment.title}
                             </Typography>
 
-                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            {/* <Typography sx={{ mb: 1.5 }} color="text.secondary">
                               {assignment.title}
-                            </Typography>
+                            </Typography> */}
                             {/* make it bold */}
                             <Typography
                               variant="h5"
                               sx={{ mb: 1.5, font: "caption" }}
                               color="text.secondary"
                             >
-                              {formatDate(assignment.dueDate)}
+                              Deadline : {formatDate(assignment.dueDate)}
+                            </Typography>
+                            <Typography
+                              variant="h6"
+                              sx={{ mb: 1.5, font: "caption" }}
+                              color="text.secondary"
+                            >
+                              Time remaining : {dateDif(assignment.dueDate)}
                             </Typography>
                           </CardContent>
-                          <CardActions>
-                            <Button size="small">Learn More</Button>
-                          </CardActions>
                         </Card>
                       </CardActionArea>
                     </Grid>
@@ -141,6 +145,43 @@ const DueAssignment = (props) => {
         <SubmissionPanel assignmentId={selectedAssId} studentId={studentId} />
       );
   }, [selectedAssId]);
+
+  const dateDif = (date2) => {
+    var d1 = new Date();
+    var d2 = new Date(date2);
+    var diff = Math.floor(d2.getTime() - d1.getTime());
+    if (d1.getTime() > d2.getTime()) return "Overdue";
+    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var hours = Math.floor(diff / (1000 * 60 * 60));
+    hours = hours % 24;
+    var minutes = Math.floor(diff / (1000 * 60));
+    minutes = minutes % 60;
+    var seconds = Math.floor(diff / 1000);
+    seconds = seconds % 60;
+    var dif;
+    if (days > 0) {
+      dif = days + " days " + hours + " hours " + minutes + " minutes ";
+    } else if (hours > 0) {
+      dif = hours + " hours " + minutes + " minutes ";
+    } else if (minutes > 0) {
+      dif = minutes + " minutes ";
+    } else {
+      dif = seconds + " seconds ";
+    }
+    // dif = dif + " remaining";
+    return dif;
+    // return dif;
+    // return (
+    //   days +
+    //   " days " +
+    //   hours +
+    //   " hours " +
+    //   minutes +
+    //   " minutes " +
+    //   seconds +
+    //   " seconds"
+    // );
+  };
 
   const formatDate = (date) => {
     // format to i.e 6 jan, saturday at 3:00pm
@@ -174,8 +215,29 @@ const DueAssignment = (props) => {
     var h = d.getHours();
     var m = d.getMinutes();
     var s = d.getSeconds();
-    var date = n + ", " + mon + +day + ", " + year + " at " + h + ":" + m;
-    return date;
+    var ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12;
+    h = h ? h : 12; // the hour '0' should be '12'
+    m = m < 10 ? "0" + m : m;
+    s = s < 10 ? "0" + s : s;
+    var strTime =
+      n +
+      ", " +
+      mon +
+      " " +
+      day +
+      ", " +
+      year +
+      " at " +
+      h +
+      ":" +
+      m +
+      ":" +
+      s +
+      " " +
+      ampm;
+    // var date = n + ", " + mon + +day + ", " + year + " at " + h + ":" + m;
+    return strTime;
   };
 
   return (

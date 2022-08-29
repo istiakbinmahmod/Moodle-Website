@@ -194,7 +194,7 @@ const CourseDetail = () => {
                               courseTitle +
                               "/" +
                               courseID +
-                              "/assignments",
+                              "/forum/create-post",
                             {
                               state: {
                                 courseID: courseID,
