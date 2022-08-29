@@ -183,7 +183,7 @@ const AddForumPost = (props) => {
         }
       );
     } catch (error) {
-      alert("Post not added");
+      // alert("Post not added");
     }
   };
 

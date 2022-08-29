@@ -148,8 +148,6 @@ const DeleteParticipants = () => {
 
   useEffect(() => {
     if (courseId) {
-      alert("courseID found");
-      alert(courseId);
       // let url2 = "http://localhost:5000/api/admin/get-teacher-list/";
       let url2 = "http://localhost:5000/api/courses/" + courseId + "/users";
       const fetchUsers = async () => {
