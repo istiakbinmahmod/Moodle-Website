@@ -62,7 +62,7 @@ const Participants = (props) => {
   // destructuring props
   const { courseID, studentId } = props;
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(100);
 
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedCourseParticipants, setLoadedCourseParticipants] =
