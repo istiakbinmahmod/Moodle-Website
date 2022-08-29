@@ -12,5 +12,10 @@ We have implemented an interactive moodle website for learning managment.
 
 - Student side
     - Student can access course
+    - A student can see the course materials and course assignments for all courses
+    - A student can download course materials 
+    - A student can submit against an assignment
+    - A student can view and reply to course forum posts
+    - All course assignments are organized as due and completed assignments
 
 ## How To Run
