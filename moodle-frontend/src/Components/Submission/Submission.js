@@ -109,7 +109,6 @@ const SubmitAssignment = (props) => {
         });
         console.log(responseData);
         setLoadedAssignment(responseData.assignment);
-        // alert(formatDate(responseData.assignment.dueDate)[1]);
       } catch (err) {}
     };
     fetchAss();

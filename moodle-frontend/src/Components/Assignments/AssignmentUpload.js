@@ -94,7 +94,6 @@ const CreateAss = (props) => {
             .child(fileName)
             .getDownloadURL()
             .then((url) => {
-              alert("url is ", url);
               setUrl(url);
             });
         }
@@ -104,7 +103,6 @@ const CreateAss = (props) => {
 
   const uploadAssignment = async (event) => {
     event.preventDefault();
-    alert(fileUrl);
     try {
       let url;
       url =

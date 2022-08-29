@@ -226,15 +226,6 @@ const CourseMaterialsPage = () => {
                               },
                             }
                           );
-
-                          // setComponent(
-                          //   <DueAssignment
-                          //     // <AllAssignments
-                          //     courseTitle={courseTitle}
-                          //     courseID={courseID}
-                          //     studentId={stdId}
-                          //   />
-                          // );
                         }}
                       >
                         <ListItemText primary="Due Assignments" />

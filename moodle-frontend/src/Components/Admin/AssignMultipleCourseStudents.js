@@ -60,7 +60,6 @@ const Assign = () => {
       alert("Invalid credentials");
     } else {
       let url = "http://localhost:5000/api/admin/enrollStudents/" + courseId;
-      alert(url);
       try {
         await sendRequest(
           url,

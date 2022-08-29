@@ -125,8 +125,17 @@ const CourseMat = (props) => {
                       <br></br>
                       {localStorage.getItem("userRole") === "teacher" && (
                         <Button
-                          variant="outlined"
-                          color="error"
+                          size="small"
+                          // disabled={!isLogged}
+                          color="primary"
+                          variant="contained"
+                          // variant="outlined"
+                          // color="error"
+                          style={{
+                            backgroundColor: "#0000ff",
+                            marginTop: "1%",
+                            color: "white",
+                          }}
                           onClick={() => setMaterialID(material._id)}
                         >
                           Delete File

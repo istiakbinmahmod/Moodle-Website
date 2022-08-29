@@ -183,7 +183,7 @@ const AddForumPost = (props) => {
         }
       );
     } catch (error) {
-      alert("Profile not updated");
+      alert("Post not added");
     }
   };
 

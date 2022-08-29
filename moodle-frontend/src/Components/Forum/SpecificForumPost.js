@@ -67,8 +67,29 @@ const formatDate = (date) => {
   var h = d.getHours();
   var m = d.getMinutes();
   var s = d.getSeconds();
-  var date = n + ", " + mon + +day + ", " + year + " at " + h + ":" + m;
-  return date;
+  var ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  h = h ? h : 12; // the hour '0' should be '12'
+  m = m < 10 ? "0" + m : m;
+  s = s < 10 ? "0" + s : s;
+  var strTime =
+    n +
+    ", " +
+    mon +
+    " " +
+    day +
+    ", " +
+    year +
+    " at " +
+    h +
+    ":" +
+    m +
+    ":" +
+    s +
+    " " +
+    ampm;
+  // var date = n + ", " + mon + +day + ", " + year + " at " + h + ":" + m;
+  return strTime;
 };
 
 const newStyles = makeStyles((theme) => ({
@@ -141,19 +162,19 @@ const SpecificForumPost = (props) => {
         }
       );
       setCommentInput("");
-      alert("reply sent");
-      navigate(
-        localStorage.getItem("userRole") === "student"
-          ? "/student/my/course/" + courseTitle + "/" + courseID + "/forum"
-          : "/teacher/my/course/" + courseTitle + "/" + courseID + "/forum",
-        {
-          state: {
-            courseID: courseID,
-            courseTitle: courseTitle,
-          },
-        }
-      );
-      // window.location.reload();
+      // alert("reply sent");
+      // navigate(
+      //   localStorage.getItem("userRole") === "student"
+      //     ? "/student/my/course/" + courseTitle + "/" + courseID + "/forum"
+      //     : "/teacher/my/course/" + courseTitle + "/" + courseID + "/forum",
+      //   {
+      //     state: {
+      //       courseID: courseID,
+      //       courseTitle: courseTitle,
+      //     },
+      //   }
+      // );
+      window.location.reload();
     } catch (err) {}
   };
 
@@ -185,18 +206,20 @@ const SpecificForumPost = (props) => {
                   <CardContent>
                     <Typography
                       variant="h5"
-                      sx={{ fontSize: 17 }}
+                      sx={{ fontSize: 21 }}
                       color="text.secondary"
                       gutterBottom
+                      style={{ fontWeight: 600 }}
                     >
-                      Post Title : {loadedPost.title}
+                      {loadedPost.title}
                     </Typography>
 
                     <Typography
                       sx={{ mb: 1.5, fontSize: 13 }}
                       color="text.secondary"
+                      style={{ color: "blue" }}
                     >
-                      Created By : {loadedPost.author} <br />
+                      By : {loadedPost.author} <br />
                       Date : {formatDate(loadedPost.postDate)}
                     </Typography>
                     {/* make it bold */}
@@ -240,23 +263,25 @@ const SpecificForumPost = (props) => {
                     <CardContent>
                       <Typography
                         variant="h5"
-                        sx={{ fontSize: 21 }}
+                        sx={{ fontSize: 16 }}
                         color="text.secondary"
                         gutterBottom
+                        style={{ fontWeight: 600 }}
                       >
-                        Reply : {rep.replyDescription}
+                        Re : {loadedPost.title}
                       </Typography>
 
-                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        Replied By : {rep.replier}
+                      <Typography
+                        variant="h7"
+                        sx={{ mb: 1.5 }}
+                        color="text.secondary"
+                        style={{ color: "blue" }}
+                      >
+                        By : {rep.replier} Date : {formatDate(rep.replyDate)}
                       </Typography>
                       {/* make it bold */}
-                      <Typography
-                        variant="h5"
-                        sx={{ mb: 1.5, font: "caption" }}
-                        color="text.secondary"
-                      >
-                        Date : {formatDate(rep.replyDate)}
+                      <Typography sx={{ mb: 1.5, mt: 1.5 }}>
+                        {rep.replyDescription}
                       </Typography>
                     </CardContent>
                   </Card>
@@ -274,7 +299,7 @@ const SpecificForumPost = (props) => {
             multiline
             rowsMin="1"
             maxRows="3"
-            placeholder="Type your comment ..."
+            placeholder="Type your reply ..."
             // placeholder={
             //   // isLogged ? "Login to comment" :
             //   "Type your comment..."
@@ -288,13 +313,13 @@ const SpecificForumPost = (props) => {
             color="primary"
             variant="contained"
             style={{
-              backgroundColor: "#ff0050",
+              backgroundColor: "#0000ff",
               marginTop: "1%",
-              color: "black",
+              color: "white",
             }}
             onClick={addComment}
           >
-            Submit
+            Reply
           </Button>
         </div>
       </CardContent>

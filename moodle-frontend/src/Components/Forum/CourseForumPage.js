@@ -65,9 +65,29 @@ const formatDate = (date) => {
   var h = d.getHours();
   var m = d.getMinutes();
   var s = d.getSeconds();
-  var date = n + ", " + mon + " " + day + ", " + year + " at " + h + ":" + m;
-  // var date = date.toLocalDateString("en-US");
-  return date;
+  var ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  h = h ? h : 12; // the hour '0' should be '12'
+  m = m < 10 ? "0" + m : m;
+  s = s < 10 ? "0" + s : s;
+  var strTime =
+    n +
+    ", " +
+    mon +
+    " " +
+    day +
+    ", " +
+    year +
+    " at " +
+    h +
+    ":" +
+    m +
+    ":" +
+    s +
+    " " +
+    ampm;
+  // var date = n + ", " + mon + +day + ", " + year + " at " + h + ":" + m;
+  return strTime;
 };
 
 interface Column {
@@ -110,6 +130,7 @@ const CourseForumPage = (props) => {
   const [postId, setPostId] = useState();
   const [component, setComponent] = useState(<div></div>);
   const [redir, setRedir] = useState(false);
+  const [deletePostId, setDeletePostId] = useState();
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -128,13 +149,25 @@ const CourseForumPage = (props) => {
     fetchPosts();
   }, [sendRequest, getToken]);
 
-  // useEffect(() => {
-  //   if (specificPostId) {
-  //     setComponent(<SpecificForumPost specificPost={specificPostId} />);
-  //     // alert("reaching");
-  //   }
-  //   // <SubmissionPanel assignmentId={selectedAssId} studentId={studentId} />
-  // }, [specificPostId]);
+  useEffect(() => {
+    if (deletePostId) {
+      const deletePost = async () => {
+        try {
+          let url;
+          url = "http://localhost:5000/api/users/delete-post/" + deletePostId;
+          await sendRequest(url, "DELETE", null, {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + auth.token,
+          });
+          alert("Post Deleted successfully");
+          window.location.reload();
+        } catch (error) {
+          alert("error deleting the post");
+        }
+      };
+      deletePost();
+    }
+  }, [deletePostId]);
 
   return (
     <div>
@@ -182,12 +215,17 @@ const CourseForumPage = (props) => {
                     sx={{ fontSize: 21 }}
                     color="text.secondary"
                     gutterBottom
+                    style={{ fontWeight: 600 }}
                   >
-                    Post Title : {post.title}
+                    {post.title}
                   </Typography>
 
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    Created By : {post.author}
+                  <Typography
+                    sx={{ mb: 1.5 }}
+                    color="text.secondary"
+                    style={{ color: "blue" }}
+                  >
+                    By : {post.author}
                   </Typography>
                   {/* make it bold */}
                   <Typography
@@ -200,6 +238,11 @@ const CourseForumPage = (props) => {
                 </CardContent>
               </Card>
             </CardActionArea>
+            {localStorage.getItem("userRole") === "teacher" && (
+              <Button onClick={() => setDeletePostId(post._id)}>
+                Delete Post
+              </Button>
+            )}
           </Grid>
         ))}
     </div>

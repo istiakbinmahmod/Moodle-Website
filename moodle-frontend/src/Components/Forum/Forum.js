@@ -91,7 +91,6 @@ const Forum = (props) => {
         courseID +
         "/" +
         localStorage.getItem("userId");
-      alert(url);
       await sendRequest(
         url,
         "POST",

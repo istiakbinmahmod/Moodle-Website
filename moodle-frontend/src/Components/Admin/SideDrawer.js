@@ -433,6 +433,34 @@ const SideDrawer = ({ setOption }) => {
             </ListItemButton>
           </ListItem>
 
+          <ListItem key="create-batch" disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => {
+                setOption("create-batch");
+                console.log("post clicked");
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <InstructorIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Create Batch"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+
           <ListItem
             key="create-teacher"
             disablePadding

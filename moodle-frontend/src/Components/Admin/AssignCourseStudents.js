@@ -52,7 +52,6 @@ const Assign = () => {
     if (!studentId || !courseId) {
       alert("Invalid credentials");
     } else {
-      alert(studentId + " " + courseId);
       let url = "http://localhost:5000/api/admin/edit/" + courseId;
       // alert(url);
       try {

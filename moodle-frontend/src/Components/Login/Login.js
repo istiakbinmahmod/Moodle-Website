@@ -40,7 +40,7 @@ function Login() {
       })
         .then((res) => {
           if (res.data.success) {
-            console.log(res.data);
+            // console.log(res.data);
             auth.login(
               res.data.userId,
               res.data.username,

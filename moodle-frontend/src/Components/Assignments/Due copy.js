@@ -26,7 +26,6 @@ const bull = (
 const DueAssignment = (props) => {
   // destructuring the props
   const { courseTitle, courseID, studentId } = props;
-  // alert(courseTitle);
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedCourseAssignments, setLoadedCourseAssignments] = useState();

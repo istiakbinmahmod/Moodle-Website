@@ -103,8 +103,6 @@ const CreateCourseMat = (props) => {
 
   const uploadAssignment = async (event) => {
     event.preventDefault();
-    alert(fileUrl);
-    alert(assignmentName);
     try {
       let url;
       url = "http://localhost:5000/api/teachers/upload-material/" + courseID;
@@ -173,7 +171,7 @@ const CreateCourseMat = (props) => {
               <Grid item>
                 <TextField
                   id="outlined-basic"
-                  label="Assignment Title"
+                  label="Material Title"
                   variant="outlined"
                   //   value={assTitle}
                   sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
@@ -183,38 +181,6 @@ const CreateCourseMat = (props) => {
                 />
               </Grid>
             </ListItem>
-            {/* <ListItem>
-              <Grid item>
-                <TextField
-                  id="outlined-basic"
-                  label="Due Date"
-                  variant="outlined"
-                  // value={dueDate}
-                  sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
-                  type="datetime-local"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={(e) => setDueDate(e.target.value)}
-                />
-              </Grid>
-            </ListItem> */}
-            {/* <ListItem>
-              <Grid item>
-                <TextField
-                  id="outlined-basic"
-                  label="Cutoff Date"
-                  variant="outlined"
-                  // value={dueDate}
-                  sx={{ minWidth: 600, bgcolor: "#f5f5f5" }}
-                  type="datetime-local"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={(e) => setCutOffDate(e.target.value)}
-                />
-              </Grid>
-            </ListItem> */}
             <ListItem>
               <Grid item>
                 <Stack>
@@ -244,8 +210,6 @@ const CreateCourseMat = (props) => {
                   <Grid item container>
                     <Grid item sm={3}></Grid>
                     <Grid item>
-                      {/* add progress bar which is circular */}
-
                       <Typography variant="h5">
                         <progress value={progress} max="100" /> {progress}%
                       </Typography>

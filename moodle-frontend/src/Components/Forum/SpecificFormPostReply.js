@@ -101,7 +101,6 @@ const SpecificForumPostReply = (props) => {
   useEffect(() => {
     const url =
       "http://localhost:5000/api/users/get-a-reply/" + specificPostReply;
-    alert(url);
     const fetchReply = async () => {
       try {
         const responseData = await sendRequest(url, "GET", null, {

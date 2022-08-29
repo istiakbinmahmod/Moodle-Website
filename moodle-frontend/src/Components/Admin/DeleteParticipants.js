@@ -60,8 +60,6 @@ const DeleteParticipants = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    // alert(studentId);
-    // alert(courseId);
     if (!userId || !courseId) {
       alert("Invalid credentials");
     } else {
@@ -170,7 +168,6 @@ const DeleteParticipants = () => {
           );
           // }
           setLoadedUserList(responseData.users);
-          // alert("setting 2");
           setComponent2(
             <Grid item>
               <Autocomplete
@@ -270,7 +267,7 @@ const DeleteParticipants = () => {
                 style={{ marginTop: "20px", marginBottom: "20px" }}
                 onClick={handleSubmit(onSubmit)}
               >
-                Assign Teacher
+                Delete Participant
               </Button>
             </Grid>
             <Grid item sm={5} />

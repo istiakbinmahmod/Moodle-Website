@@ -16,6 +16,7 @@ import CreateStudent from "./CreateStudent";
 import CreateTeacher from "./CreateTeacher";
 import CourseParticipants from "./CourseParticipantsList";
 import DeleteParticipants from "./DeleteParticipants";
+import CreateStudents from "./CreateStudents";
 
 const Dashboard = () => {
   const classes = useStyles();
@@ -76,6 +77,12 @@ const Dashboard = () => {
       setComponent(
         <div>
           <CreateStudent />
+        </div>
+      );
+    } else if (option === "create-batch") {
+      setComponent(
+        <div>
+          <CreateStudents />
         </div>
       );
     } else if (option === "remove-user") {
