@@ -32,3 +32,9 @@ We have implemented an interactive moodle website for learning managment.
 
 Our project has a frontend and a backend. **moodle-frontend** contains all frontend codes and **backend** contains all backend codes
 
+## How To Run
+
+To run **backend** side 
+
+- Go to **backend** folder via terminal (cd backend from root folder)
+- Type *node app.js* and backend is started in localhost::3000
