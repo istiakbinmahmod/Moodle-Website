@@ -515,10 +515,8 @@ const deleteForumPost = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     await post.remove({ session: session });
-    //also need to delete the replies
-    // for (reply in post.replies) {
-    //   await PostReply.findByIdAndRemove(reply, { session: session });
-    // }
+   //delete the replies of that post
+    await PostReply.deleteMany({ post: post._id }, { session: session });
     const forumRelatedtoPost = await Forum.findById(post.forum);
     await forumRelatedtoPost.posts.pull(post);
     await forumRelatedtoPost.save({ session: session });
