@@ -404,7 +404,7 @@ const getForumPosts = async (req, res, next) => {
 
   let posts;
   try {
-    posts = await ForumPost.find({ forum: forum._id.toString() }).populate("user");
+    posts = await ForumPost.find({ forum: forum._id.toString() }).populate("user").sort({postDate: -1});
   } catch (err) {
     console.log(err);
     return next(new HttpError("Could not get the posts for this forum.", 500));
