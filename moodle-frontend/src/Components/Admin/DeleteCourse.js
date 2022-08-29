@@ -58,6 +58,7 @@ function DeleteCourse() {
             coursesList.push({
               id: x._id,
               name: x.courseID,
+              sess_name: x.sessionName,
             })
           );
         }
@@ -160,10 +161,10 @@ function DeleteCourse() {
                     }}
                     options={coursesList}
                     autoHighlight
-                    getOptionLabel={(option) => option.name}
+                    getOptionLabel={(option) => option.name + "," + option.sess_name}
                     renderOption={(props, option) => (
                       <Box component="li" {...props}>
-                        {option.name}
+                        {option.name + "," + option.sess_name}
                       </Box>
                     )}
                     renderInput={(params) => (
