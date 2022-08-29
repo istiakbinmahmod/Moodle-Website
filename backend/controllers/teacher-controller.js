@@ -634,7 +634,18 @@ const getEnrolledCourses = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ courses: enrolledCourses.courses.toObject({ getters: true }) });
+  let courses = [];
+  for (let i = 0; i < enrolledCourses.courses.length; i++) {
+    courses.push(enrolledCourses.courses[i]);
+  }
+  //sort the courses by courseTitle
+  courses.sort((a, b) => {
+    if (a.courseTitle < b.courseTitle) return -1;
+    if (a.courseTitle > b.courseTitle) return 1;
+    return 0;
+  }
+  );
+  res.json({ courses });
 };
 
 exports.uploadCourseMaterials = uploadCourseMaterials;
