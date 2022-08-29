@@ -10,7 +10,7 @@ We have implemented an interactive moodle website for learning managment.
 
 - All users can see profile and edit profile
 
-- Student side
+- **Student side**
     - Student can access course
     - A student can see the course materials and course assignments for all courses
     - A student can download course materials 
