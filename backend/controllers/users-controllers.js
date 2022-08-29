@@ -516,9 +516,9 @@ const deleteForumPost = async (req, res, next) => {
     session.startTransaction();
     await post.remove({ session: session });
     //also need to delete the replies
-    for (reply in post.replies) {
-      await PostReply.findByIdAndRemove(reply, { session: session });
-    }
+    // for (reply in post.replies) {
+    //   await PostReply.findByIdAndRemove(reply, { session: session });
+    // }
     const forumRelatedtoPost = await Forum.findById(post.forum);
     await forumRelatedtoPost.posts.pull(post);
     await forumRelatedtoPost.save({ session: session });
