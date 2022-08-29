@@ -41,7 +41,7 @@ function AdminLogin() {
         .then((res) => {
           if (res.data.success) {
             console.log(res.data);
-            // alert("Login Successful");
+            alert("Login Successful");
             navigate("/admin/homepage");
           }
           setLoading(false);

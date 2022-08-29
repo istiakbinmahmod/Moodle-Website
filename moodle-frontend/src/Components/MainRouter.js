@@ -51,9 +51,9 @@ function MainRouter() {
           <Route
             path="/admin/homepage"
             element={
-              <RequireAuth>
-                <AdminDashboard />
-              </RequireAuth>
+              // <RequireAuth>
+              <AdminDashboard />
+              // </RequireAuth>
             }
           />
           <Route
