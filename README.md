@@ -6,11 +6,11 @@ We have implemented an interactive moodle website for learning managment.
 
 ## Project Features
 
-- **Adming side**
-    - Admin can create users (teachers and students)
-    - Admin can create course, create session
-    - Admin can assign participants(students and teachers) to course
-    - Admin can delete course or participants
+- **Admin side**
+    - An Admin can create users (teachers and students)
+    - An Admin can create course, create session
+    - An Admin can assign participants(students and teachers) to course
+    - An Admin can delete course or participants
 
 - **Student side**
     - A student can see the course materials and course assignments for all courses
@@ -28,4 +28,7 @@ We have implemented an interactive moodle website for learning managment.
     - Teacher can start and delete forum post, reply to forum post
     - A teacher can see profile and edit profile
 
-## How To Run
+## Code Structure
+
+Our project has a frontend and a backend. **moodle-frontend** contains all frontend codes and **backend** contains all backend codes
+
