@@ -45,4 +45,5 @@ To run **frontend** side
 - Type **npm start** and client is started in **localhost::5000**
 
 ## Project video link 
+https://drive.google.com/file/d/1Gptiwe-TZtYJl2HUdfBybDwPtKNaTzQU/view?usp=share_link
 
