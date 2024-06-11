@@ -37,12 +37,12 @@ Our project has a frontend and a backend. **moodle-frontend** contains all front
 To run **backend** side 
 
 - Go to **backend** folder via terminal (**cd backend** from root folder)
-- Type **node app.js** and server is started in **localhost::3000**
+- Type **node app.js** and server is started in **localhost::5000**
 
 To run **frontend** side
 
 - Go to **moodle-frontend** folder via terminal (**cd moodle-frontend** from root folder)
-- Type **npm start** and client is started in **localhost::5000**
+- Type **npm start** and client is started in **localhost::3000**
 
 ## Project video link 
 https://drive.google.com/file/d/1Gptiwe-TZtYJl2HUdfBybDwPtKNaTzQU/view?usp=share_link

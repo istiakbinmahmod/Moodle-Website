@@ -89,7 +89,8 @@ app.use("/upload-course-materials", express.static("uploads"));
 
 mongoose
     .connect(
-        "mongodb+srv://shafaet:h4504hTEzqNn8Nrc@cluster0.pbpj0.mongodb.net/moodle?retryWrites=true&w=majority"
+        // "mongodb+srv://shafaet:h4504hTEzqNn8Nrc@cluster0.pbpj0.mongodb.net/moodle?retryWrites=true&w=majority"
+        "mongodb+srv://istiakbinmahmod:istiakbinmahmod@moodle.wrcbe1v.mongodb.net/?retryWrites=true&w=majority&appName=moodle"
     )
     .then(() => {
         app.listen(5000);
