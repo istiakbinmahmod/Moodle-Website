@@ -12,11 +12,12 @@ const Notification = require("../models/notifications");
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
 
+import { SENDGRID_API_KEY } from "../config"
+
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
-      api_key:
-        "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",
+      api_key: SENDGRID_API_KEY,
     },
   })
 );
